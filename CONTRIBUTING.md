@@ -7,7 +7,7 @@ Please follow the code of conduct found below. Treat it as gospel when interacti
 ## Process for Pull Requests
 
 1. 
-2. 
+2.  
 3. 
 4. 
 
