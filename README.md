@@ -1,6 +1,6 @@
 Smoodify
 ========
-A music playing application that shuffles songs according to the mood determined by the lyrics of the songs the user listens to.
+A music playing application that shuffles songs according to the mood determined by the lyrics or melody of the songs the user listens to.
 
 
 Motivation
