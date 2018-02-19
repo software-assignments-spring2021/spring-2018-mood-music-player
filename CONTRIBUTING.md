@@ -1,16 +1,16 @@
 # Contributing
 
-If you would like to contribute to this repository and this project, please discuss whatever changes you would like to make via issue, email, or any other method of contact with the owners of the repository before making any changes. 
+Only members of the smoodify team will be contributing directly to this project's code. Suggestions and ideas are welcomed and encouraged, and you may contact a member of the team with this information, if you so desire. 
 
 Please follow the code of conduct found below. Treat it as gospel when interacting with one another. 
 
 ## Process for Pull Requests
 
-1. 
-2.  
-3. 
-4. 
-
+1. Before doing anything, create an Issue on GitHub to describe what you would like to do. These Issues should be as discussed in the product or sprint backlog. 
+2. To begin working on an issue, create a branch named after your issue number, e.g. "#2". Make sure to include the quotes when making the branch on the terminal. Add the appropriate labels, project, and milestone to this issue and update the sprint's task board accordingly.
+3. All changes should be built into your branch. When adding to the repository, please ensure that you only add the files that you made changes to. Adding all could result in someone else's commit being over written. Better yet, pull before you push. 
+4. Create a pull request to the **development** branch titled after the issue number followed by a short description of what the pull request is changing, e.g. "#2 Added CONTRIBUTING.md". These wil be reviewed by other developers as well as the scrum master. Once your changes have been confirmed by the scrum master, as well as another developer, the pull request will be accepted into the development branch, the issue will be closed, and the associated branch will be deleted.
+5. At the end of the sprint, the scrum master will merge the development branch with the master branch.
 
 ## Contributor Covenant Code of Conduct
 
