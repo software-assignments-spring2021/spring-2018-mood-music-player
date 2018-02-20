@@ -25,7 +25,7 @@ smoodify is a web application built on Node using Express. It makes use of the f
 
 ## Contributors
 1. [Olina Stathopoulou](https://github.com/olinastath) :sparkles:
-2. [Ryan Chau](https://github.com/rchau0623) 
+2. [Ryan Chau](https://github.com/rchau0623) :crayon:
 3. [Peter Kim](https://github.com/peterckim) 
 4. [Andrea Waxman](https://github.com/andreawaxman) 
 
