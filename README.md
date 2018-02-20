@@ -7,7 +7,9 @@ Motivation
 ==========
 *Fill in the specifics on how this application was initially thought up.*
 
-The primary motivation for creating this application was to provide an easier way for music listeners to attain songs that related to their current moods.
+The primary motivation for creating this application was to provide an easier way for music listeners to attain songs that relate to their current moods. Sometimes when we listen to music, even if we have a playlist set up, we are unhappy with a particular song that plays and it unwillingly changes the mood. We want to avoid this kind of let down and give users a smooth mood-satisfying musical experience.
+
+
 
 Links
 =============
