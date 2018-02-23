@@ -1,0 +1,27 @@
+{
+  "name": "mood-music-player",
+  "version": "1.0.0",
+  "description": "Smoodify ======== A music playing application that shuffles songs according to the mood determined by the lyrics or melody of the songs the user listens to.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nyu-software-engineering/mood-music-player.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nyu-software-engineering/mood-music-player/issues"
+  },
+  "homepage": "https://github.com/nyu-software-engineering/mood-music-player#readme",
+  "devDependencies": {
+    "body-parser": "^1.18.2",
+    "eslint": "^4.18.0",
+    "express": "^4.16.2",
+    "hbs": "^4.0.1",
+    "mongoose": "^5.0.6",
+    "mongoose-url-slugs": "^1.0.2"
+  }
+}
