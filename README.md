@@ -19,7 +19,7 @@ smoodify is a web application built on Node using Express. It makes use of the f
 * [spotify-web-api-node](https://github.com/thelinmichael/spotify-web-api-node) to analyze songs' metadata
 * [lyric-api](https://github.com/rhnvrm/lyric-api) to retrieve song lyrics
 * [sentiment](https://www.npmjs.com/package/sentiment) to analyze sentiment in lyrics
-* [Gracenote Developer](https://developer.gracenote.com) to analyze music
+* [node-gracenote](https://github.com/ddanninger/node-gracenote) to analyze music
 
 ## [Contributing](CONTRIBUTING.md)
 
