@@ -4,7 +4,7 @@
   "description": "Smoodify ======== A music playing application that shuffles songs according to the mood determined by the lyrics or melody of the songs the user listens to.",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "node src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
