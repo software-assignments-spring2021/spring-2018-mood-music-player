@@ -12,6 +12,18 @@ Please follow the code of conduct found below. Treat it as gospel when interacti
 4. Create a pull request to the **development** branch titled after the issue number followed by a short description of what the pull request is changing, e.g. "#2 Added CONTRIBUTING.md". These wil be reviewed by other developers as well as the scrum master. Once your changes have been confirmed by the scrum master, as well as another developer, the pull request will be accepted into the development branch, the issue will be closed, and the associated branch will be deleted.
 5. At the end of the sprint, the scrum master will merge the development branch with the master branch.
 
+## Meeting Times
+
+### Sprints/Scrum
+
+- Monday: 7 - 9PM in person
+- Friday: 11 - 5PM in person
+
+### Standups
+
+- Tuesday: 1:45 - 2PM in person
+- Friday: 11 - 11:15AM in person
+
 ## Contributor Covenant Code of Conduct
 
 ### Our Pledge
