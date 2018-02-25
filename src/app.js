@@ -5,9 +5,6 @@ const app = express();
 // setting path
 const path = require('path');
 
-// linking db.js
-require('./db');
-
 // mongoose setup
 const mongoose = require('mongoose');
 
@@ -21,6 +18,37 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // serve static files 	
 app.use(express.static(path.join(__dirname, 'public')));
+
+// sessions setup
+const session = require('express-session');
+const sessionOptions = {
+	secret: 'secret cookie thang (store this elsewhere!)',
+	resave: true,
+	saveUninitialized: true
+};
+app.use(session(sessionOptions));
+
+// mongoose schemas
+const Song = require('./models/song');
+const Mood = require('./models/mood');
+const Playlist = require('./models/playlist');
+const User = require('./models/user');
+
+// passport setup
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+// setting up for ports used in hosting
+const clientId = process.env.CLIENTID;
+const clientSecret = process.env.CLIENTSECRET;
+
+const db = process.env.MONGODB_URI || require('./config.js').mongoKey;
+mongoose.connect(db);
 
 app.get('/', (req, res) => {
 	res.render('index');
