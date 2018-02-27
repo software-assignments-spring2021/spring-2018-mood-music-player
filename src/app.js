@@ -8,6 +8,25 @@ const path = require('path');
 // mongoose setup
 const mongoose = require('mongoose');
 
+
+// lyric-get api
+var lyric = require('lyric-get');
+
+// todo: change the variables to equal the artist and title retrieved from spotify API. 
+var artist = "John Lennon", title = "Imagine";
+
+// todo: get the artist, song name, from spotify api and place as parameters, make the parameters dynamic.
+// https://github.com/rhnvrm/lyric-api
+lyric.get(artist, title, function(err, res){
+    if(err){
+        console.log(err);
+    }
+    else{
+        console.log(res);
+    }
+});
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
