@@ -54,18 +54,6 @@ app.get('/', (req, res) => {
 	res.render('index');
 });
 
-
-/* code to register spotify account */
-app.get('/login', function(req, res) {
-	var scopes = 'user-read-private user-read-email';
-	res.redirect('https://accounts.spotify.com/authorize' +
-	  '?response_type=code' +
-	  '&client_id=' + 'dcddb8d13b2f4019a1dadb4b4c070661' +
-	  (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
-	  '&redirect_uri=' + encodeURIComponent('http://localhost:3000'));
-});
-
-
 app.get('*', function(req, res) {
 	res.render('error', {message: 'page no existo'});
 });
