@@ -51,7 +51,7 @@ const db = process.env.MONGODB_URI || require('./config.js').mongoKey;
 mongoose.connect(db);
 
 app.get('/', (req, res) => {
-	res.render('index');
+	res.render('login');
 });
 
 app.get('*', function(req, res) {
