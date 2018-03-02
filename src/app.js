@@ -69,9 +69,9 @@ function authenticated(req,res,next) {
 app.get('/', function(req, res) {
 	if (authenticated) {
 		// TODO: add .hbs of our app
-		res.render('login');
+		res.render('index');
 	}
-	res.render('index');
+	res.render('login');
 });
 
 // TODO: change error messages and render info
