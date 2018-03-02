@@ -67,11 +67,17 @@ function authenticated(req,res,next) {
 
 // TODO: check if this owrks.
 app.get('/', function(req, res) {
-	if (authenticated) {
+
+	res.render('login');
+	
+	// TODO: figure this shit out once passport is poperly implemented. 
+	/*
+	if (authenticated(req,res,next)) {
 		// TODO: add .hbs of our app
 		res.render('index');
 	}
-	res.render('login');
+	*/
+	
 });
 
 // TODO: change error messages and render info
@@ -130,6 +136,17 @@ app.post('/login', function(req, res, next) {
 			}
 		});
 	})(req, res, next);
+});
+
+// code to register spotify account
+// TODO: fix conflict with path to be prettier.
+app.get('/spotify_login', function(req, res) {
+	var scopes = 'user-read-private user-read-email';
+	res.redirect('https://accounts.spotify.com/authorize' +
+	  '?response_type=code' +
+	  '&client_id=' + 'dcddb8d13b2f4019a1dadb4b4c070661' +
+	  (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
+	  '&redirect_uri=' + encodeURIComponent('http://localhost:3000'));
 });
 
 app.get('/logout', function(req, res) {
