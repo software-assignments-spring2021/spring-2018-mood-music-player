@@ -22,7 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // sessions setup
 const session = require('express-session');
 const sessionOptions = {
-	secret: 'secret cookie thang (store this elsewhere!)',
+	secret: 'secret cookie thang',
 	resave: true,
 	saveUninitialized: true
 };
