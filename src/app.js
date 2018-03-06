@@ -22,7 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // sessions setup
 const session = require('express-session');
 const sessionOptions = {
-	secret: 'keyboard cat',
+	secret: 'keyboard dog',
 	resave: true,
 	saveUninitialized: true
 };
