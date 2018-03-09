@@ -1,7 +1,7 @@
 // basic setup
 const express = require('express');
 const app = express();
-const favicon = require('serve-favicon');
+// const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 
