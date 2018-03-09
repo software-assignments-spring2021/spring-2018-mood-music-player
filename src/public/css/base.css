@@ -224,36 +224,277 @@ textarea {
 }
 
 
-.music-player-container {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  padding: 1rem;
-  background-color: #efefef;
+
+
+
+/* Code for Music Player Footer */
+
+@media screen and (max-width: 799px) {
+
+  body {
+    background:#A239CA;
+  }
+
+  button {
+    outline:none;
+    border: none;
+    background-color: #efefef;
+  }
+
+
+  button:active{
+    opacity: 0.5;
+  }
+
+  .music-player-bar {
+    position: fixed;
+    left: 0px;
+    width: 100%;
+    height: 40px;
+    bottom: 0px;
+    background-color: #efefef;
+  }
+
+  .music-player-bar-left {
+    position:relative;
+    width: 33.33%;
+    float:left;
+  }
+
+  .title-wrapper {
+    position:relative;
+    width:20%;
+    left: 20px;
+    float:left;
+
+  }
+
+  .artist-wrapper {
+    position:relative;
+    width: 20%;
+    left: 30px;
+    float:left;
+  }
+
+  .add-song-to-playlist {
+    position:relative;
+    width:20%;
+    top: 15px;
+    left: 50px;
+    float:left;
+  }
+
+  .music-player-bar-center {
+    position: relative;
+    top: 11px;
+    width: 33.33%;
+    left: 150px;
+    float: left;
+  }
+
+
+
+
+  .music-player-bar-right {
+    position: relative;
+    top: 10px;
+    width: 33.33%;
+    left:200px;
+    float: left;
+  }
+
+
+  .volume-button {
+    position:relative;
+    left: 50px;
+    top: 2px;
+    float:left;
+  }
+
+  .progress-bar {
+    position:relative;
+    left: 55px;
+    bottom: 5px;
+    float:left;
+  }
+
 }
 
-.music-player-bar-left {
-  top: 0;
-  width:100px; 
-  left:0; 
-  bottom: 0;
-  position:absolute;
+
+@media screen and (min-width: 800px) and (max-width:1199px) {
+
+  body {
+    background: #4717F6;
+  }
+
+
+  button {
+    outline:none;
+    border: none;
+    background-color: #efefef;
+  }
+  
+  
+  button:active{
+    opacity: 0.5;
+  }
+  
+  .music-player-bar {
+    position: fixed;
+    left: 0px;
+    width: 100%;
+    height: 40px;
+    bottom: 0px;
+    background-color: #efefef;
+  }
+  
+  .music-player-bar-left {
+    position:relative;
+    width: 33.33%;
+    float:left;
+  }
+  
+  .title-wrapper {
+    position:relative;
+    left: 20px;
+    float:left;
+  
+  }
+  
+  .artist-wrapper {
+    position:relative;
+    left: 30px;
+    float:left;
+  }
+  
+  .add-song-to-playlist {
+    position:relative;
+    top: 15px;
+    left: 50px;
+    float:left;
+  }
+  
+  .music-player-bar-center {
+    position: relative;
+    top: 11px;
+    width: 33.33%;
+    left: 150px;
+    float: left;
+  }
+  
+  
+  
+  
+  .music-player-bar-right {
+    position: relative;
+    top: 10px;
+    width: 33.33%;
+    left:200px;
+    float: left;
+  }
+  
+  
+  .volume-button {
+    position:relative;
+    left: 50px;
+    top: 2px;
+    float:left;
+  }
+  
+  .progress-bar {
+    position:relative;
+    left: 55px;
+    bottom: 5px;
+    float:left;
+  }
 }
 
-.music-player-bar-center {
-  top: 0;
-  width:100px; 
-  left: 200;
-  bottom: 0;
-  position: absolute;
-  float: center;
-}
 
-.music-player-bar-right {
-  top: 0;
-  width:100px; 
-  right:0; 
-  bottom: 0;
-  position:absolute;
+/* correct */
+/* The progress bar goes off the screen at */
+@media screen and (min-width: 1200px) {
+
+  body {
+    background:#000000;
+  }
+
+  button {
+    outline:none;
+    border: none;
+    background-color: #efefef;
+  }
+  
+  
+  button:active{
+    opacity: 0.5;
+  }
+  
+  .music-player-bar {
+    position: fixed;
+    left: 0px;
+    width: 100%;
+    height: 40px;
+    bottom: 0px;
+    background-color: #efefef;
+  }
+  
+  .music-player-bar-left {
+    position:relative;
+    width: 33.33%;
+    float:left;
+  }
+  
+  .title-wrapper {
+    position:relative;
+    left: 20px;
+    float:left;
+  
+  }
+  
+  .artist-wrapper {
+    position:relative;
+    left: 30px;
+    float:left;
+  }
+  
+  .add-song-to-playlist {
+    position:relative;
+    top: 15px;
+    left: 50px;
+    float:left;
+  }
+  
+  .music-player-bar-center {
+    position: relative;
+    top: 11px;
+    width: 33.33%;
+    left: 150px;
+    float: left;
+  }
+  
+  
+  
+  
+  .music-player-bar-right {
+    position: relative;
+    top: 10px;
+    width: 33.33%;
+    left:200px;
+    float: left;
+  }
+  
+  
+  .volume-button {
+    position:relative;
+    left: 50px;
+    top: 2px;
+    float:left;
+  }
+  
+  .progress-bar {
+    position:relative;
+    left: 55px;
+    bottom: 5px;
+    float:left;
+  }
 }
