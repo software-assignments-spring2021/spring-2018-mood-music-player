@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const Mood = new mongoose.Schema({
-	type: {type: String, required: true, default: ''},
+	type: {type: String, required: true},
 	songs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'song' }],
 	
 	// seems a bit thin.

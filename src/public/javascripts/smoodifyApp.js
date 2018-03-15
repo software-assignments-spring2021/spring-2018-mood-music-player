@@ -1,4 +1,4 @@
-var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource']).run(function($rootScope, $http) {
+var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS']).run(function($rootScope, $http) {
 	$rootScope.authenticated = false;
 	$rootScope.current_user = '';
 	
@@ -11,37 +11,57 @@ var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource']).run(function(
 
 app.config(function($routeProvider){
 	$routeProvider
-		//the timeline display
+		// the landing display
 		.when('/', {
-			templateUrl: 'main.html',
+			css: {
+				href: '../stylesheets/login.css',
+				preload: true
+			},
+			templateUrl: 'landing.html',
 			controller: 'mainController'
 		})
-		//the login display
+		// the login display
 		.when('/login', {
+			css: {
+				href: '../stylesheets/login.css',
+				preload: true
+			},
 			templateUrl: 'login.html',
 			controller: 'authController'
 		})
-		//the signup display
+		// the signup display
 		.when('/register', {
+			css: {
+				href: '../stylesheets/login.css',
+				preload: true
+			},
 			templateUrl: 'register.html',
-			controller: 'authController'
+			controller: 'authController',
+		})
+		// the logged in display
+		.when('/browse', {
+			css: {
+				href: '../stylesheets/base.css',
+				preload: true
+			},
+			templateUrl: 'main.html',
+			controller: 'mainController'
 		});
 });
 
-app.factory('postService', function($resource){
-	return $resource('/api/posts/:id');
+app.factory('songService', function($resource) {
+	return $resource ('api/songs');
 });
 
-app.controller('mainController', function(postService, $scope, $rootScope){
-	$scope.posts = postService.query();
-	$scope.newPost = {created_by: '', text: '', created_at: ''};
-	
+app.controller('mainController', function(songService, $scope, $rootScope){
+	$scope.songs = songService.query();
+
 	$scope.post = function() {
-	  $scope.newPost.created_by = $rootScope.current_user;
-	  $scope.newPost.created_at = Date.now();
-	  postService.save($scope.newPost, function(){
-	    $scope.posts = postService.query();
-	    $scope.newPost = {created_by: '', text: '', created_at: ''};
+	  $scope.newSong.title = $scope.new.title;
+	  $scope.newSong.artist = $scope.new.artist;
+	  songService.save($scope.newSong, function(){
+	    $scope.songs = songService.query();
+	    $scope.newSong = {title: '', artist: ''};
 	  });
 	};
 });
@@ -49,13 +69,12 @@ app.controller('mainController', function(postService, $scope, $rootScope){
 app.controller('authController', function($scope, $http, $rootScope, $location){
   $scope.user = {username: '', password: ''};
   $scope.error_message = '';
-
   $scope.login = function(){
     $http.post('/auth/login', $scope.user).success(function(data){
       if(data.state == 'success'){
         $rootScope.authenticated = true;
         $rootScope.current_user = data.user.username;
-        $location.path('/');
+        $location.path('/browse');
       }
       else{
         $scope.error_message = data.message;
@@ -68,7 +87,7 @@ app.controller('authController', function($scope, $http, $rootScope, $location){
       if(data.state == 'success'){
         $rootScope.authenticated = true;
         $rootScope.current_user = data.user.username;
-        $location.path('/');
+        $location.path('/browse');
       }
       else{
         $scope.error_message = data.message;
