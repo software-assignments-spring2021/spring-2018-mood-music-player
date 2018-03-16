@@ -7,10 +7,10 @@ const Song = new mongoose.Schema({
 	// if Spotify can't give anything. This is likely tentative,
 	// I made this because it wouldn't run with the comment above.
 	title: {type: String, required: true},
-	artist: {type: String, required: true},
-	genre: {type: String, required: true},
+	// artist: {type: String, required: true},
+	// genre: {type: String, required: true},
 	album: {type: String, required: true},
-	length: {type: String, required: true},
+	// length: {type: String, required: true},
 	
 	// mood: [{type: String}]
 	mood: [{ type: String, required: true }]
