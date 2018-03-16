@@ -1,10 +1,14 @@
-body {
-  /*background: #0e0b16;*/
-  background: white;
+#auth-view {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  overflow: auto;
+  top: 0px;
+  left: 0px;
   color: white;
+  background: white;
   font-family: Arial, Helvetica, sans-serif;
 }
-
 
 /* Code for Music Player Footer */
 
