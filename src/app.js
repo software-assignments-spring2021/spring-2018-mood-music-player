@@ -38,6 +38,7 @@ app.use('/', index);
 app.use('/auth', authenticate);
 app.use('/api', api);
 
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     const err = new Error('Not Found');
@@ -73,13 +74,7 @@ app.use(function(err, req, res, next) {
     });
 });
 
-// app.get('/spotify_login', function(req, res) {
-//     const scopes = 'user-read-private user-read-email';
-//     res.redirect('https://accounts.spotify.com/authorize' +
-//       '?response_type=code' +
-//       '&client_id=' + 'dcddb8d13b2f4019a1dadb4b4c070661' +
-//       (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
-//       '&redirect_uri=' + encodeURIComponent('http://localhost:3000'));
-// });
+
+
 
 app.listen(process.env.PORT || 3000);
