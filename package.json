@@ -30,6 +30,7 @@
     "mongoose-url-slugs": "^1.0.2",
     "morgan": "^1.9.0",
     "passport": "^0.4.0",
-    "passport-local-mongoose": "^5.0.0"
+    "passport-local-mongoose": "^5.0.0",
+    "spotify-player": "^1.0.0-alpha.1"
   }
 }

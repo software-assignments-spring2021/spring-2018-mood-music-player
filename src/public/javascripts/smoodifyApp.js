@@ -59,7 +59,7 @@ app.factory('songService', function($resource) {
 	return $resource ('api/songs');
 });
 
-app.controller('mainController', function(songService, $scope, $rootScope){
+app.controller('mainController', function(songService, $scope, $rootScope, $window){
 	$scope.songs = songService.query();
 
 	$scope.post = function() {
@@ -73,9 +73,8 @@ app.controller('mainController', function(songService, $scope, $rootScope){
 
   /* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
 	$scope.myFunc = function() {
-    window.onSpotifyWebPlaybackSDKReady = () => {
       /* TODO: Going to need to make token dynamic in that it obtains the current users token. Code once CORS Issue is solved.*/
-      const token = 'BQDwiZuDCMwRCZOc4IDebtV-CirRhV46Lrs41-vEA73jyh3ivqRVV_i3o3Fc0YwiW28GCA-NJRqIicwGJQY8aph5VS_xf0J2KK-6pNruxUgqaxWfZkGTu48Q8nlYLldfDOBDOq6ydx5D1AZ2_vs8036Ipn79YM1w-KDT';
+      const token = 'BQBa3-xtvzEsJnpmHkEvogTlKGAtpXya1em7drsp3z_D8BX5KkvLwbEGC-xOCmnTOMkzDfJqaMT1Nga1myEZRBEeuBPtlmvlkMUjFHJGnzM1_Ln0P6uakQ53JUqc1kg5ECIHYcFVIY_g68hH09VtahuE-9xztnKkWggA';
       const player = new Spotify.Player({
         name: 'Smoodify',
         getOAuthToken: cb => { cb(token); }
@@ -97,7 +96,6 @@ app.controller('mainController', function(songService, $scope, $rootScope){
 
       // Connect to the player!
       player.connect();
-    	};
 	};
 
 });
