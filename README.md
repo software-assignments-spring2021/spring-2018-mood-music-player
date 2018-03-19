@@ -16,7 +16,7 @@ The user would make an account on the app using their already existing Spotify a
 ## Technical Details
 smoodify is a web application built on Node using Express. It makes use of the following APIs and modules:
 * [node-spotify-web](https://github.com/TooTallNate/node-spotify-web) to stream songs
-* [spotify-web-api-node](https://github.com/thelinmichael/spotify-web-api-node) to analyze songs' metadata
+* [spotify-web-api-node](https://github.com/thelinmichael/spotify-web-api-node) to analyze a song metadata
 * [lyric-api](https://github.com/rhnvrm/lyric-api) to retrieve song lyrics
 * [sentiment](https://www.npmjs.com/package/sentiment) to analyze sentiment in lyrics
 * [node-gracenote](https://github.com/ddanninger/node-gracenote) to analyze music

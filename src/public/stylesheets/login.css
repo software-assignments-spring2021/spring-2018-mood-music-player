@@ -1,0 +1,533 @@
+#unauth-view {
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  border: 1px solid white;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  overflow: auto;
+  top: 0px;
+  left: 0px;
+  background-image: url("../images/main-background.jpeg");  
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+#gradient {
+  /*z-index: 1;*/
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  overflow: auto;
+  top: 0px;
+  left: 0px;
+  background: rgba(0, 0, 0, 0.7); /*can be anything, of course*/
+}
+
+@media screen and (max-width: 799px) {
+  .button {
+    color: #b781db;
+    background-color: black;
+    padding:15px 0;
+    font-size:20px;
+    font-weight: 600;
+  }
+
+  .button a {
+    color: #b781db;
+  }
+
+  .button:hover {
+    transition:all.5s ease;
+    color: #442d54;
+  }
+
+  #register, #login {
+    color: #0e0b16;
+    width: 300px;
+  }
+
+  #buttons {
+    /*border: 1px solid white;*/
+    position: absolute;
+    display: block;
+    -webkit-transform: translate(0%,-50%);
+       -moz-transform: translate(0%,-50%);
+       -o-transform: translate(0%,-50%);
+        transform: translate(0%,-50%);
+    top: 50%;
+    left: 15%;
+    text-transform:uppercase;
+    letter-spacing:.1em;
+  }
+
+  #buttons button {
+    /*margin: 80px 0px 80px 0px;*/
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    display: block;
+    width: 300px;
+    border-radius: 30px;
+    position: relative;
+  }
+
+  #buttons a {
+    text-decoration: none;
+  }
+
+  #member {
+    /*border: 1px solid white;*/
+    text-align: center;
+  }
+
+  #line {
+    /*border-left: 1px solid rgb(0,0,0,0.8);*/
+    border-left: 1px solid hsla(0,0%,100%,.6);
+    height: 300px;
+    -webkit-transform: translate(-50%,-50%);
+     -moz-transform: translate(-50%,-50%);
+       -o-transform: translate(-50%,-50%);
+          transform: translate(-50%,-50%);
+    left: 45%;
+    top: 50%;
+    display: block;
+    position: fixed;
+  }
+
+  #logo {
+    text-decoration: none;
+    display: block;
+    padding-top: 15px;
+    position: fixed;
+    left: 30px;
+    font-size: 18px;
+    color: #b781db;
+  }
+
+  #logo-img {
+    width: 20px;
+  }
+
+  #right-container {
+    width: 500px;
+    display: block;
+    position: fixed;
+    -webkit-transform: translate(-50%,-50%);
+     -moz-transform: translate(-50%,-50%);
+       -o-transform: translate(-50%,-50%);
+          transform: translate(-50%,-50%);
+    left: 70%;
+    top: 50%;
+  }
+
+  .big-blurb {
+    font-size: 27px;
+    margin-bottom: 20px;
+  }
+
+  .bold {
+    color: #b781db;
+  }
+
+  #member {
+    color: hsla(0,0%,100%,.6);
+    text-align: center;
+    padding: 20px 0px 10px 0px;
+  }
+
+  #sign-up-blurb {
+    font-size: 20px;
+  }
+
+  #login, #register {
+    margin-top: 20px;
+    /*border: 1px solid white;*/
+    /*position: relative;*/
+    width: 350px;
+  }
+
+  #login button, #register button {
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    display: block;
+    border-radius: 30px;
+    position: relative;
+    left: 25px;
+    width: 300px;
+    margin-top: 20px;
+    /*padding: 10px;*/
+
+  }
+
+  #login label, #register label {
+    text-transform:uppercase;
+    letter-spacing:.2em;
+    color: white;
+    margin-left: 25px;
+    display: block;
+  }
+
+  #login input, #register input {
+    width: 300px;
+    margin-left: 25px;
+  }
+
+  .field-wrapper {
+    padding-bottom: 20px;
+  }
+
+  #forgot {
+    text-align: right;
+    margin-right: 25px;
+    margin-top: -10px;
+  }
+
+  #login a, #login a:hover {
+    text-decoration: none;
+  }
+
+  .text-warning {
+    font-size: 16px;
+    color: white;
+    margin-left: 15px;
+  }
+}
+
+@media screen and (min-width: 800px) and (max-width:1199px) {
+  .button {
+    color: #b781db;
+    background-color: black;
+    padding:15px 0;
+    font-size:15px;
+    font-weight: 600;
+  }
+
+  .button a {
+    color: #b781db;
+  }
+
+  .button:hover {
+    transition:all.5s ease;
+    color: #442d54;
+  }
+
+  #register, #login {
+    color: #0e0b16;
+    width: 250px;
+  }
+
+  #buttons {
+    /*border: 1px solid white;*/
+    position: absolute;
+    display: block;
+    -webkit-transform: translate(0%,-50%);
+       -moz-transform: translate(0%,-50%);
+       -o-transform: translate(0%,-50%);
+        transform: translate(0%,-50%);
+    top: 50%;
+    left: 15%;
+    text-transform:uppercase;
+    letter-spacing:.1em;
+  }
+
+  #buttons button {
+    /*margin: 80px 0px 80px 0px;*/
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    display: block;
+    width: 250px;
+    border-radius: 30px;
+    position: relative;
+  }
+
+  #buttons a {
+    text-decoration: none;
+  }
+
+  #member {
+    /*border: 1px solid white;*/
+    text-align: center;
+  }
+
+  #line {
+    /*border-left: 1px solid rgb(0,0,0,0.8);*/
+    border-left: 1px solid hsla(0,0%,100%,.6);
+    height: 300px;
+    -webkit-transform: translate(-50%,-50%);
+     -moz-transform: translate(-50%,-50%);
+       -o-transform: translate(-50%,-50%);
+          transform: translate(-50%,-50%);
+    left: 45%;
+    top: 50%;
+    display: block;
+    position: fixed;
+  }
+
+  #logo {
+    text-decoration: none;
+    display: block;
+    padding-top: 15px;
+    position: fixed;
+    left: 30px;
+    font-size: 18px;
+    color: #b781db;
+  }
+
+  #logo-img {
+    width: 20px;
+  }
+
+  #right-container {
+    width: 450px;
+    display: block;
+    position: fixed;
+    -webkit-transform: translate(-50%,-50%);
+     -moz-transform: translate(-50%,-50%);
+       -o-transform: translate(-50%,-50%);
+          transform: translate(-50%,-50%);
+    left: 70%;
+    top: 50%;
+  }
+
+  .big-blurb {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .bold {
+    color: #b781db;
+  }
+
+  #member {
+    color: hsla(0,0%,100%,.6);
+    text-align: center;
+    padding: 20px 0px 10px 0px;
+  }
+
+  #sign-up-blurb {
+    font-size: 20px;
+  }
+
+  #login, #register {
+    margin-top: 20px;
+    /*border: 1px solid white;*/
+    /*position: relative;*/
+    width: 350px;
+  }
+
+  #login button, #register button {
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    display: block;
+    border-radius: 30px;
+    position: relative;
+    left: 25px;
+    width: 250px;
+    margin-top: 20px;
+    /*padding: 10px;*/
+
+  }
+
+  #login label, #register label {
+    text-transform:uppercase;
+    letter-spacing:.2em;
+    color: white;
+    margin-left: 25px;
+    display: block;
+  }
+
+  #login input, #register input {
+    width: 250px;
+    margin-left: 25px;
+  }
+
+  .field-wrapper {
+    padding-bottom: 20px;
+  }
+
+  #forgot {
+    text-align: right;
+    margin-right: 25px;
+    margin-top: -10px;
+  }
+
+  #login a, #login a:hover {
+    text-decoration: none;
+  }
+
+  .text-warning {
+    font-size: 16px;
+    color: white;
+    margin-left: 15px;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .button {
+    color: #b781db;
+    background-color: black;
+    padding:15px 0;
+    font-size:20px;
+    font-weight: 600;
+  }
+
+  .button a {
+    color: #b781db;
+  }
+
+  .button:hover {
+    transition:all.5s ease;
+    color: #442d54;
+  }
+
+  #register, #login {
+    color: #0e0b16;
+    width: 300px;
+  }
+
+  #buttons {
+    /*border: 1px solid white;*/
+    position: absolute;
+    display: block;
+    -webkit-transform: translate(0%,-50%);
+       -moz-transform: translate(0%,-50%);
+       -o-transform: translate(0%,-50%);
+        transform: translate(0%,-50%);
+    top: 50%;
+    left: 15%;
+    text-transform:uppercase;
+    letter-spacing:.1em;
+  }
+
+  #buttons button {
+    /*margin: 80px 0px 80px 0px;*/
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    display: block;
+    width: 300px;
+    border-radius: 30px;
+    position: relative;
+  }
+
+  #buttons a {
+    text-decoration: none;
+  }
+
+  #member {
+    /*border: 1px solid white;*/
+    text-align: center;
+  }
+
+  #line {
+    /*border-left: 1px solid rgb(0,0,0,0.8);*/
+    border-left: 1px solid hsla(0,0%,100%,.6);
+    height: 300px;
+    -webkit-transform: translate(-50%,-50%);
+     -moz-transform: translate(-50%,-50%);
+       -o-transform: translate(-50%,-50%);
+          transform: translate(-50%,-50%);
+    left: 45%;
+    top: 50%;
+    display: block;
+    position: fixed;
+  }
+
+  #logo {
+    text-decoration: none;
+    display: block;
+    padding-top: 15px;
+    position: fixed;
+    left: 30px;
+    font-size: 18px;
+    color: #b781db;
+  }
+
+  #logo-img {
+    width: 20px;
+  }
+
+  #right-container {
+    width: 500px;
+    display: block;
+    position: fixed;
+    -webkit-transform: translate(-50%,-50%);
+     -moz-transform: translate(-50%,-50%);
+       -o-transform: translate(-50%,-50%);
+          transform: translate(-50%,-50%);
+    left: 70%;
+    top: 50%;
+  }
+
+  .big-blurb {
+    font-size: 27px;
+    margin-bottom: 20px;
+  }
+
+  .bold {
+    color: #b781db;
+  }
+
+  #member {
+    color: hsla(0,0%,100%,.6);
+    text-align: center;
+    padding: 20px 0px 10px 0px;
+  }
+
+  #sign-up-blurb {
+    font-size: 20px;
+  }
+
+  #login, #register {
+    margin-top: 20px;
+    /*border: 1px solid white;*/
+    /*position: relative;*/
+    width: 350px;
+  }
+
+  #login button, #register button {
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    display: block;
+    border-radius: 30px;
+    position: relative;
+    left: 25px;
+    width: 300px;
+    margin-top: 20px;
+    /*padding: 10px;*/
+
+  }
+
+  #login label, #register label {
+    text-transform:uppercase;
+    letter-spacing:.2em;
+    color: white;
+    margin-left: 25px;
+    display: block;
+  }
+
+  #login input, #register input {
+    width: 300px;
+    margin-left: 25px;
+  }
+
+  .field-wrapper {
+    padding-bottom: 20px;
+  }
+
+  #forgot {
+    text-align: right;
+    margin-right: 25px;
+    margin-top: -10px;
+  }
+
+  #login a, #login a:hover {
+    text-decoration: none;
+  }
+
+  .text-warning {
+    font-size: 16px;
+    color: white;
+    margin-left: 15px;
+  }
+}

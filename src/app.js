@@ -1,98 +1,85 @@
-// express setup
 const express = require('express');
-const app = express();
-
-// setting path
 const path = require('path');
-
-// mongoose setup
-const mongoose = require('mongoose');
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
-
-// body parser setup
-const bodyParser = require('body-parser'); 
-app.use(bodyParser.urlencoded({ extended: false }));
-
-// serve static files 	
-app.use(express.static(path.join(__dirname, 'public')));
-
-// sessions setup
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 const session = require('express-session');
-const sessionOptions = {
-	secret: 'secret cookie thang (store this elsewhere!)',
-	resave: true,
-	saveUninitialized: true
-};
-app.use(session(sessionOptions));
-
-// mongoose schemas
+const passport = require('passport');
+//initialize mongoose schemas
 const Song = require('./models/song');
 const Mood = require('./models/mood');
 const Playlist = require('./models/playlist');
 const User = require('./models/user');
 
-// passport setup
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-app.use(passport.initialize());
-app.use(passport.session());
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
-
-// setting up for ports used in hosting
-const clientId = process.env.CLIENTID;
-const clientSecret = process.env.CLIENTSECRET;
-
+const index = require('./routes/index');
+const api = require('./routes/api');
+const authenticate = require('./routes/authenticate')(passport);
+const mongoose = require('mongoose');
 const db = process.env.MONGODB_URI || require('./config.js').mongoKey;
 mongoose.connect(db);
+const app = express();
 
-app.get('/', (req, res) => {
-	res.render('index');
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
+app.use(logger('dev'));
+app.use(session({
+  secret: 'keyboard cat'
+}));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use('/', index);
+app.use('/auth', authenticate);
+app.use('/api', api);
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+    const err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
+//// Initialize Passport
+const initPassport = require('./passport-init');
+initPassport(passport);
 
-/* code to register spotify account */
-app.get('/login', function(req, res) {
-	var scopes = 'user-read-private user-read-email';
-	res.redirect('https://accounts.spotify.com/authorize' +
-	  '?response_type=code' +
-	  '&client_id=' + 'dcddb8d13b2f4019a1dadb4b4c070661' +
-	  (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
-	  '&redirect_uri=' + encodeURIComponent('http://localhost:3000'));
+// error handlers
+
+// development error handler
+// will print stacktrace
+if (app.get('env') === 'development') {
+    app.use(function(err, req, res, next) {
+        res.status(err.status || 500);
+        res.render('error', {
+            message: err.message,
+            error: err
+        });
+    });
+}
+
+// production error handler
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+        message: err.message,
+        error: {}
+    });
 });
 
+// app.get('/spotify_login', function(req, res) {
+//     const scopes = 'user-read-private user-read-email';
+//     res.redirect('https://accounts.spotify.com/authorize' +
+//       '?response_type=code' +
+//       '&client_id=' + 'dcddb8d13b2f4019a1dadb4b4c070661' +
+//       (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
+//       '&redirect_uri=' + encodeURIComponent('http://localhost:3000'));
+// });
 
-app.get('*', function(req, res) {
-	res.render('error', {message: 'page no existo'});
-});
-
-// listening
 app.listen(process.env.PORT || 3000);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

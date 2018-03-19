@@ -6,6 +6,7 @@ const Playlist = require('./playlist.js');
 
 const User = new mongoose.Schema({
 	username: {type: String, required: true},
+	password: {type: String, required: true}, //hash created from password
 	name: {type: String},
 	dob: {type: String},
 	// If we do not add a song schema, please replace this with a reference to whatever API we use.z
