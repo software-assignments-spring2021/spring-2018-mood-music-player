@@ -13,36 +13,6 @@
 <!-- Code for Spotify SDK API -->
 <body>
   <!-- ISSUE: In-line scripts are not running in this html file -->
-  <script src="https://sdk.scdn.co/spotify-player.js"></script>
-  <script>
-    window.onSpotifyWebPlaybackSDKReady = () => {
-      /* TODO: Going to need to make token dynamic in that it obtains the current users token. Code once CORS Issue is solved.*/
-      const token = 'BQDXq_68RLDjg7HI3lgqxjYEPYNygRDvSnF5VFOIBtI7IwArFpM_xtFwOb6QZdN2gbJ4jJNNEbzTdRTV5bigZ91_F4a0iPncsw1P0upPZa504Xo0361nmb96riYMRiayMSfJHfTTG2fLlsok8b9CIGk6Iz4UDd4JPmEC';
-      const player = new Spotify.Player({
-        name: 'Smoodify',
-        getOAuthToken: cb => { cb(token); }
-      });
-
-      // Error handling
-      player.addListener('initialization_error', ({ message }) => { console.error(message); });
-      player.addListener('authentication_error', ({ message }) => { console.error(message); });
-      player.addListener('account_error', ({ message }) => { console.error(message); });
-      player.addListener('playback_error', ({ message }) => { console.error(message); });
-
-      // Playback status updates
-      player.addListener('player_state_changed', state => { console.log(state); });
-
-      // Ready
-      player.addListener('ready', ({ device_id }) => {
-        console.log('Ready with Device ID', device_id);
-      });
-
-      // Connect to the player!
-      player.connect();
-    };
-  </script>
-
-
     <footer class="music-player-container" ng-show="authenticated">
         <div class="music-player-bar">
             <div class="music-player-bar-left">
@@ -69,7 +39,7 @@
                     <button class="skip-back-button">
                         <i class="fas fa-backward"></i>
                     </button>
-                    <button class="play-button">
+                    <button ng-click="myFunc()" class="play-button">
                         <i class="far fa-play-circle"></i>
                     </button>
                     <!-- <button class="pause-button">

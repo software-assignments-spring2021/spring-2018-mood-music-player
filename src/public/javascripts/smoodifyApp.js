@@ -70,9 +70,39 @@ app.controller('mainController', function(songService, $scope, $rootScope){
 	    $scope.newSong = {title: '', artist: ''};
 	  });
 	};
+
+  /* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
+	$scope.myFunc = function() {
+    window.onSpotifyWebPlaybackSDKReady = () => {
+      /* TODO: Going to need to make token dynamic in that it obtains the current users token. Code once CORS Issue is solved.*/
+      const token = 'BQDwiZuDCMwRCZOc4IDebtV-CirRhV46Lrs41-vEA73jyh3ivqRVV_i3o3Fc0YwiW28GCA-NJRqIicwGJQY8aph5VS_xf0J2KK-6pNruxUgqaxWfZkGTu48Q8nlYLldfDOBDOq6ydx5D1AZ2_vs8036Ipn79YM1w-KDT';
+      const player = new Spotify.Player({
+        name: 'Smoodify',
+        getOAuthToken: cb => { cb(token); }
+      });
+
+      // Error handling
+      player.addListener('initialization_error', ({ message }) => { console.error(message); });
+      player.addListener('authentication_error', ({ message }) => { console.error(message); });
+      player.addListener('account_error', ({ message }) => { console.error(message); });
+      player.addListener('playback_error', ({ message }) => { console.error(message); });
+
+      // Playback status updates
+      player.addListener('player_state_changed', state => { console.log(state); });
+
+      // Ready
+      player.addListener('ready', ({ device_id }) => {
+        console.log('Ready with Device ID', device_id);
+      });
+
+      // Connect to the player!
+      player.connect();
+    	};
+	};
+
 });
 
-/* controller for spotify login */
+/* controller for spotify login. Currently giving a CORS Error */
 app.controller('spotifyController', function($scope, $http, $location, $window) {
 	$scope.scopes = 'user-read-private user-read-email';
 	/* Currently giving a CORS issue because Spotify doesn't allow Cross Domain Access */
