@@ -1,11 +1,28 @@
-body {
-  background: #0e0b16;
+#unauth-view {
   color: white;
   font-family: Arial, Helvetica, sans-serif;
+  border: 1px solid white;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  overflow: auto;
+  top: 0px;
+  left: 0px;
   background-image: url("../images/main-background.jpeg");  
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
+}
+
+#gradient {
+  /*z-index: 1;*/
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  overflow: auto;
+  top: 0px;
+  left: 0px;
+  background: rgba(0, 0, 0, 0.7); /*can be anything, of course*/
 }
 
 @media screen and (max-width: 799px) {
@@ -117,17 +134,6 @@ body {
     color: hsla(0,0%,100%,.6);
     text-align: center;
     padding: 20px 0px 10px 0px;
-  }
-
-  #main {
-    /*z-index: 1;*/
-    height: 100%;
-    width: 100%;
-    position: fixed;
-    overflow: auto;
-    top: 0px;
-    left: 0px;
-    background: rgba(0, 0, 0, 0.7); /*can be anything, of course*/
   }
 
   #sign-up-blurb {
@@ -299,17 +305,6 @@ body {
     padding: 20px 0px 10px 0px;
   }
 
-  #main {
-    /*z-index: 1;*/
-    height: 100%;
-    width: 100%;
-    position: fixed;
-    overflow: auto;
-    top: 0px;
-    left: 0px;
-    background: rgba(0, 0, 0, 0.7); /*can be anything, of course*/
-  }
-
   #sign-up-blurb {
     font-size: 20px;
   }
@@ -477,17 +472,6 @@ body {
     color: hsla(0,0%,100%,.6);
     text-align: center;
     padding: 20px 0px 10px 0px;
-  }
-
-  #main {
-    /*z-index: 1;*/
-    height: 100%;
-    width: 100%;
-    position: fixed;
-    overflow: auto;
-    top: 0px;
-    left: 0px;
-    background: rgba(0, 0, 0, 0.7); /*can be anything, of course*/
   }
 
   #sign-up-blurb {

@@ -1,11 +1,42 @@
-var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS']).run(function($rootScope, $http) {
-	$rootScope.authenticated = false;
-	$rootScope.current_user = '';
+var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 'ngCookies']).run(function($rootScope, $http, $cookies, $location) {
+	$rootScope.$on('$locationChangeStart', function (event, next, current) {
+		// var for user stored in session cookie
+		let user = '';
+		if (typeof $cookies['user'] == 'string' && $cookies['user'] != '') {
+			user = JSON.parse($cookies['user'])
+		}
+
+		console.log('grabbing cookie');
+		// no logged in user, we should be going to #login
+		if (user == '') {
+			$rootScope.authenticated = false;
+			$rootScope.current_user = '';
+			// if (next.includes('register')) {
+			// 	// if link is to register page, allow
+			// 	console.log('not auth\'d');
+			// }
+			// else {  // otherwise redirect to login
+			// 	console.log('not auth\'d');
+			// }
+			console.log('not auth\'d');
+		}
+		// logged in session exists, set current user as authenticated
+		else {
+			console.log('yes auth\'d');
+			$rootScope.authenticated = true;
+			$rootScope.current_user = user;
+		}
+	});
 	
 	$rootScope.signout = function(){
-    	$http.get('auth/signout');
-    	$rootScope.authenticated = false;
-    	$rootScope.current_user = '';
+		console.log('got into signout');
+		if (typeof($cookies['user']) == 'string') {
+			$http.get('auth/signout');
+			$rootScope.authenticated = false;
+			$rootScope.current_user = '';
+			$cookies['user'] = '' //, { path:'/', domain:'localhost'} this object may be necessary in some situations
+			console.log('removed cookie');
+		}
 	};
 });
 
@@ -13,10 +44,7 @@ app.config(function($routeProvider){
 	$routeProvider
 		// the landing display
 		.when('/', {
-			css: {
-				href: '../stylesheets/login.css',
-				preload: true
-			},
+			css: ['../stylesheets/login.css', '../stylesheets/base.css'],
 			templateUrl: 'landing.html',
 			controller: 'mainController'
 		})
@@ -37,15 +65,6 @@ app.config(function($routeProvider){
 			},
 			templateUrl: 'register.html',
 			controller: 'authController',
-		})
-		// the logged in display
-		.when('/browse', {
-			css: {
-				href: '../stylesheets/base.css',
-				preload: true
-			},
-			templateUrl: 'main.html',
-			controller: 'mainController'
 		});
 });
 
@@ -66,15 +85,16 @@ app.controller('mainController', function(songService, $scope, $rootScope){
 	};
 });
 
-app.controller('authController', function($scope, $http, $rootScope, $location){
+app.controller('authController', function($scope, $http, $rootScope, $location, $cookies){
   $scope.user = {username: '', password: ''};
   $scope.error_message = '';
   $scope.login = function(){
     $http.post('/auth/login', $scope.user).success(function(data){
       if(data.state == 'success'){
+      	$cookies['user'] = JSON.stringify(data.user);
         $rootScope.authenticated = true;
         $rootScope.current_user = data.user.username;
-        $location.path('/browse');
+        $location.path('/');
       }
       else{
         $scope.error_message = data.message;
@@ -87,7 +107,7 @@ app.controller('authController', function($scope, $http, $rootScope, $location){
       if(data.state == 'success'){
         $rootScope.authenticated = true;
         $rootScope.current_user = data.user.username;
-        $location.path('/browse');
+        $location.path('/');
       }
       else{
         $scope.error_message = data.message;
