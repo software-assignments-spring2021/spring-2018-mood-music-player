@@ -45,7 +45,7 @@ app.config(function($routeProvider){
 				preload: true
 			},
 			templateUrl: 'main.html',
-			controller: 'mainController'
+			controller: 'browseController'
 		}).when('/spotify_login', {
 			css: {
 				/* Code to get to Spotify Login */
@@ -71,10 +71,25 @@ app.controller('mainController', function(songService, $scope, $rootScope, $wind
 	  });
 	};
 
-  /* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
-	$scope.myFunc = function() {
+});
+
+
+app.controller('browseController', function(songService, $scope, $rootScope, $window){
+
+		$scope.songs = songService.query();
+
+		$scope.post = function() {
+			$scope.newSong.title = $scope.new.title;
+			$scope.newSong.artist = $scope.new.artist;
+			songService.save($scope.newSong, function(){
+				$scope.songs = songService.query();
+				$scope.newSong = {title: '', artist: ''};
+			});
+		};
+		
+  		/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
       /* TODO: Going to need to make token dynamic in that it obtains the current users token. Code once CORS Issue is solved.*/
-      const token = 'BQBa3-xtvzEsJnpmHkEvogTlKGAtpXya1em7drsp3z_D8BX5KkvLwbEGC-xOCmnTOMkzDfJqaMT1Nga1myEZRBEeuBPtlmvlkMUjFHJGnzM1_Ln0P6uakQ53JUqc1kg5ECIHYcFVIY_g68hH09VtahuE-9xztnKkWggA';
+      const token = 'BQCGa1Lc-t8pydJNpq-gtPevK5sSqMjmkvMineRZTxj27vtA1jJUtiESPy5j1Z61mVWIcmzvWyTX38fV7KR6ZEMGTWIHNlhTj9tlYa7GfNK6ZKSy87GdzvBpeYVcYE1QdRpjK9zWynxsP6eDYRBuGUYGIyGC07bIaIhb';
       const player = new Spotify.Player({
         name: 'Smoodify',
         getOAuthToken: cb => { cb(token); }
@@ -95,8 +110,55 @@ app.controller('mainController', function(songService, $scope, $rootScope, $wind
       });
 
       // Connect to the player!
-      player.connect();
-	};
+			player.connect().then(success => {
+				if (success) {
+					console.log('The Web Playback SDK successfully connected to Spotify!');
+			  }
+			})
+
+		/* Play a song. Trigger this function when play button is pressed */
+		$scope.play = function() {
+			player.togglePlay().then(() => {
+				console.log('Toggle Button Fired');
+			});
+
+
+			/* code to get the metadata of the song currently playing */
+			/* only need top trigger this when a song is playing */
+			player.getCurrentState().then(state => {
+				if (!state) {
+					console.error('User is not playing music through the Web Playback SDK');
+					return;
+				}
+			
+				let {
+					current_track,
+					next_tracks: [next_track]
+				} = state.track_window;
+			
+				console.log('Currently Playing', current_track);
+				console.log('Playing Next', next_track);
+			});
+
+		};
+
+		/* Go back to previous song. Trigger this function when previous button is clicked */
+		$scope.previous = function() {
+			player.previousTrack().then(() => {
+				console.log('Previous');
+			});
+		};
+
+		/* Skip song. Trigger this function when skip button is pressed */
+		$scope.skip = function() {
+			player.nextTrack().then(() => {
+				console.log('Skip');
+			});
+		};
+
+
+
+		
 
 });
 
