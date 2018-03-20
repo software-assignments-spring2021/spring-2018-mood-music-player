@@ -73,7 +73,7 @@ app.controller('mainController', function(songService, $scope, $rootScope, $wind
 
 });
 
-
+/* Currently separated browse page into browseController. Merge with mainController later */
 app.controller('browseController', function(songService, $scope, $rootScope, $window){
 
 		$scope.songs = songService.query();
@@ -89,7 +89,7 @@ app.controller('browseController', function(songService, $scope, $rootScope, $wi
 		
   		/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
       /* TODO: Going to need to make token dynamic in that it obtains the current users token. Code once CORS Issue is solved.*/
-      const token = 'BQCGa1Lc-t8pydJNpq-gtPevK5sSqMjmkvMineRZTxj27vtA1jJUtiESPy5j1Z61mVWIcmzvWyTX38fV7KR6ZEMGTWIHNlhTj9tlYa7GfNK6ZKSy87GdzvBpeYVcYE1QdRpjK9zWynxsP6eDYRBuGUYGIyGC07bIaIhb';
+      const token = 'BQCiKiTysePuuZOp_lyF87FtSHFVDkhzRYdMk7mkq4ug3leBvMvoYMmDHUvRlxw7Ib6k6jqx0tdZC__jqkcqAd9SWK10NGdy_nFfsAGAMNE1Zmsoic2TZEPrc3HGkbfd4GHqYdhDwI6EmqqfCW2JOiufYY0UICbTrKdT';
       const player = new Spotify.Player({
         name: 'Smoodify',
         getOAuthToken: cb => { cb(token); }
@@ -124,7 +124,6 @@ app.controller('browseController', function(songService, $scope, $rootScope, $wi
 
 
 			/* code to get the metadata of the song currently playing */
-			/* only need top trigger this when a song is playing */
 			player.getCurrentState().then(state => {
 				if (!state) {
 					console.error('User is not playing music through the Web Playback SDK');
@@ -136,9 +135,16 @@ app.controller('browseController', function(songService, $scope, $rootScope, $wi
 					next_tracks: [next_track]
 				} = state.track_window;
 			
-				console.log('Currently Playing', current_track);
+				console.log('Currently Playing', current_track.name);
 				console.log('Playing Next', next_track);
+
+				/* scope variables to send back to html */
+				$scope.imgSrc = current_track.album.images[0].url;
+				/* Code to change the title <p> tag to the current song title. */
+				$scope.songTitle = current_track.name;
+				$scope.artistName = current_track.artists[0].name;
 			});
+
 
 		};
 
@@ -167,7 +173,7 @@ app.controller('spotifyController', function($scope, $http, $location, $window) 
 	$scope.scopes = 'user-read-private user-read-email';
 	/* Currently giving a CORS issue because Spotify doesn't allow Cross Domain Access */
 	/* TODO: Create a proxy server to be able to Cross Domain Access */
-	$http.get('"https://cors-escape.herokuapp.com/https://accounts.spotify.com/authorize' +
+	$http.get('https://accounts.spotify.com/authorize' +
       '?response_type=code' +
       '&client_id=' + 'dcddb8d13b2f4019a1dadb4b4c070661' +
       ($scope.scopes ? '&scope=' + encodeURIComponent($scope.scopes) : '') +

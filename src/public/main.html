@@ -17,12 +17,12 @@
         <div class="music-player-bar">
             <div class="music-player-bar-left">
                 <div class="track-info">
-                  <img src="../images/test-album.jpg" class="album-wrapper">
+                  <img ng-src="{{imgSrc}}" class="album-wrapper">
                     <div class="title-wrapper">
-                        <p>Work (feat. Drake) <i class="fas fa-heart"></i> <i class="fas fa-ban"></i></p> 
+                        <p ng-bind="songTitle"><i class="fas fa-heart"></i> <i class="fas fa-ban"></i></p> 
                     </div>
                     <div class="artist-wrapper">
-                        <p>Rihanna</p>
+                        <p ng-bind="artistName"></p>
                     </div>
                 </div>
 
