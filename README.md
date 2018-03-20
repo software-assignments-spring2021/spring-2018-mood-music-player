@@ -37,3 +37,5 @@ Information on building and testing the application will be posted once the app 
 
 ## Other Notes
 smoodify relies on the Spofity SDK to stream songs. To experience our application's full extent, please log in with a Spotify Premium account.
+
+small change
