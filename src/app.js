@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
+const gracenote = require('node-gracenote');
 //initialize mongoose schemas
 const Song = require('./models/song');
 const Mood = require('./models/mood');
@@ -48,6 +49,10 @@ app.use(function(req, res, next) {
 //// Initialize Passport
 const initPassport = require('./passport-init');
 initPassport(passport);
+
+//// Initialize Gracenote
+const initGracenote = require('./gracenote-init');
+initGracenote(gracenote);
 
 // error handlers
 

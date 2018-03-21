@@ -14,6 +14,12 @@
 
 	</head>
 	<body ng-app="smoodifyApp">
+		<script src="https://sdk.scdn.co/spotify-player.js"></script>
+		<script>
+			window.onSpotifyWebPlaybackSDKReady = () => {
+				// You can now initialize Spotify.Player and use the SDK
+			};
+		</script>
 		<div id="main" class="container">
 			<div ng-view></div>
 		</div>
