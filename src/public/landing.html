@@ -1,5 +1,3 @@
-<!-- <a href="#" id="logo"> <img src="../images/logo.png" id="logo-img"> smoodify </a> -->
-
 <!-- <ul class="navbar" ng-hide="authenticated">
 	<li id="account-btn">
 		<a href="#/account"><i class="fas fa-user"></i> Account</a>
@@ -17,9 +15,11 @@
 	</form>
 </div> -->
 
-<div id="unauth-view" ng-hide="authenticated">
+<div class="unauth-view" ng-hide="authenticated">
 	<div id="gradient">
-		<div id="buttons">
+		<a href="#" id="logo"> <img src="../images/logo.png" id="logo-img"> smoodify </a>
+
+		<div class="buttons">
 			<a href="#/register"><button class="button button-block" id="register-button">Get Started</button></a>
 			<div id="member">
 				<p>already a member?</p>
@@ -48,9 +48,28 @@
 </div>
 
 
-<div id="auth-view" ng-show="authenticated">
-	<a href="#" ng-click="signout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
-	
+<div class="auth-view" ng-show="authenticated">
+	<div class="sidebar">
+		<a href="#" id="logo"> <img src="../images/logo.png" id="logo-img"> smoodify </a> 
+		<hr id="first-hr">
+
+		<nav id="links">
+			<a href="#" class="current-page">Home</a>
+			<a href="#/saved">Saved Music</a>
+		</nav>
+		<hr id="second-hr">
+		
+		<hr id="third-hr">
+		<a href="#/account" id="account">My Account</a>
+	</div>
+
+	<div class="content" id="main-page">
+
+	</div>
+
+
+
+
 	<footer class="music-player-container">
 		<div class="music-player-bar">
 			<div class="music-player-bar-left">

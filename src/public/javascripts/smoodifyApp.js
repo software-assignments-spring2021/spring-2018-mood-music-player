@@ -65,6 +65,19 @@ app.config(function($routeProvider){
 			},
 			templateUrl: 'register.html',
 			controller: 'authController',
+		})
+		.when('/saved', {
+			css: {
+				href: '../stylesheets/base.css',
+				preload: true
+			},
+			templateUrl: 'saved_music.html',
+			controller: 'mainController'
+		})
+		.when('/account', {
+			css: ['../stylesheets/login.css', '../stylesheets/base.css'],
+			templateUrl: 'account.html',
+			controller: 'accountController'
 		});
 });
 
@@ -73,6 +86,19 @@ app.factory('songService', function($resource) {
 });
 
 app.controller('mainController', function(songService, $scope, $rootScope){
+	$scope.songs = songService.query();
+
+	$scope.post = function() {
+	  $scope.newSong.title = $scope.new.title;
+	  $scope.newSong.artist = $scope.new.artist;
+	  songService.save($scope.newSong, function(){
+	    $scope.songs = songService.query();
+	    $scope.newSong = {title: '', artist: ''};
+	  });
+	};
+});
+
+app.controller('accountController', function(songService, $scope, $rootScope){
 	$scope.songs = songService.query();
 
 	$scope.post = function() {
