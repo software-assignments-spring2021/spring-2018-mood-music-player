@@ -196,17 +196,49 @@ app.controller('browseController', function(songService, $scope, $rootScope, $wi
 
 /* controller for spotify login. Currently giving a CORS Error */
 app.controller('spotifyController', function($scope, $http, $location, $window) {
-	$scope.scopes = 'user-read-private user-read-email';
-	/* Currently giving a CORS issue because Spotify doesn't allow Cross Domain Access */
-	/* TODO: Create a proxy server to be able to Cross Domain Access */
-	$http.get('https://accounts.spotify.com/authorize' +
-      '?response_type=code' +
-      '&client_id=' + 'dcddb8d13b2f4019a1dadb4b4c070661' +
-      ($scope.scopes ? '&scope=' + encodeURIComponent($scope.scopes) : '') +
-			'&redirect_uri=' + encodeURIComponent('http://localhost:3000'))
-			.then(function(response) {
-				$scope.my_data = response.data;
-	});
+			// Get the hash of the url
+			/* Spotify Login API Code */
+		const hash = window.location.hash
+		.substring(1)
+		.split('&')
+		.reduce(function (initial, item) {
+			if (item) {
+				var parts = item.split('=');
+				initial[parts[0]] = decodeURIComponent(parts[1]);
+			}
+			return initial;
+		}, {});
+		window.location.hash = '';
+
+		// Set token
+		let _token = hash.access_token;
+
+		const authEndpoint = 'https://accounts.spotify.com/authorize';
+
+		// Replace with your app's client ID, redirect URI and desired scopes
+		const clientId = 'dcddb8d13b2f4019a1dadb4b4c070661';
+		const redirectUri = 'http://localhost:3000';
+		const scopes = [
+			'user-read-birthdate',
+			'user-read-email',
+			'user-read-private',
+			'playlist-read-private',
+			'user-top-read',
+			'user-library-read',
+			'playlist-modify-private',
+			'user-read-currently-playing',
+			'user-read-recently-played',
+			'user-modify-playback-state',
+			'user-read-playback-state',
+			'user-library-modify',
+			'streaming',
+			'playlist-modify-public'
+		];
+
+		// If there is no token, redirect to Spotify authorization
+		if (!_token) {
+			window.location = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join('%20')}&response_type=token`;
+		}
 });
 
 app.controller('accountController', function(songService, $scope, $rootScope){
