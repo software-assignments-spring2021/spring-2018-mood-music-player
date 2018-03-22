@@ -221,7 +221,18 @@ app.controller('spotifyController', function($scope, $http, $location, $window) 
 		const scopes = [
 			'user-read-birthdate',
 			'user-read-email',
-			'user-read-private'
+			'user-read-private',
+			'playlist-read-private',
+			'user-top-read',
+			'user-library-read',
+			'playlist-modify-private',
+			'user-read-currently-playing',
+			'user-read-recently-played',
+			'user-modify-playback-state',
+			'user-read-playback-state',
+			'user-library-modify',
+			'streaming',
+			'playlist-modify-public'
 		];
 
 		// If there is no token, redirect to Spotify authorization
