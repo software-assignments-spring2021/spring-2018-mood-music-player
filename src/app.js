@@ -51,7 +51,7 @@ app.use(function(req, res, next) {
 const initPassport = require('./passport-init');
 initPassport(passport);
 
-//// Initialize Gracenote
+// Initialize Gracenote
 const initGracenote = require('./gracenote-init');
 initGracenote(gracenote);
 
