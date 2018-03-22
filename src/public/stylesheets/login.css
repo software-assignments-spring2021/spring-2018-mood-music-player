@@ -1,4 +1,4 @@
-#unauth-view {
+.unauth-view {
   color: white;
   font-family: Arial, Helvetica, sans-serif;
   border: 1px solid white;
@@ -48,7 +48,7 @@
     width: 300px;
   }
 
-  #buttons {
+  .buttons {
     /*border: 1px solid white;*/
     position: absolute;
     display: block;
@@ -62,7 +62,7 @@
     letter-spacing:.1em;
   }
 
-  #buttons button {
+  .buttons button {
     /*margin: 80px 0px 80px 0px;*/
     text-transform:uppercase;
     letter-spacing:.1em;
@@ -72,7 +72,7 @@
     position: relative;
   }
 
-  #buttons a {
+  .buttons a {
     text-decoration: none;
   }
 
@@ -93,20 +93,6 @@
     top: 50%;
     display: block;
     position: fixed;
-  }
-
-  #logo {
-    text-decoration: none;
-    display: block;
-    padding-top: 15px;
-    position: fixed;
-    left: 30px;
-    font-size: 18px;
-    color: #b781db;
-  }
-
-  #logo-img {
-    width: 20px;
   }
 
   #right-container {
@@ -217,7 +203,7 @@
     width: 250px;
   }
 
-  #buttons {
+  .buttons {
     /*border: 1px solid white;*/
     position: absolute;
     display: block;
@@ -231,7 +217,7 @@
     letter-spacing:.1em;
   }
 
-  #buttons button {
+  .buttons button {
     /*margin: 80px 0px 80px 0px;*/
     text-transform:uppercase;
     letter-spacing:.1em;
@@ -241,7 +227,7 @@
     position: relative;
   }
 
-  #buttons a {
+  .buttons a {
     text-decoration: none;
   }
 
@@ -262,20 +248,6 @@
     top: 50%;
     display: block;
     position: fixed;
-  }
-
-  #logo {
-    text-decoration: none;
-    display: block;
-    padding-top: 15px;
-    position: fixed;
-    left: 30px;
-    font-size: 18px;
-    color: #b781db;
-  }
-
-  #logo-img {
-    width: 20px;
   }
 
   #right-container {
@@ -386,7 +358,7 @@
     width: 300px;
   }
 
-  #buttons {
+  .buttons {
     /*border: 1px solid white;*/
     position: absolute;
     display: block;
@@ -400,7 +372,7 @@
     letter-spacing:.1em;
   }
 
-  #buttons button {
+  .buttons button {
     /*margin: 80px 0px 80px 0px;*/
     text-transform:uppercase;
     letter-spacing:.1em;
@@ -410,7 +382,7 @@
     position: relative;
   }
 
-  #buttons a {
+  .buttons a {
     text-decoration: none;
   }
 
@@ -431,20 +403,6 @@
     top: 50%;
     display: block;
     position: fixed;
-  }
-
-  #logo {
-    text-decoration: none;
-    display: block;
-    padding-top: 15px;
-    position: fixed;
-    left: 30px;
-    font-size: 18px;
-    color: #b781db;
-  }
-
-  #logo-img {
-    width: 20px;
   }
 
   #right-container {

@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
+const gracenote = require('node-gracenote');
 //initialize mongoose schemas
 const Song = require('./models/song');
 const Mood = require('./models/mood');
@@ -38,6 +39,7 @@ app.use('/', index);
 app.use('/auth', authenticate);
 app.use('/api', api);
 
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     const err = new Error('Not Found');
@@ -48,6 +50,10 @@ app.use(function(req, res, next) {
 //// Initialize Passport
 const initPassport = require('./passport-init');
 initPassport(passport);
+
+//// Initialize Gracenote
+const initGracenote = require('./gracenote-init');
+initGracenote(gracenote);
 
 // error handlers
 
@@ -73,13 +79,7 @@ app.use(function(err, req, res, next) {
     });
 });
 
-// app.get('/spotify_login', function(req, res) {
-//     const scopes = 'user-read-private user-read-email';
-//     res.redirect('https://accounts.spotify.com/authorize' +
-//       '?response_type=code' +
-//       '&client_id=' + 'dcddb8d13b2f4019a1dadb4b4c070661' +
-//       (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
-//       '&redirect_uri=' + encodeURIComponent('http://localhost:3000'));
-// });
+
+
 
 app.listen(process.env.PORT || 3000);

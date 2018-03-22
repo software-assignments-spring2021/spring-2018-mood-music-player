@@ -1,4 +1,4 @@
-#auth-view {
+.auth-view {
   height: 100%;
   width: 100%;
   position: fixed;
@@ -10,7 +10,127 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Code for Music Player Footer */
+/* SIDEBAR */
+#logo {
+  text-decoration: none;
+  display: block;
+  padding-top: 15px;
+  position: fixed;
+  left: 60px;
+  font-size: 18px;
+  color: #b781db;
+}
+
+#logo-img {
+  width: 20px;
+}
+
+.sidebar {
+  display: block;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  background: rgba(14,11,22, 0.8);
+  width: 225px;
+  height: 100%;
+  overflow: auto;
+}
+
+hr {
+  width: 185px;
+  position: fixed;
+  border-color: hsla(0,0%,100%,.6);
+  left: 20px;
+}
+
+#first-hr {
+  top: 40px;
+}
+
+#second-hr {
+  top: 140px;
+}
+
+#third-hr {
+  top: 500px;
+}
+
+#links {
+  display: block;
+  padding-top: 72px;
+}
+
+#links a, #account {
+  display: block;
+  padding: 0px 0px 10px 30px;
+  font-size: 20px;
+  color: hsla(0,0%,100%,.6);
+  text-decoration: none;
+}
+
+#links a:hover, #account:hover {
+  color: white;
+}
+
+.current-page {
+  color: #b781db !important;
+}
+
+#account {
+  position: absolute;
+  bottom: 85px;
+}
+
+/* CONTENT */
+.content {
+  display: block;
+  position: fixed;
+  top: 0px;
+  left: 225px;
+  background-color: rgba(14,11,22, 0.95);
+  width: calc(100% - 225px);
+  height: 100%;
+  overflow: auto;
+}
+
+/* ACCOUNT */
+#account-page {
+  width: 300px;
+  position: absolute;
+  display: block;
+  -webkit-transform: translate(-50%,-50%);
+     -moz-transform: translate(-50%,-50%);
+     -o-transform: translate(-50%,-50%);
+      transform: translate(-50%,-50%);
+  left: 50%;
+  top: 35%;
+}
+
+#profile-picture {
+  width: 200px;
+  margin: 0px 50px 100px;
+}
+
+#account-links {
+  margin-top: -100px;
+  position: absolute;
+}
+
+#account-links a {
+  text-decoration: none;
+}
+
+#account-links button {
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  display: block;
+  border-radius: 30px;
+  position: relative;
+  width: 300px;
+  margin-top: 20px;
+}
+
+/* MUSIC PLAYER FOOTER */
 
 .play-button {
   font-size: 25px;
@@ -25,6 +145,10 @@ button {
 
 button:active{
   opacity: 0.5;
+}
+
+footer {
+  box-shadow: 5px 10px red;
 }
 
 .music-player-bar {
