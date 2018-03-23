@@ -7,17 +7,9 @@ var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 
 		}
 
 		console.log('grabbing cookie');
-		// no logged in user, we should be going to #login
 		if (user == '') {
 			$rootScope.authenticated = false;
 			$rootScope.current_user = '';
-			// if (next.includes('register')) {
-			// 	// if link is to register page, allow
-			// 	console.log('not auth\'d');
-			// }
-			// else {  // otherwise redirect to login
-			// 	console.log('not auth\'d');
-			// }
 			console.log('not auth\'d');
 		}
 		// logged in session exists, set current user as authenticated
@@ -26,8 +18,28 @@ var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 
 			$rootScope.authenticated = true;
 			$rootScope.current_user = user;
 		}
+
+		if ($cookies.token === undefined) {
+			$cookies.token = '';
+			$rootScope.has_token = false;
+		}
 	});
 	
+	$rootScope.$on('$locationChangeSuccess', function (angularEvent, newUrl, oldUrl) {
+		// if we just redirected from gaining the access token, save it to $cookies and $rootScope
+		if (oldUrl.includes('access_token')) {
+			if ($cookies.token === '') {	// if it hasn't been set yet, set it
+				let path = oldUrl.substring(oldUrl.indexOf('access_token')).split('&');
+				$cookies.token = path[0].split('=')[1];
+				$cookies.token_exp = path[2].split('=')[1];	
+				$rootScope.token = $cookies.token;
+				$rootScope.token_exp = $cookies.token_exp;
+				$rootScope.has_token = true;
+			}
+			$location.path('/');	// redirect to main
+		}
+	});
+
 	$rootScope.signout = function(){
 		console.log('got into signout');
 		if (typeof($cookies['user']) == 'string') {
@@ -35,22 +47,10 @@ var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 
 			$rootScope.authenticated = false;
 			$rootScope.current_user = '';
 			$cookies['user'] = '' //, { path:'/', domain:'localhost'} this object may be necessary in some situations
+			$cookies['token'] = '';	// erase token until next time (for debugging)
 			console.log('removed cookie');
 		}
 	};
-
-	$rootScope.parseURLHash = function ($location) {
-	    return location.pathname.substring(1).split('&')[0].split('=')[1];
-	}
-
-	if ($cookies.token === undefined) {
-		$cookies.token = '';
-	} else if (location.pathname.includes('access_token')) {
-		if ($cookies.token === '') {
-			$cookies.token = $rootScope.parseURLHash();	
-		}
-		$location.path('/');
-	}
 });
 
 app.config(function($routeProvider, $locationProvider){
@@ -98,7 +98,7 @@ app.config(function($routeProvider, $locationProvider){
 			css: {
 
 			}, 
-			templateUrl: 'get_token.html',
+			templateUrl: 'main.html',
 			controller: 'tokenController'
 		})
 		.when('/account', {
@@ -107,7 +107,7 @@ app.config(function($routeProvider, $locationProvider){
 			controller: 'accountController'
 		});
 	
-	$locationProvider.html5Mode(true);
+	$locationProvider.html5Mode({requireBase: false});
 });
 
 app.factory('songService', function($resource) {
@@ -217,8 +217,9 @@ app.controller('browseController', function(songService, $scope, $rootScope, $wi
 });
 
 app.controller('tokenController', function($rootScope, $location, $window) {
-	console.log(window.location.hash);
-	console.log(window.location);
+	console.log('hi');
+	console.log(window.location.path);
+	// console.log(window.location);
 });
 
 /* controller for spotify login. Currently giving a CORS Error */
