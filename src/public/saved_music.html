@@ -18,7 +18,9 @@
 	</div>
 
 
-
+	<div class="music-progress-bar">
+		<input ng-change="setVolume()" ng-model="vol" type="range" min="0" max="100" class="volume-bar">
+	</div>
 	<footer class="music-player-container">
 		<div class="music-player-bar">
 			<div class="music-player-bar-left">
@@ -61,12 +63,12 @@
 			</div>
 			<div class="music-player-bar-right">
 				<div class="volume-button">
-					<button class="volume-mute">
+					<button ng-click="mute()" class="volume-mute">
 						<i class="fas fa-volume-up"></i>
 					</button>
 				</div>
 				<div class="progress-bar">
-					<input ng-change="setVolume()" ng-model="vol"type="range" min=ir"0" max="100" class="volume-bar">
+					<input ng-change="setVolume()" ng-model="vol" type="range" min="0" max="100" class="volume-bar">
 				</div>
 			</div>
 		</div>
