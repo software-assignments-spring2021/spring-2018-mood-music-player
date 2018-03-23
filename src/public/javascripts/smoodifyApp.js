@@ -51,6 +51,9 @@ var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 
 			console.log('removed cookie');
 		}
 	};
+
+	console.log($cookies.token);
+
 });
 
 app.config(function($routeProvider, $locationProvider){
@@ -94,13 +97,6 @@ app.config(function($routeProvider, $locationProvider){
 			templateUrl: 'main.html',
 			controller: 'spotifyController'
 		})
-		.when('/get_token', {
-			css: {
-
-			}, 
-			templateUrl: 'main.html',
-			controller: 'tokenController'
-		})
 		.when('/account', {
 			css: ['../stylesheets/login.css', '../stylesheets/base.css'],
 			templateUrl: 'account.html',
@@ -128,21 +124,10 @@ app.controller('mainController', function(songService, $scope, $rootScope, $wind
 });
 
 /* Currently separated browse page into browseController. Merge with mainController later */
-app.controller('browseController', function(songService, $scope, $rootScope, $window){
-	$scope.songs = songService.query();
-
-	$scope.post = function() {
-		$scope.newSong.title = $scope.new.title;
-		$scope.newSong.artist = $scope.new.artist;
-		songService.save($scope.newSong, function(){
-			$scope.songs = songService.query();
-			$scope.newSong = {title: '', artist: ''};
-		});
-	};
-		
+app.controller('browseController', function(songService, $scope, $http, $cookies, $rootScope, $window){
   /* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
   /* TODO: Going to need to make token dynamic in that it obtains the current users token. Code once CORS Issue is solved.*/
-  const token = 'BQAVE_hQEmioWCyzUY9ckY5pnQwmRBlqf6D49S7HF2nma85VDNhXs_xFQtFH62WjNwgJuTH27k8Evn10WscBDz5oLll4cT1Xh_UldBNisClbjTwqvF16ttOfZVRJ5id-fOEk06-nb8yPoVhTGXLlH3A-5bpNc8xEHfuL';
+  const token = $cookies.token;	
   const player = new Spotify.Player({
     name: 'Smoodify',
     getOAuthToken: cb => { cb(token); }
@@ -194,8 +179,6 @@ app.controller('browseController', function(songService, $scope, $rootScope, $wi
 				$scope.artistName = current_track.artists[0].name;
 			});
 		});
-
-
 	};
 
 	/* Go back to previous song. Trigger this function when previous button is clicked */
@@ -224,8 +207,6 @@ app.controller('browseController', function(songService, $scope, $rootScope, $wi
 				$scope.artistName = current_track.artists[0].name;
 			});
 		});
-
-
 	};
 
 	/* Skip song. Trigger this function when skip button is pressed */
@@ -254,8 +235,6 @@ app.controller('browseController', function(songService, $scope, $rootScope, $wi
 				$scope.artistName = current_track.artists[0].name;
 			});
 		});
-
-
 	};
 
 	/* Make setVolume parameter to the value you get from volume bar */
@@ -265,33 +244,20 @@ app.controller('browseController', function(songService, $scope, $rootScope, $wi
 		});
 	};
 
-
-});
-
-app.controller('tokenController', function($rootScope, $location, $window) {
-	console.log('hi');
-	console.log(window.location.path);
-	// console.log(window.location);
+	$scope.getSavedTracks = function() {
+		$http.get('https://api.spotify.com/v1/me/tracks?offset=0&limit=50', {
+			headers: {
+				'Authorization': 'Bearer ' + $cookies.token
+			}
+		}).then(function(data) {
+			console.log(data.data);
+		});
+	}
 });
 
 /* controller for spotify login. Currently giving a CORS Error */
 app.controller('spotifyController', function($scope, $http, $location, $window) {
 		/* Spotify Login API Code */
-		const hash = window.location.hash
-		.substring(1)
-		.split('&')
-		.reduce(function (initial, item) {
-			if (item) {
-				var parts = item.split('=');
-				initial[parts[0]] = decodeURIComponent(parts[1]);
-			}
-			return initial;
-		}, {});
-		window.location.hash = '';
-
-		// Set token
-		let _token = hash.access_token;
-		console.log(_token);
 		const authEndpoint = 'https://accounts.spotify.com/authorize';
 
 		// Replace with your app's client ID, redirect URI and desired scopes
@@ -315,9 +281,9 @@ app.controller('spotifyController', function($scope, $http, $location, $window) 
 		];
 
 		// If there is no token, redirect to Spotify authorization
-		if (!_token) {
+		// if (!_token) {
 			window.location = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join('%20')}&response_type=token`;
-		} 
+		// } 
 });
 
 app.controller('accountController', function(songService, $scope, $rootScope){

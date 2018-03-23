@@ -17,8 +17,6 @@
 		
 	</div>
 
-
-
 	<footer class="music-player-container">
 		<div class="music-player-bar">
 			<div class="music-player-bar-left">
@@ -39,10 +37,10 @@
 			</div>
 			<div class="music-player-bar-center">
 				<div class="music-player-buttons">
-					<button class="shuffle-button">
+					<button ng-click="getSavedTracks()" class="shuffle-button">
 						<i class="fas fa-random"></i>
 					</button>
-					<button ng-click="previous()"class="skip-back-button">
+					<button ng-click="previous()" class="skip-back-button">
 						<i class="fas fa-backward"></i>
 					</button>
 					<button ng-click="play()" class="play-button">
