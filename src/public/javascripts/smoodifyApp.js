@@ -142,7 +142,7 @@ app.controller('browseController', function(songService, $scope, $rootScope, $wi
 		
   /* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
   /* TODO: Going to need to make token dynamic in that it obtains the current users token. Code once CORS Issue is solved.*/
-  const token = 'BQAVE_hQEmioWCyzUY9ckY5pnQwmRBlqf6D49S7HF2nma85VDNhXs_xFQtFH62WjNwgJuTH27k8Evn10WscBDz5oLll4cT1Xh_UldBNisClbjTwqvF16ttOfZVRJ5id-fOEk06-nb8yPoVhTGXLlH3A-5bpNc8xEHfuL';
+  const token = 'BQA1_r-JV7kX4BiRdtT3v5WYURSvHvTRmB8oEQXaMCTXYlS2FqtadCQ-8Sn2HFr_bkajpdnUM8zFqYF7pRX8ClmLGsrJbccfrMRmG4SsjqdSTztCePb9u8DlSoj83E5IrNCDGj_VZgCFBEAMbYRKlGAfikXn-oNh4wZw';
   const player = new Spotify.Player({
     name: 'Smoodify',
     getOAuthToken: cb => { cb(token); }
@@ -155,7 +155,7 @@ app.controller('browseController', function(songService, $scope, $rootScope, $wi
   player.addListener('playback_error', ({ message }) => { console.error(message); });
 
   // Playback status updates
-  player.addListener('player_state_changed', state => { console.log(state); });
+  player.addListener('player_state_changed', state => { console.log(state.shuffle); });
 
   // Ready
   player.addListener('ready', ({ device_id }) => {
@@ -185,7 +185,7 @@ app.controller('browseController', function(songService, $scope, $rootScope, $wi
 					next_tracks: [next_track]
 				} = state.track_window;
 				
-				console.log('Currently Playing', current_track.name);
+				console.log('Currently Playing', current_track);
 
 				/* scope variables to send back to html */
 				$scope.imgSrc = current_track.album.images[0].url;
@@ -258,14 +258,31 @@ app.controller('browseController', function(songService, $scope, $rootScope, $wi
 
 	};
 
+	
+	/* Make setVolume parameter to the value you get from volume bar */
+	$scope.mute = function() {
+		player.getVolume().then(volume => {
+			let volume_percentage = volume * 100;
+			if (volume_percentage == 0) {
+				player.setVolume(($scope.vol) / 100).then(() => {
+					console.log('Volume updated!');
+				});
+			} else {
+				player.setVolume(0).then(() => {
+					console.log('Volume updated!');
+				});
+			}
+		});
+	};
+
 	/* Make setVolume parameter to the value you get from volume bar */
 	$scope.setVolume = function() {
-		player.setVolume($scope.vol.value).then(() => {
+		player.setVolume(($scope.vol) / 100).then(() => {
 			console.log('Volume updated!');
 		});
 	};
 
-
+	
 });
 
 app.controller('tokenController', function($rootScope, $location, $window) {
