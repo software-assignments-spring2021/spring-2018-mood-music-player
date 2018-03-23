@@ -7,17 +7,9 @@ var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 
 		}
 
 		console.log('grabbing cookie');
-		// no logged in user, we should be going to #login
 		if (user == '') {
 			$rootScope.authenticated = false;
 			$rootScope.current_user = '';
-			// if (next.includes('register')) {
-			// 	// if link is to register page, allow
-			// 	console.log('not auth\'d');
-			// }
-			// else {  // otherwise redirect to login
-			// 	console.log('not auth\'d');
-			// }
 			console.log('not auth\'d');
 		}
 		// logged in session exists, set current user as authenticated
@@ -26,8 +18,28 @@ var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 
 			$rootScope.authenticated = true;
 			$rootScope.current_user = user;
 		}
+
+		if ($cookies.token === undefined) {
+			$cookies.token = '';
+			$rootScope.has_token = false;
+		}
 	});
 	
+	$rootScope.$on('$locationChangeSuccess', function (angularEvent, newUrl, oldUrl) {
+		// if we just redirected from gaining the access token, save it to $cookies and $rootScope
+		if (oldUrl.includes('access_token')) {
+			if ($cookies.token === '') {	// if it hasn't been set yet, set it
+				let path = oldUrl.substring(oldUrl.indexOf('access_token')).split('&');
+				$cookies.token = path[0].split('=')[1];
+				$cookies.token_exp = path[2].split('=')[1];	
+				$rootScope.token = $cookies.token;
+				$rootScope.token_exp = $cookies.token_exp;
+				$rootScope.has_token = true;
+			}
+			$location.path('/');	// redirect to main
+		}
+	});
+
 	$rootScope.signout = function(){
 		console.log('got into signout');
 		if (typeof($cookies['user']) == 'string') {
@@ -35,12 +47,13 @@ var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 
 			$rootScope.authenticated = false;
 			$rootScope.current_user = '';
 			$cookies['user'] = '' //, { path:'/', domain:'localhost'} this object may be necessary in some situations
+			$cookies['token'] = '';	// erase token until next time (for debugging)
 			console.log('removed cookie');
 		}
 	};
 });
 
-app.config(function($routeProvider){
+app.config(function($routeProvider, $locationProvider){
 	$routeProvider
 		// the landing display
 		.when('/', {
@@ -80,18 +93,27 @@ app.config(function($routeProvider){
 			templateUrl: 'main.html',
 			controller: 'spotifyController'
 		})
+		.when('/get_token', {
+			css: {
+
+			}, 
+			templateUrl: 'main.html',
+			controller: 'tokenController'
+		})
 		.when('/account', {
 			css: ['../stylesheets/login.css', '../stylesheets/base.css'],
 			templateUrl: 'account.html',
 			controller: 'accountController'
 		});
+	
+	$locationProvider.html5Mode({requireBase: false});
 });
 
 app.factory('songService', function($resource) {
 	return $resource ('api/songs');
 });
 
-app.controller('mainController', function(songService, $scope, $rootScope, $window){
+app.controller('mainController', function(songService, $scope, $rootScope, $window, $location){
 	$scope.songs = songService.query();
 
 	$scope.post = function() {
@@ -102,7 +124,6 @@ app.controller('mainController', function(songService, $scope, $rootScope, $wind
 	    $scope.newSong = {title: '', artist: ''};
 	  });
 	};
-
 });
 
 /* Currently separated browse page into browseController. Merge with mainController later */
@@ -120,7 +141,7 @@ app.controller('browseController', function(songService, $scope, $rootScope, $wi
 		
   /* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
   /* TODO: Going to need to make token dynamic in that it obtains the current users token. Code once CORS Issue is solved.*/
-  const token = 'BQCiKiTysePuuZOp_lyF87FtSHFVDkhzRYdMk7mkq4ug3leBvMvoYMmDHUvRlxw7Ib6k6jqx0tdZC__jqkcqAd9SWK10NGdy_nFfsAGAMNE1Zmsoic2TZEPrc3HGkbfd4GHqYdhDwI6EmqqfCW2JOiufYY0UICbTrKdT';
+  const token = 'BQAVE_hQEmioWCyzUY9ckY5pnQwmRBlqf6D49S7HF2nma85VDNhXs_xFQtFH62WjNwgJuTH27k8Evn10WscBDz5oLll4cT1Xh_UldBNisClbjTwqvF16ttOfZVRJ5id-fOEk06-nb8yPoVhTGXLlH3A-5bpNc8xEHfuL';
   const player = new Spotify.Player({
     name: 'Smoodify',
     getOAuthToken: cb => { cb(token); }
@@ -151,52 +172,109 @@ app.controller('browseController', function(songService, $scope, $rootScope, $wi
 	$scope.play = function() {
 		player.togglePlay().then(() => {
 			console.log('Toggle Button Fired');
-		});
+					/* code to get the metadata of the song currently playing */
+			player.getCurrentState().then(state => {
+				if (!state) {
+					console.error('User is not playing music through the Web Playback SDK');
+					return;
+				}
+				
+				let {
+					current_track,
+					next_tracks: [next_track]
+				} = state.track_window;
+				
+				console.log('Currently Playing', current_track.name);
 
-
-		/* code to get the metadata of the song currently playing */
-		player.getCurrentState().then(state => {
-			if (!state) {
-				console.error('User is not playing music through the Web Playback SDK');
-				return;
-			}
-			
-			let {
-				current_track,
-				next_tracks: [next_track]
-			} = state.track_window;
-			
-			console.log('Currently Playing', current_track.name);
-			console.log('Playing Next', next_track);
-
-			/* scope variables to send back to html */
-			$scope.imgSrc = current_track.album.images[0].url;
-			/* Code to change the title <p> tag to the current song title. */
-			$scope.songTitle = current_track.name;
-			$scope.artistName = current_track.artists[0].name;
+				/* scope variables to send back to html */
+				$scope.imgSrc = current_track.album.images[0].url;
+				/* Code to change the title <p> tag to the current song title. */
+				$scope.songTitle = current_track.name;
+				$scope.artistName = current_track.artists[0].name;
+			});
 		});
 
 
 	};
 
 	/* Go back to previous song. Trigger this function when previous button is clicked */
-	$scope.previous = function() {
+	$scope.previous = function() {		
 		player.previousTrack().then(() => {
 			console.log('Previous');
+					/* code to get the metadata of the song currently playing */
+			player.getCurrentState().then(state => {
+				if (!state) {
+					console.error('User is not playing music through the Web Playback SDK');
+					return;
+				}
+				
+				let {
+					current_track,
+					next_tracks: [next_track]
+				} = state.track_window;
+				
+				console.log('Currently Playing', current_track.name);
+				console.log('Playing Next', next_track);
+
+				/* scope variables to send back to html */
+				$scope.imgSrc = current_track.album.images[0].url;
+				/* Code to change the title <p> tag to the current song title. */
+				$scope.songTitle = current_track.name;
+				$scope.artistName = current_track.artists[0].name;
+			});
 		});
+
+
 	};
 
 	/* Skip song. Trigger this function when skip button is pressed */
 	$scope.skip = function() {
 		player.nextTrack().then(() => {
 			console.log('Skip');
+					/* code to get the metadata of the song currently playing */
+			player.getCurrentState().then(state => {
+				if (!state) {
+					console.error('User is not playing music through the Web Playback SDK');
+					return;
+				}
+				
+				let {
+					current_track,
+					next_tracks: [next_track]
+				} = state.track_window;
+				
+				console.log('Currently Playing', current_track.name);
+				console.log('Playing Next', next_track);
+
+				/* scope variables to send back to html */
+				$scope.imgSrc = current_track.album.images[0].url;
+				/* Code to change the title <p> tag to the current song title. */
+				$scope.songTitle = current_track.name;
+				$scope.artistName = current_track.artists[0].name;
+			});
+		});
+
+
+	};
+
+	/* Make setVolume parameter to the value you get from volume bar */
+	$scope.setVolume = function() {
+		player.setVolume($scope.vol.value).then(() => {
+			console.log('Volume updated!');
 		});
 	};
+
+
+});
+
+app.controller('tokenController', function($rootScope, $location, $window) {
+	console.log('hi');
+	console.log(window.location.path);
+	// console.log(window.location);
 });
 
 /* controller for spotify login. Currently giving a CORS Error */
 app.controller('spotifyController', function($scope, $http, $location, $window) {
-		// Get the hash of the url
 		/* Spotify Login API Code */
 		const hash = window.location.hash
 		.substring(1)
@@ -212,12 +290,12 @@ app.controller('spotifyController', function($scope, $http, $location, $window) 
 
 		// Set token
 		let _token = hash.access_token;
-
+		console.log(_token);
 		const authEndpoint = 'https://accounts.spotify.com/authorize';
 
 		// Replace with your app's client ID, redirect URI and desired scopes
 		const clientId = 'dcddb8d13b2f4019a1dadb4b4c070661';
-		const redirectUri = 'http://localhost:3000';
+		const redirectUri = 'http://localhost:3000/';
 		const scopes = [
 			'user-read-birthdate',
 			'user-read-email',
