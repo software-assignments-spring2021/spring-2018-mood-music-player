@@ -7,17 +7,9 @@ var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 
 		}
 
 		console.log('grabbing cookie');
-		// no logged in user, we should be going to #login
 		if (user == '') {
 			$rootScope.authenticated = false;
 			$rootScope.current_user = '';
-			// if (next.includes('register')) {
-			// 	// if link is to register page, allow
-			// 	console.log('not auth\'d');
-			// }
-			// else {  // otherwise redirect to login
-			// 	console.log('not auth\'d');
-			// }
 			console.log('not auth\'d');
 		}
 		// logged in session exists, set current user as authenticated
@@ -26,8 +18,28 @@ var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 
 			$rootScope.authenticated = true;
 			$rootScope.current_user = user;
 		}
+
+		if ($cookies.token === undefined) {
+			$cookies.token = '';
+			$rootScope.has_token = false;
+		}
 	});
 	
+	$rootScope.$on('$locationChangeSuccess', function (angularEvent, newUrl, oldUrl) {
+		// if we just redirected from gaining the access token, save it to $cookies and $rootScope
+		if (oldUrl.includes('access_token')) {
+			if ($cookies.token === '') {	// if it hasn't been set yet, set it
+				let path = oldUrl.substring(oldUrl.indexOf('access_token')).split('&');
+				$cookies.token = path[0].split('=')[1];
+				$cookies.token_exp = path[2].split('=')[1];	
+				$rootScope.token = $cookies.token;
+				$rootScope.token_exp = $cookies.token_exp;
+				$rootScope.has_token = true;
+			}
+			$location.path('/');	// redirect to main
+		}
+	});
+
 	$rootScope.signout = function(){
 		console.log('got into signout');
 		if (typeof($cookies['user']) == 'string') {
@@ -35,12 +47,13 @@ var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 
 			$rootScope.authenticated = false;
 			$rootScope.current_user = '';
 			$cookies['user'] = '' //, { path:'/', domain:'localhost'} this object may be necessary in some situations
+			$cookies['token'] = '';	// erase token until next time (for debugging)
 			console.log('removed cookie');
 		}
 	};
 });
 
-app.config(function($routeProvider){
+app.config(function($routeProvider, $locationProvider){
 	$routeProvider
 		// the landing display
 		.when('/', {
@@ -71,27 +84,37 @@ app.config(function($routeProvider){
 				href: '../stylesheets/base.css',
 				preload: true
 			},
-      templateUrl: 'saved_music.html',
+      		templateUrl: 'saved_music.html',
 			controller: 'browseController'
-		}).when('/spotify_login', {
+		})
+		.when('/spotify_login', {
 			css: {
 				/* Code to get to Spotify Login */
 			},
 			templateUrl: 'main.html',
 			controller: 'spotifyController'
 		})
+		.when('/get_token', {
+			css: {
+
+			}, 
+			templateUrl: 'main.html',
+			controller: 'tokenController'
+		})
 		.when('/account', {
 			css: ['../stylesheets/login.css', '../stylesheets/base.css'],
 			templateUrl: 'account.html',
 			controller: 'accountController'
 		});
+	
+	$locationProvider.html5Mode({requireBase: false});
 });
 
 app.factory('songService', function($resource) {
 	return $resource ('api/songs');
 });
 
-app.controller('mainController', function(songService, $scope, $rootScope, $window){
+app.controller('mainController', function(songService, $scope, $rootScope, $window, $location){
 	$scope.songs = songService.query();
 
 	$scope.post = function() {
@@ -102,7 +125,6 @@ app.controller('mainController', function(songService, $scope, $rootScope, $wind
 	    $scope.newSong = {title: '', artist: ''};
 	  });
 	};
-
 });
 
 /* Currently separated browse page into browseController. Merge with mainController later */
@@ -246,6 +268,12 @@ app.controller('browseController', function(songService, $scope, $rootScope, $wi
 
 });
 
+app.controller('tokenController', function($rootScope, $location, $window) {
+	console.log('hi');
+	console.log(window.location.path);
+	// console.log(window.location);
+});
+
 /* controller for spotify login. Currently giving a CORS Error */
 app.controller('spotifyController', function($scope, $http, $location, $window) {
 		/* Spotify Login API Code */
@@ -289,7 +317,7 @@ app.controller('spotifyController', function($scope, $http, $location, $window) 
 		// If there is no token, redirect to Spotify authorization
 		if (!_token) {
 			window.location = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join('%20')}&response_type=token`;
-		}
+		} 
 });
 
 app.controller('accountController', function(songService, $scope, $rootScope){
