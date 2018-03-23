@@ -91,13 +91,6 @@ app.config(function($routeProvider, $locationProvider){
 			templateUrl: 'main.html',
 			controller: 'spotifyController'
 		})
-		.when('/get_token', {
-			css: {
-
-			}, 
-			templateUrl: 'main.html',
-			controller: 'tokenController'
-		})
 		.when('/account', {
 			css: ['../stylesheets/login.css', '../stylesheets/base.css'],
 			templateUrl: 'account.html',
