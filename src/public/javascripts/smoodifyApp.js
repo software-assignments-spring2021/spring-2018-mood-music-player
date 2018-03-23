@@ -101,36 +101,17 @@ app.config(function($routeProvider, $locationProvider){
 		.when('/account', {
 			css: ['../stylesheets/login.css', '../stylesheets/base.css'],
 			templateUrl: 'account.html',
-			controller: 'accountController'
+			controller: 'mainController'
 		});
 	$locationProvider.html5Mode({requireBase: false});
 });
 
-app.controller('mainController', function(songService, $scope, $rootScope, $window, $location){
-	$scope.songs = songService.query();
-
-	$scope.post = function() {
-	  $scope.newSong.title = $scope.new.title;
-	  $scope.newSong.artist = $scope.new.artist;
-	  songService.save($scope.newSong, function(){
-	    $scope.songs = songService.query();
-	    $scope.newSong = {title: '', artist: ''};
-	  });
-	};
+app.controller('mainController', function($scope, $rootScope, $window, $location){
+	
 });
 
 /* Currently separated browse page into browseController. Merge with mainController later */
-app.controller('browseController', function(songService, $scope, $rootScope, $window){
-	$scope.songs = songService.query();
-
-	$scope.post = function() {
-		$scope.newSong.title = $scope.new.title;
-		$scope.newSong.artist = $scope.new.artist;
-		songService.save($scope.newSong, function(){
-			$scope.songs = songService.query();
-			$scope.newSong = {title: '', artist: ''};
-		});
-	};
+app.controller('browseController', function($scope, $rootScope, $window){
 		
 	/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
 	/* TODO: Going to need to make token dynamic in that it obtains the current users token. Code once CORS Issue is solved.*/
@@ -324,9 +305,6 @@ app.controller('spotifyController', function($scope, $http, $location, $window) 
 	if (!_token) {
 		window.location = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join('%20')}&response_type=token`;
 	}
-});
-
-app.controller('accountController', function(songService, $scope, $rootScope){
 });
 
 app.controller('authController', function($scope, $http, $rootScope, $location, $cookies){
