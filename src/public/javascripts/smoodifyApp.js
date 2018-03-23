@@ -71,9 +71,10 @@ app.config(function($routeProvider){
 				href: '../stylesheets/base.css',
 				preload: true
 			},
-      templateUrl: 'saved_music.html',
+      		templateUrl: 'saved_music.html',
 			controller: 'browseController'
-		}).when('/spotify_login', {
+		})
+		.when('/spotify_login', {
 			css: {
 				/* Code to get to Spotify Login */
 			},
@@ -210,6 +211,8 @@ app.controller('spotifyController', function($scope, $http, $location, $window) 
 		}, {});
 		window.location.hash = '';
 
+		console.log(hash["/spotify_login"]);
+
 		// Set token
 		let _token = hash.access_token;
 
@@ -238,7 +241,7 @@ app.controller('spotifyController', function($scope, $http, $location, $window) 
 		// If there is no token, redirect to Spotify authorization
 		if (!_token) {
 			window.location = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join('%20')}&response_type=token`;
-		}
+		} 
 });
 
 app.controller('accountController', function(songService, $scope, $rootScope){
