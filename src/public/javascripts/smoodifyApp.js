@@ -38,9 +38,22 @@ var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 
 			console.log('removed cookie');
 		}
 	};
+
+	$rootScope.parseURLHash = function ($location) {
+	    return location.pathname.substring(1).split('&')[0].split('=')[1];
+	}
+
+	if ($cookies.token === undefined) {
+		$cookies.token = '';
+	} else if (location.pathname.includes('access_token')) {
+		if ($cookies.token === '') {
+			$cookies.token = $rootScope.parseURLHash();	
+		}
+		$location.path('/');
+	}
 });
 
-app.config(function($routeProvider){
+app.config(function($routeProvider, $locationProvider){
 	$routeProvider
 		// the landing display
 		.when('/', {
@@ -81,18 +94,27 @@ app.config(function($routeProvider){
 			templateUrl: 'main.html',
 			controller: 'spotifyController'
 		})
+		.when('/get_token', {
+			css: {
+
+			}, 
+			templateUrl: 'get_token.html',
+			controller: 'tokenController'
+		})
 		.when('/account', {
 			css: ['../stylesheets/login.css', '../stylesheets/base.css'],
 			templateUrl: 'account.html',
 			controller: 'accountController'
 		});
+	
+	$locationProvider.html5Mode(true);
 });
 
 app.factory('songService', function($resource) {
 	return $resource ('api/songs');
 });
 
-app.controller('mainController', function(songService, $scope, $rootScope, $window){
+app.controller('mainController', function(songService, $scope, $rootScope, $window, $location){
 	$scope.songs = songService.query();
 
 	$scope.post = function() {
@@ -103,7 +125,6 @@ app.controller('mainController', function(songService, $scope, $rootScope, $wind
 	    $scope.newSong = {title: '', artist: ''};
 	  });
 	};
-
 });
 
 /* Currently separated browse page into browseController. Merge with mainController later */
@@ -195,6 +216,11 @@ app.controller('browseController', function(songService, $scope, $rootScope, $wi
 	};
 });
 
+app.controller('tokenController', function($rootScope, $location, $window) {
+	console.log(window.location.hash);
+	console.log(window.location);
+});
+
 /* controller for spotify login. Currently giving a CORS Error */
 app.controller('spotifyController', function($scope, $http, $location, $window) {
 		// Get the hash of the url
@@ -211,8 +237,6 @@ app.controller('spotifyController', function($scope, $http, $location, $window) 
 		}, {});
 		window.location.hash = '';
 
-		console.log(hash["/spotify_login"]);
-
 		// Set token
 		let _token = hash.access_token;
 
@@ -220,7 +244,7 @@ app.controller('spotifyController', function($scope, $http, $location, $window) 
 
 		// Replace with your app's client ID, redirect URI and desired scopes
 		const clientId = 'dcddb8d13b2f4019a1dadb4b4c070661';
-		const redirectUri = 'http://localhost:3000';
+		const redirectUri = 'http://localhost:3000/';
 		const scopes = [
 			'user-read-birthdate',
 			'user-read-email',

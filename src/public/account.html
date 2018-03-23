@@ -1,16 +1,16 @@
 <div class="auth-view" ng-show="authenticated">
 	<div class="sidebar">
-		<a href="#" id="logo"> <img src="../images/logo.png" id="logo-img"> smoodify </a> 
+		<a href="/" id="logo"> <img src="../images/logo.png" id="logo-img"> smoodify </a> 
 		<hr id="first-hr">
 
 		<nav id="links">
-			<a href="#">Home</a>
-			<a href="#/saved">Saved Music</a>
+			<a href="/">Home</a>
+			<a href="/saved">Saved Music</a>
 		</nav>
 		<hr id="second-hr">
 		
 		<hr id="third-hr">
-		<a href="#/account" id="account" class="current-page">My Account</a>
+		<a href="/account" id="account" class="current-page">My Account</a>
 	</div>
 
 	<div class="content">
@@ -18,8 +18,8 @@
 			<img id="profile-picture" src="../images/logo.png">
 			
 			<nav id="account-links">
-				<a href="#/spotify_login"><button class="button button-block">Connect to Spotify</button></a>
-				<a href="#" ng-click="signout()"><button class="button button-block">Logout</button></a>
+				<a href="/spotify_login"><button class="button button-block">Connect to Spotify</button></a>
+				<a href="/" ng-click="signout()"><button class="button button-block">Logout</button></a>
 			</nav>
 		</div>
 	</div>
