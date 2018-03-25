@@ -14,9 +14,8 @@ We found that there is something missing in the music streaming business: a trul
 The user would make an account on the app using their already existing Spotify account (either using their email or Facebook login). Once logged in, they can look at their music and already existing playlists, and they can play music either by choosing a song or using the "shuffle" feature. Once the music is playing, the app is now "listening" for clues. If a user skips a song, that means they are not feeling like listening to it, and if a user listens through more than 50% of the song, that means the opposite. Based on this information, the app figures out the user's mood and recalibrates with every skip. The app also gives the user the option of saving the session as a playlist on the app to listen to at a later time. 
 
 ## Technical Details
-smoodify is a web application built on Node using Express. It makes use of the following APIs and modules:
-* [node-spotify-web](https://github.com/TooTallNate/node-spotify-web) to stream songs
-* [spotify-web-api-node](https://github.com/thelinmichael/spotify-web-api-node) to analyze a song metadata
+smoodify is a web application built using the MEAN stack. It makes use of the following APIs and modules:
+* [Spotify's Web Playback SDK](https://beta.developer.spotify.com/documentation/web-playback-sdk/) to stream songs
 * [lyric-api](https://github.com/rhnvrm/lyric-api) to retrieve song lyrics
 * [sentiment](https://www.npmjs.com/package/sentiment) to analyze sentiment in lyrics
 * [node-gracenote](https://github.com/ddanninger/node-gracenote) to analyze music
