@@ -71,7 +71,7 @@ app.config(function($routeProvider){
 				href: '../stylesheets/base.css',
 				preload: true
 			},
-      templateUrl: 'saved_music.html',
+     		templateUrl: 'saved_music.html',
 			controller: 'browseController'
 		}).when('/spotify_login', {
 			css: {
@@ -105,7 +105,7 @@ app.controller('mainController', function(songService, $scope, $rootScope, $wind
 
 });
 
-/* Currently separated browse page into browseController. Merge with mainController later */
+// Currently separated browse page into browseController. Merge with mainController later 
 app.controller('browseController', function(songService, $scope, $rootScope, $window){
 		$scope.songs = songService.query();
 
@@ -194,13 +194,13 @@ app.controller('browseController', function(songService, $scope, $rootScope, $wi
 		};
 });
 
-/* controller for spotify login. Currently giving a CORS Error */
+// Controller for spotify login. Currently giving a CORS Error 
 app.controller('spotifyController', function($scope, $http, $location, $window) {
 	$scope.scopes = 'user-read-private user-read-email';
 	/* Currently giving a CORS issue because Spotify doesn't allow Cross Domain Access */
 	/* TODO: Create a proxy server to be able to Cross Domain Access */
 	$http.get('https://accounts.spotify.com/authorize' +
-      '?response_type=code' +
+      '?response_type=token' +
       '&client_id=' + 'dcddb8d13b2f4019a1dadb4b4c070661' +
       ($scope.scopes ? '&scope=' + encodeURIComponent($scope.scopes) : '') +
 			'&redirect_uri=' + encodeURIComponent('http://localhost:3000'))
@@ -209,9 +209,11 @@ app.controller('spotifyController', function($scope, $http, $location, $window) 
 	});
 });
 
+// TODO
 app.controller('accountController', function(songService, $scope, $rootScope){
 });
 
+// Controller used for loging in and registering using Passport
 app.controller('authController', function($scope, $http, $rootScope, $location, $cookies){
   $scope.user = {username: '', password: ''};
   $scope.error_message = '';
