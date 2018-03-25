@@ -26,6 +26,7 @@ var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 
 	});
 	
 	$rootScope.$on('$locationChangeSuccess', function (angularEvent, newUrl, oldUrl) {
+		console.log($cookies.token);
 		// if we just redirected from gaining the access token, save it to $cookies and $rootScope
 		if (oldUrl.includes('access_token')) {
 			if ($cookies.token === '') {	// if it hasn't been set yet, set it
@@ -51,9 +52,6 @@ var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 
 			console.log('removed cookie');
 		}
 	};
-
-	console.log($cookies.token);
-
 });
 
 app.config(function($routeProvider, $locationProvider){
@@ -124,7 +122,7 @@ app.controller('mainController', function(songService, $scope, $rootScope, $wind
 });
 
 /* Currently separated browse page into browseController. Merge with mainController later */
-app.controller('browseController', function(songService, $scope, $http, $cookies, $rootScope, $window){
+app.controller('browseController', function(songService, $scope, $http, $cookies, $rootScope, $window, $q){
   /* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
   /* TODO: Going to need to make token dynamic in that it obtains the current users token. Code once CORS Issue is solved.*/
   const token = $cookies.token;	
@@ -244,15 +242,39 @@ app.controller('browseController', function(songService, $scope, $http, $cookies
 		});
 	};
 
+
+	// var ret = $q.defer();
+	var apiBaseUrl= 'https://api.spotify.com/v1/'
+	var allTracks = [];
+
+	var getTracks = function(offset){
+		$http.get(apiBaseUrl + 'me/tracks?offset=' + offset + '&limit=50', {
+			headers: {
+				'Authorization': 'Bearer ' + $cookies.token
+			}
+		}).success(function(data) {
+			console.log('offset',  offset);
+			allTracks.push(data.items);
+		}).error(function(data){
+			console.log('offset', offset, 'broke');
+		}); 
+	}
+
 	$scope.getSavedTracks = function() {
 		$http.get('https://api.spotify.com/v1/me/tracks?offset=0&limit=50', {
 			headers: {
 				'Authorization': 'Bearer ' + $cookies.token
 			}
 		}).then(function(data) {
-			console.log(data.data);
-		});
+			allTracks.push(data.items);
+			var songsLeft = data.data.total;
+			for (var offset = 50; offset <= songsLeft; offset = offset + 50) {
+				getTracks(offset);
+			}
+			// return ret.promise;
+		}).then(console.log(allTracks));
 	}
+
 });
 
 /* controller for spotify login. Currently giving a CORS Error */
