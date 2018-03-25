@@ -71,7 +71,7 @@ app.config(function($routeProvider){
 				href: '../stylesheets/base.css',
 				preload: true
 			},
-      templateUrl: 'saved_music.html',
+     		templateUrl: 'saved_music.html',
 			controller: 'browseController'
 		}).when('/spotify_login', {
 			css: {
