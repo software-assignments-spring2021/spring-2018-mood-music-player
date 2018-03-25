@@ -98,31 +98,18 @@ app.config(function($routeProvider, $locationProvider){
 		.when('/account', {
 			css: ['../stylesheets/login.css', '../stylesheets/base.css'],
 			templateUrl: 'account.html',
-			controller: 'accountController'
+			controller: 'mainController'
 		});
 	
 	$locationProvider.html5Mode({requireBase: false});
 });
 
-app.factory('songService', function($resource) {
-	return $resource ('api/songs');
-});
+app.controller('mainController', function($scope, $rootScope, $window, $location){
 
-app.controller('mainController', function(songService, $scope, $rootScope, $window, $location){
-	$scope.songs = songService.query();
-
-	$scope.post = function() {
-	  $scope.newSong.title = $scope.new.title;
-	  $scope.newSong.artist = $scope.new.artist;
-	  songService.save($scope.newSong, function(){
-	    $scope.songs = songService.query();
-	    $scope.newSong = {title: '', artist: ''};
-	  });
-	};
 });
 
 /* Currently separated browse page into browseController. Merge with mainController later */
-app.controller('browseController', function(songService, $scope, $http, $cookies, $rootScope, $window, $q){
+app.controller('browseController', function($scope, $http, $cookies, $rootScope, $window, $q){
   /* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
   /* TODO: Going to need to make token dynamic in that it obtains the current users token. Code once CORS Issue is solved.*/
   const token = $cookies.token;	
@@ -242,7 +229,6 @@ app.controller('browseController', function(songService, $scope, $http, $cookies
 		});
 	};
 
-
 	// var ret = $q.defer();
 	var apiBaseUrl= 'https://api.spotify.com/v1/'
 	var allTracks = [];
@@ -302,13 +288,7 @@ app.controller('spotifyController', function($scope, $http, $location, $window) 
 			'playlist-modify-public'
 		];
 
-		// If there is no token, redirect to Spotify authorization
-		// if (!_token) {
-			window.location = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join('%20')}&response_type=token`;
-		// } 
-});
-
-app.controller('accountController', function(songService, $scope, $rootScope){
+		window.location = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join('%20')}&response_type=token`;
 });
 
 app.controller('authController', function($scope, $http, $rootScope, $location, $cookies){
