@@ -26,6 +26,7 @@ var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 
 	});
 	
 	$rootScope.$on('$locationChangeSuccess', function (angularEvent, newUrl, oldUrl) {
+		console.log($cookies.token);
 		// if we just redirected from gaining the access token, save it to $cookies and $rootScope
 		if (oldUrl.includes('access_token')) {
 			if ($cookies.token === '') {	// if it hasn't been set yet, set it
@@ -91,13 +92,6 @@ app.config(function($routeProvider, $locationProvider){
 			templateUrl: 'main.html',
 			controller: 'spotifyController'
 		})
-		.when('/get_token', {
-			css: {
-
-			}, 
-			templateUrl: 'main.html',
-			controller: 'tokenController'
-		})
 		.when('/account', {
 			css: ['../stylesheets/login.css', '../stylesheets/base.css'],
 			templateUrl: 'account.html',
@@ -107,20 +101,18 @@ app.config(function($routeProvider, $locationProvider){
 });
 
 app.controller('mainController', function($scope, $rootScope, $window, $location){
-	
 });
 
 /* Currently separated browse page into browseController. Merge with mainController later */
-app.controller('browseController', function($scope, $rootScope, $window){
-		
-	/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
-	/* TODO: Going to need to make token dynamic in that it obtains the current users token. Code once CORS Issue is solved.*/
-	const token = 'BQA1_r-JV7kX4BiRdtT3v5WYURSvHvTRmB8oEQXaMCTXYlS2FqtadCQ-8Sn2HFr_bkajpdnUM8zFqYF7pRX8ClmLGsrJbccfrMRmG4SsjqdSTztCePb9u8DlSoj83E5IrNCDGj_VZgCFBEAMbYRKlGAfikXn-oNh4wZw';
-	const player = new Spotify.Player({
-		name: 'Smoodify',
-		getOAuthToken: cb => { cb(token); }
-	});
-
+app.controller('browseController', function($scope, $http, $cookies, $rootScope, $window, $q){
+  /* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
+  /* TODO: Going to need to make token dynamic in that it obtains the current users token. Code once CORS Issue is solved.*/
+  const token = $cookies.token;	
+  const player = new Spotify.Player({
+    name: 'Smoodify',
+    getOAuthToken: cb => { cb(token); }
+  });
+  
 	// Error handling
 	player.addListener('initialization_error', ({ message }) => { console.error(message); });
 	player.addListener('authentication_error', ({ message }) => { console.error(message); });
@@ -224,8 +216,6 @@ app.controller('browseController', function($scope, $rootScope, $window){
 				$scope.artistName = current_track.artists[0].name;
 			});
 		});
-
-
 	};
 
 	
@@ -251,60 +241,66 @@ app.controller('browseController', function($scope, $rootScope, $window){
 			console.log('Volume updated!');
 		});
 	};
+  
+	// var ret = $q.defer();
+	var apiBaseUrl= 'https://api.spotify.com/v1/'
+	var allTracks = [];
 
-	
-});
+	var getTracks = function(offset){
+		$http.get(apiBaseUrl + 'me/tracks?offset=' + offset + '&limit=50', {
+			headers: {
+				'Authorization': 'Bearer ' + $cookies.token
+			}
+		}).success(function(data) {
+			console.log('offset',  offset);
+			allTracks.push(data.items);
+		}).error(function(data){
+			console.log('offset', offset, 'broke');
+		}); 
+	}
 
-app.controller('tokenController', function($rootScope, $location, $window) {
-	console.log('hi');
-	console.log(window.location.path);
-	// console.log(window.location);
+	$scope.getSavedTracks = function() {
+		$http.get('https://api.spotify.com/v1/me/tracks?offset=0&limit=50', {
+			headers: {
+				'Authorization': 'Bearer ' + $cookies.token
+			}
+		}).then(function(data) {
+			allTracks.push(data.items);
+			var songsLeft = data.data.total;
+			for (var offset = 50; offset <= songsLeft; offset = offset + 50) {
+				getTracks(offset);
+			}
+			// return ret.promise;
+		}).then(console.log(allTracks));
+	}
 });
 
 /* controller for spotify login. Currently giving a CORS Error */
 app.controller('spotifyController', function($scope, $http, $location, $window) {
-	/* Spotify Login API Code */
-	const hash = window.location.hash
-	.substring(1)
-	.split('&')
-	.reduce(function (initial, item) {
-		if (item) {
-			var parts = item.split('=');
-			initial[parts[0]] = decodeURIComponent(parts[1]);
-		}
-		return initial;
-	}, {});
-	window.location.hash = '';
+		/* Spotify Login API Code */
+		const authEndpoint = 'https://accounts.spotify.com/authorize';
 
-	// Set token
-	let _token = hash.access_token;
-	console.log(_token);
-	const authEndpoint = 'https://accounts.spotify.com/authorize';
+		// Replace with your app's client ID, redirect URI and desired scopes
+		const clientId = 'dcddb8d13b2f4019a1dadb4b4c070661';
+		const redirectUri = 'http://localhost:3000/';
+		const scopes = [
+			'user-read-birthdate',
+			'user-read-email',
+			'user-read-private',
+			'playlist-read-private',
+			'user-top-read',
+			'user-library-read',
+			'playlist-modify-private',
+			'user-read-currently-playing',
+			'user-read-recently-played',
+			'user-modify-playback-state',
+			'user-read-playback-state',
+			'user-library-modify',
+			'streaming',
+			'playlist-modify-public'
+		];
 
-	// Replace with your app's client ID, redirect URI and desired scopes
-	const clientId = 'dcddb8d13b2f4019a1dadb4b4c070661';
-	const redirectUri = 'http://localhost:3000/';
-	const scopes = [
-		'user-read-birthdate',
-		'user-read-email',
-		'user-read-private',
-		'playlist-read-private',
-		'user-top-read',
-		'user-library-read',
-		'playlist-modify-private',
-		'user-read-currently-playing',
-		'user-read-recently-played',
-		'user-modify-playback-state',
-		'user-read-playback-state',
-		'user-library-modify',
-		'streaming',
-		'playlist-modify-public'
-	];
-
-	// If there is no token, redirect to Spotify authorization
-	if (!_token) {
 		window.location = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join('%20')}&response_type=token`;
-	}
 });
 
 app.controller('authController', function($scope, $http, $rootScope, $location, $cookies){
