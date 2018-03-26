@@ -17,7 +17,7 @@ var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 
 			// }
 			// else {  // otherwise redirect to login
 			// 	console.log('not auth\'d');
-			// }
+			// }	
 			console.log('not auth\'d');
 		}
 		// logged in session exists, set current user as authenticated
@@ -71,7 +71,7 @@ app.config(function($routeProvider){
 				href: '../stylesheets/base.css',
 				preload: true
 			},
-     		templateUrl: 'saved_music.html',
+			templateUrl: 'saved_music.html',
 			controller: 'browseController'
 		}).when('/spotify_login', {
 			css: {
@@ -85,113 +85,89 @@ app.config(function($routeProvider){
 			templateUrl: 'account.html',
 			controller: 'accountController'
 		});
+	$locationProvider.html5Mode({requireBase: false});
 });
 
-app.factory('songService', function($resource) {
-	return $resource ('api/songs');
-});
-
-app.controller('mainController', function(songService, $scope, $rootScope, $window){
-	$scope.songs = songService.query();
-
-	$scope.post = function() {
-	  $scope.newSong.title = $scope.new.title;
-	  $scope.newSong.artist = $scope.new.artist;
-	  songService.save($scope.newSong, function(){
-	    $scope.songs = songService.query();
-	    $scope.newSong = {title: '', artist: ''};
-	  });
-	};
-
+app.controller('mainController', function($scope, $rootScope, $window){
+	
 });
 
 // Currently separated browse page into browseController. Merge with mainController later 
-app.controller('browseController', function(songService, $scope, $rootScope, $window){
-		$scope.songs = songService.query();
+app.controller('browseController', function($scope, $rootScope, $window){
+	/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
+	/* TODO: Going to need to make token dynamic in that it obtains the current users token. Code once CORS Issue is solved.*/
+	const token = $cookies.token;
+	const player = new Spotify.Player({
+		name: 'Smoodify',
+		getOAuthToken: cb => { cb(token); }
+	});
 
-		$scope.post = function() {
-			$scope.newSong.title = $scope.new.title;
-			$scope.newSong.artist = $scope.new.artist;
-			songService.save($scope.newSong, function(){
-				$scope.songs = songService.query();
-				$scope.newSong = {title: '', artist: ''};
-			});
-		};
-		
-  		/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
-      /* TODO: Going to need to make token dynamic in that it obtains the current users token. Code once CORS Issue is solved.*/
-      const token = 'BQCiKiTysePuuZOp_lyF87FtSHFVDkhzRYdMk7mkq4ug3leBvMvoYMmDHUvRlxw7Ib6k6jqx0tdZC__jqkcqAd9SWK10NGdy_nFfsAGAMNE1Zmsoic2TZEPrc3HGkbfd4GHqYdhDwI6EmqqfCW2JOiufYY0UICbTrKdT';
-      const player = new Spotify.Player({
-        name: 'Smoodify',
-        getOAuthToken: cb => { cb(token); }
-      });
+	// Error handling
+	player.addListener('initialization_error', ({ message }) => { console.error(message); });
+	player.addListener('authentication_error', ({ message }) => { console.error(message); });
+	player.addListener('account_error', ({ message }) => { console.error(message); });
+	player.addListener('playback_error', ({ message }) => { console.error(message); });
 
-      // Error handling
-      player.addListener('initialization_error', ({ message }) => { console.error(message); });
-      player.addListener('authentication_error', ({ message }) => { console.error(message); });
-      player.addListener('account_error', ({ message }) => { console.error(message); });
-      player.addListener('playback_error', ({ message }) => { console.error(message); });
+	// Playback status updates
+	player.addListener('player_state_changed', state => { console.log(state); });
 
-      // Playback status updates
-      player.addListener('player_state_changed', state => { console.log(state); });
+	// Ready
+	player.addListener('ready', ({ device_id }) => {
+		console.log('Ready with Device ID', device_id);
+	});
 
-      // Ready
-      player.addListener('ready', ({ device_id }) => {
-        console.log('Ready with Device ID', device_id);
-      });
+	// Connect to the player!
+	player.connect().then(success => {
+		if (success) {
+			console.log('The Web Playback SDK successfully connected to Spotify!');
+		}
+	});
 
-      // Connect to the player!
-			player.connect().then(success => {
-				if (success) {
-					console.log('The Web Playback SDK successfully connected to Spotify!');
-			  }
-			})
-
-		/* Play a song. Trigger this function when play button is pressed */
-		$scope.play = function() {
-			player.togglePlay().then(() => {
-				console.log('Toggle Button Fired');
-			});
+	/* Play a song. Trigger this function when play button is pressed */
+	$scope.play = function() {
+		player.togglePlay().then(() => {
+			console.log('Toggle Button Fired');
+		});
 
 
-			/* code to get the metadata of the song currently playing */
-			player.getCurrentState().then(state => {
-				if (!state) {
-					console.error('User is not playing music through the Web Playback SDK');
-					return;
-				}
+		/* code to get the metadata of the song currently playing */
+		player.getCurrentState().then(state => {
+			if (!state) {
+				console.error('User is not playing music through the Web Playback SDK');
+				return;
+			}
+				
+			let {
+				current_track,
+				next_tracks: [next_track]
+			} = state.track_window;
 			
-				let {
-					current_track,
-					next_tracks: [next_track]
-				} = state.track_window;
-			
-				console.log('Currently Playing', current_track.name);
-				console.log('Playing Next', next_track);
+			console.log('Currently Playing', current_track.name);
+			console.log('Playing Next', next_track);
 
-				/* scope variables to send back to html */
-				$scope.imgSrc = current_track.album.images[0].url;
-				/* Code to change the title <p> tag to the current song title. */
-				$scope.songTitle = current_track.name;
-				$scope.artistName = current_track.artists[0].name;
-			});
+			/* scope variables to send back to html */
+			$scope.imgSrc = current_track.album.images[0].url;
+			/* Code to change the title <p> tag to the current song title. */
+			$scope.songTitle = current_track.name;
+			$scope.artistName = current_track.artists[0].name;
+		});
 
 
-		};
+	};
 
-		/* Go back to previous song. Trigger this function when previous button is clicked */
-		$scope.previous = function() {
-			player.previousTrack().then(() => {
-				console.log('Previous');
-			});
-		};
+	/* Go back to previous song. Trigger this function when previous button is clicked */
+	$scope.previous = function() {
+		player.previousTrack().then(() => {
+			console.log('Previous');
+		});
+	};
 
-		/* Skip song. Trigger this function when skip button is pressed */
-		$scope.skip = function() {
-			player.nextTrack().then(() => {
-				console.log('Skip');
-			});
-		};
+	/* Skip song. Trigger this function when skip button is pressed */
+	$scope.skip = function() {
+		player.nextTrack().then(() => {
+			console.log('Skip');
+		});
+	};
 });
 
 // Controller for spotify login. Currently giving a CORS Error 
