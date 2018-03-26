@@ -85,13 +85,10 @@ app.config(function($routeProvider, $locationProvider){
 				href: '../stylesheets/base.css',
 				preload: true
 			},
-      		templateUrl: 'saved_music.html',
+			templateUrl: 'saved_music.html',
 			controller: 'browseController'
 		})
 		.when('/spotify_login', {
-			css: {
-				/* Code to get to Spotify Login */
-			},
 			templateUrl: 'main.html',
 			controller: 'spotifyController'
 		})
@@ -100,12 +97,10 @@ app.config(function($routeProvider, $locationProvider){
 			templateUrl: 'account.html',
 			controller: 'mainController'
 		});
-	
 	$locationProvider.html5Mode({requireBase: false});
 });
 
 app.controller('mainController', function($scope, $rootScope, $window, $location){
-
 });
 
 /* Currently separated browse page into browseController. Merge with mainController later */
@@ -117,22 +112,23 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
     name: 'Smoodify',
     getOAuthToken: cb => { cb(token); }
   });
+  
+	// Error handling
+	player.addListener('initialization_error', ({ message }) => { console.error(message); });
+	player.addListener('authentication_error', ({ message }) => { console.error(message); });
+	player.addListener('account_error', ({ message }) => { console.error(message); });
+	player.addListener('playback_error', ({ message }) => { console.error(message); });
 
-  // Error handling
-  player.addListener('initialization_error', ({ message }) => { console.error(message); });
-  player.addListener('authentication_error', ({ message }) => { console.error(message); });
-  player.addListener('account_error', ({ message }) => { console.error(message); });
-  player.addListener('playback_error', ({ message }) => { console.error(message); });
+	// Playback status updates
+	player.addListener('player_state_changed', state => { console.log(state.shuffle); });
 
-  // Playback status updates
-  player.addListener('player_state_changed', state => { console.log(state); });
+	// Ready
+	player.addListener('ready', ({ device_id }) => {
+		console.log('Ready with Device ID', device_id);
+	});
 
-  // Ready
-  player.addListener('ready', ({ device_id }) => {
-    console.log('Ready with Device ID', device_id);
-  });
+	// Connect to the player!
 
-  // Connect to the player!
 	player.connect().then(success => {
 		if (success) {
 			console.log('The Web Playback SDK successfully connected to Spotify!');
@@ -155,7 +151,7 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 					next_tracks: [next_track]
 				} = state.track_window;
 				
-				console.log('Currently Playing', current_track.name);
+				console.log('Currently Playing', current_track);
 
 				/* scope variables to send back to html */
 				$scope.imgSrc = current_track.album.images[0].url;
@@ -222,13 +218,30 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 		});
 	};
 
+	
 	/* Make setVolume parameter to the value you get from volume bar */
-	$scope.setVolume = function() {
-		player.setVolume($scope.vol.value).then(() => {
-			console.log('Volume updated!');
+	$scope.mute = function() {
+		player.getVolume().then(volume => {
+			let volume_percentage = volume * 100;
+			if (volume_percentage == 0) {
+				player.setVolume(($scope.vol) / 100).then(() => {
+					console.log('Volume updated!');
+				});
+			} else {
+				player.setVolume(0).then(() => {
+					console.log('Volume updated!');
+				});
+			}
 		});
 	};
 
+	/* Make setVolume parameter to the value you get from volume bar */
+	$scope.setVolume = function() {
+		player.setVolume(($scope.vol) / 100).then(() => {
+			console.log('Volume updated!');
+		});
+	};
+  
 	// var ret = $q.defer();
 	var apiBaseUrl= 'https://api.spotify.com/v1/'
 	var allTracks = [];
@@ -260,7 +273,6 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 			// return ret.promise;
 		}).then(console.log(allTracks));
 	}
-
 });
 
 /* controller for spotify login. Currently giving a CORS Error */
@@ -292,32 +304,30 @@ app.controller('spotifyController', function($scope, $http, $location, $window) 
 });
 
 app.controller('authController', function($scope, $http, $rootScope, $location, $cookies){
-  $scope.user = {username: '', password: ''};
-  $scope.error_message = '';
-  $scope.login = function(){
-    $http.post('/auth/login', $scope.user).success(function(data){
-      if(data.state == 'success'){
-      	$cookies['user'] = JSON.stringify(data.user);
-        $rootScope.authenticated = true;
-        $rootScope.current_user = data.user.username;
-        $location.path('/');
-      }
-      else{
-        $scope.error_message = data.message;
-      }
-    });
-  };
+	$scope.user = {username: '', password: ''};
+	$scope.error_message = '';
+	$scope.login = function(){
+		$http.post('/auth/login', $scope.user).success(function(data){
+			if(data.state == 'success'){
+				$cookies['user'] = JSON.stringify(data.user);
+				$rootScope.authenticated = true;
+				$rootScope.current_user = data.user.username;
+				$location.path('/');
+			} else{
+				$scope.error_message = data.message;
+			}
+		});
+	};
 
-  $scope.register = function(){
-    $http.post('/auth/signup', $scope.user).success(function(data){
-      if(data.state == 'success'){
-        $rootScope.authenticated = true;
-        $rootScope.current_user = data.user.username;
-        $location.path('/');
-      }
-      else{
-        $scope.error_message = data.message;
-      }
-    });
-  };
+	$scope.register = function(){
+		$http.post('/auth/signup', $scope.user).success(function(data){
+			if(data.state == 'success'){
+				$rootScope.authenticated = true;
+				$rootScope.current_user = data.user.username;
+				$location.path('/');
+			} else{
+				$scope.error_message = data.message;
+			}
+		});
+	};
 });
