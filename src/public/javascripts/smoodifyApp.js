@@ -10,6 +10,13 @@ var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 
 		if (user == '') {
 			$rootScope.authenticated = false;
 			$rootScope.current_user = '';
+			// if (next.includes('register')) {
+			// 	// if link is to register page, allow
+			// 	console.log('not auth\'d');
+			// }
+			// else {  // otherwise redirect to login
+			// 	console.log('not auth\'d');
+			// }	
 			console.log('not auth\'d');
 		}
 		// logged in session exists, set current user as authenticated
@@ -133,7 +140,7 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 		if (success) {
 			console.log('The Web Playback SDK successfully connected to Spotify!');
 	  }
-	})
+	});
 
 	/* Play a song. Trigger this function when play button is pressed */
 	$scope.play = function() {
@@ -189,7 +196,7 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 			});
 		});
 	};
-
+  
 	/* Skip song. Trigger this function when skip button is pressed */
 	$scope.skip = function() {
 		player.nextTrack().then(() => {
@@ -273,9 +280,11 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 			// return ret.promise;
 		}).then(console.log(allTracks));
 	}
+		});
+	};
 });
 
-/* controller for spotify login. Currently giving a CORS Error */
+// Controller for spotify login. Currently giving a CORS Error 
 app.controller('spotifyController', function($scope, $http, $location, $window) {
 		/* Spotify Login API Code */
 		const authEndpoint = 'https://accounts.spotify.com/authorize';
@@ -301,8 +310,25 @@ app.controller('spotifyController', function($scope, $http, $location, $window) 
 		];
 
 		window.location = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join('%20')}&response_type=token`;
+
+	$scope.scopes = 'user-read-private user-read-email';
+	/* Currently giving a CORS issue because Spotify doesn't allow Cross Domain Access */
+	/* TODO: Create a proxy server to be able to Cross Domain Access */
+	$http.get('https://accounts.spotify.com/authorize' +
+      '?response_type=token' +
+      '&client_id=' + 'dcddb8d13b2f4019a1dadb4b4c070661' +
+      ($scope.scopes ? '&scope=' + encodeURIComponent($scope.scopes) : '') +
+			'&redirect_uri=' + encodeURIComponent('http://localhost:3000'))
+			.then(function(response) {
+				$scope.my_data = response.data;
+	});
 });
 
+// TODO
+app.controller('accountController', function(songService, $scope, $rootScope){
+});
+
+// Controller used for loging in and registering using Passport
 app.controller('authController', function($scope, $http, $rootScope, $location, $cookies){
 	$scope.user = {username: '', password: ''};
 	$scope.error_message = '';
