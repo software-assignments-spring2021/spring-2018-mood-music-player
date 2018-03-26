@@ -280,8 +280,6 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 			// return ret.promise;
 		}).then(console.log(allTracks));
 	}
-		});
-	};
 });
 
 // Controller for spotify login. Currently giving a CORS Error 
