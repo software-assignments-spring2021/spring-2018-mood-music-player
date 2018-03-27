@@ -259,9 +259,11 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 		});
 	};
   
-	// var ret = $q.defer();
-	var apiBaseUrl= 'https://api.spotify.com/v1/'
+	var apiBaseUrl= 'https://api.spotify.com/v1/';
 	var allTracks = [];
+	var allIds = [];
+	var allFeatures = [];
+
 
 	var getTracks = function(offset){
 		$http.get(apiBaseUrl + 'me/tracks?offset=' + offset + '&limit=50', {
@@ -269,26 +271,71 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 				'Authorization': 'Bearer ' + $cookies.token
 			}
 		}).success(function(data) {
-			console.log('offset',  offset);
-			allTracks.push(data.items);
+			if (data.items) {
+				data.items.forEach((ele) => {
+					allTracks.push(ele.track);
+				});
+			}
 		}).error(function(data){
 			console.log('offset', offset, 'broke');
 		}); 
 	}
 
+	var getFeatures = function(ids, i){
+		$http.get(apiBaseUrl + 'audio-features/?ids=' + ids, {
+			headers: {
+				'Authorization': 'Bearer ' + $cookies.token
+			}
+		}).success(function(data) {
+			allFeatures.push.apply(allFeatures, data.audio_features);
+		}).error(function(data){
+			console.log(i, 'broke');
+		}); 
+	}
+
 	$scope.getSavedTracks = function() {
-		$http.get('https://api.spotify.com/v1/me/tracks?offset=0&limit=50', {
+		$http.get(apiBaseUrl + 'me/tracks?offset=0&limit=50', {
 			headers: {
 				'Authorization': 'Bearer ' + $cookies.token
 			}
 		}).then(function(data) {
-			allTracks.push(data.items);
+			if (data.items) {
+				data.items.forEach((ele) => {
+					allTracks.push(ele.track);
+				});
+			}
 			var songsLeft = data.data.total;
-			for (var offset = 50; offset <= songsLeft; offset = offset + 50) {
+			for (var offset = 0; offset <= songsLeft; offset = offset + 50) {
 				getTracks(offset);
 			}
-			// return ret.promise;
-		}).then(console.log(allTracks));
+		}).then(function() {
+			console.log($scope.songs);
+			$scope.getSongAnalysis();
+		});
+	}
+
+	$scope.getSongAnalysis = function() {
+		for (var i = 0; i < allTracks.length; i++) {
+			allIds.push(allTracks[i].id);
+		}
+		$http.get(apiBaseUrl + 'audio-features/?ids=' + allIds.slice(0,100).join(), {
+			headers: {
+				'Authorization': 'Bearer ' + $cookies.token
+			}
+		}).then(function(data) {
+			for (var i = 0; i < allIds.length; i += 100) {
+				var end;
+				if (i + 100 >= allIds.length) {
+					end = allIds.length - i;
+				} else {
+					end = i + 100;
+				}
+				var ids = allIds.slice(i, end);
+				getFeatures(ids.join(), i);
+			}
+		}).then(function() {
+			// pair allTracks and allFeatures based on song id and create song object then save to db
+		});
 	}
 });
 

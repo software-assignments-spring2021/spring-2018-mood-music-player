@@ -1,5 +1,5 @@
 node_modules
 .deploying
 src/config.js
-audio_analysis.json
 spotify_track.json
+audio_analysis.json
