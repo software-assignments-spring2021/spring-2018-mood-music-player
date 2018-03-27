@@ -24,7 +24,8 @@ var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 
 			$rootScope.has_token = false;
 		}
 	});
-	
+
+	// TODO: Location change success
 	$rootScope.$on('$locationChangeSuccess', function (angularEvent, newUrl, oldUrl) {
 		// if we just redirected from gaining the access token, save it to $cookies and $rootScope
 		if (oldUrl.includes('access_token')) {
@@ -248,12 +249,7 @@ app.controller('browseController', function($scope, $rootScope, $window){
 	
 });
 
-app.controller('tokenController', function($rootScope, $location, $window) {
-	console.log('hi');
-	console.log(window.location.path);
-	// console.log(window.location);
-});
-
+// TODO: Controller
 /* controller for spotify login. Currently giving a CORS Error */
 app.controller('spotifyController', function($scope, $http, $location, $window) {
 	/* Spotify Login API Code */
