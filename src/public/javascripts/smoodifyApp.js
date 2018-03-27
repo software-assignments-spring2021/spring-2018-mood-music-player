@@ -174,6 +174,7 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 			$http.get(paramString).success(function(data) {
 				/* data variable currently holds the mood from gracenote */
 				/* TODO: Currently first return is undefined, fix once we have the song list */
+				$scope.data = data;
 				console.log(data);
 			})
 		});
@@ -309,6 +310,7 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 				getTracks(offset);
 			}
 		}).then(function() {
+			$scope.songs = allTracks;
 			console.log($scope.songs);
 			$scope.getSongAnalysis();
 		});
@@ -402,6 +404,7 @@ app.controller('authController', function($scope, $http, $rootScope, $location, 
 	$scope.register = function(){
 		$http.post('/auth/signup', $scope.user).success(function(data){
 			if(data.state == 'success'){
+				$cookies['user'] = JSON.stringify(data.user);
 				$rootScope.authenticated = true;
 				$rootScope.current_user = data.user.username;
 				$location.path('/');
