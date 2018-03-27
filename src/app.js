@@ -15,6 +15,7 @@ const User = require('./models/user');
 const index = require('./routes/index');
 const api = require('./routes/api');
 const authenticate = require('./routes/authenticate')(passport);
+const spotify = require('./routes/spotify.js');
 const mongoose = require('mongoose');
 const db = process.env.MONGODB_URI || require('./config.js').mongoKey;
 mongoose.connect(db);
@@ -38,6 +39,7 @@ app.use(passport.session());
 app.use('/', index);
 app.use('/auth', authenticate);
 app.use('/api', api);
+app.use('/spotify', spotify);
 
 
 // catch 404 and forward to error handler
