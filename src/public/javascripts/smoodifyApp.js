@@ -165,7 +165,17 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 				/* Code to change the title <p> tag to the current song title. */
 				$scope.songTitle = current_track.name;
 				$scope.artistName = current_track.artists[0].name;
+				$scope.albumName = current_track.album.name;
 			});
+
+			/* input variable to go into gracenote API separated by '-' */
+			var paramString = "/gracenote/" + $scope.artistName + "-" + $scope.albumName + "-" + $scope.songTitle;
+			/* send data to back end */
+			$http.get(paramString).success(function(data) {
+				/* data variable currently holds the mood from gracenote */
+				/* TODO: Currently first return is undefined, fix once we have the song list */
+				console.log(data);
+			})
 		});
 	};
 
@@ -342,7 +352,6 @@ app.controller('authController', function($scope, $http, $rootScope, $location, 
 			}
 		});
 	};
-
 	$scope.register = function(){
 		$http.post('/auth/signup', $scope.user).success(function(data){
 			if(data.state == 'success'){
