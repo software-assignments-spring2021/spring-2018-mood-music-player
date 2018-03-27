@@ -168,19 +168,12 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 				$scope.albumName = current_track.album.name;
 			});
 
-
-			// $http.post('/auth/signup', $scope.user).success(function(data){
-			// 	if(data.state == 'success'){
-			// 		$rootScope.authenticated = true;
-			// 		$rootScope.current_user = data.user.username;
-			// 		$location.path('/');
-			// 	} else{
-			// 		$scope.error_message = data.message;
-			// 	}
-			// });
-
+			/* input variable to go into gracenote API separated by '-' */
+			var paramString = "/gracenote/" + $scope.artistName + "-" + $scope.albumName + "-" + $scope.songTitle;
 			/* send data to back end */
-			$http.get("/gracenote/mooddata").success(function(data) {
+			$http.get(paramString).success(function(data) {
+				/* data variable currently holds the mood from gracenote */
+				/* TODO: Currently first return is undefined, fix once we have the song list */
 				console.log(data);
 			})
 		});

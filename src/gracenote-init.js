@@ -12,7 +12,7 @@ const db = process.env.MONGODB_URI || require('./config.js').mongoKey;
 
 	api.searchTrack(artist, album, track, function(err, result) {
 		// Search Result as array
-		console.log(result[0].tracks[0]);
+		//console.log(result[0].tracks[0]);
 
 	}, {matchMode: gracenote.BEST_MATCH_ONLY});
 };

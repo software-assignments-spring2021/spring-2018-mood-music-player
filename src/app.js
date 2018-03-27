@@ -14,7 +14,6 @@ const User = require('./models/user');
 
 const index = require('./routes/index');
 const api = require('./routes/api');
-/* Gracenote Route */
 const gracenoteroute = require('./routes/gracenoteroute')
 
 const authenticate = require('./routes/authenticate')(passport);
