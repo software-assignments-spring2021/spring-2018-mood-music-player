@@ -11,8 +11,6 @@ const Song = new mongoose.Schema({
 	genre: {type: String, required: true},
 	album: {type: String, required: true},
 	length: {type: String, required: true},
-	
-	// mood: [{type: String}]
 	mood: [{ type: String, required: true }]
 });
 

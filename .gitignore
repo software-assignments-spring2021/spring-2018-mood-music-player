@@ -1,7 +1,5 @@
 node_modules
-<<<<<<< HEAD
-config.js
-=======
-
+.deploying
 src/config.js
->>>>>>> cb47de5082ed0ab391c6979d2059a21e10737304
+audio_analysis.json
+spotify_track.json
