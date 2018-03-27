@@ -311,6 +311,7 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 			}
 		}).then(function() {
 			$scope.songs = allTracks;
+			console.log(typeof $scope.songs);
 			console.log($scope.songs);
 			$scope.getSongAnalysis();
 		});
