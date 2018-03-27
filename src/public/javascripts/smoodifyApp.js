@@ -165,7 +165,24 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 				/* Code to change the title <p> tag to the current song title. */
 				$scope.songTitle = current_track.name;
 				$scope.artistName = current_track.artists[0].name;
+				$scope.albumName = current_track.album.name;
 			});
+
+
+			// $http.post('/auth/signup', $scope.user).success(function(data){
+			// 	if(data.state == 'success'){
+			// 		$rootScope.authenticated = true;
+			// 		$rootScope.current_user = data.user.username;
+			// 		$location.path('/');
+			// 	} else{
+			// 		$scope.error_message = data.message;
+			// 	}
+			// });
+
+			/* send data to back end */
+			$http.get("/gracenote/mooddata").success(function(data) {
+				console.log(data);
+			})
 		});
 	};
 
@@ -280,8 +297,6 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 			// return ret.promise;
 		}).then(console.log(allTracks));
 	}
-		});
-	};
 });
 
 // Controller for spotify login. Currently giving a CORS Error 
@@ -345,15 +360,5 @@ app.controller('authController', function($scope, $http, $rootScope, $location, 
 		});
 	};
 
-	$scope.register = function(){
-		$http.post('/auth/signup', $scope.user).success(function(data){
-			if(data.state == 'success'){
-				$rootScope.authenticated = true;
-				$rootScope.current_user = data.user.username;
-				$location.path('/');
-			} else{
-				$scope.error_message = data.message;
-			}
-		});
-	};
+	
 });
