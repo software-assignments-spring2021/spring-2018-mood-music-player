@@ -10,13 +10,6 @@ var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 
 		if (user == '') {
 			$rootScope.authenticated = false;
 			$rootScope.current_user = '';
-			// if (next.includes('register')) {
-			// 	// if link is to register page, allow
-			// 	console.log('not auth\'d');
-			// }
-			// else {  // otherwise redirect to login
-			// 	console.log('not auth\'d');
-			// }	
 			console.log('not auth\'d');
 		}
 		// logged in session exists, set current user as authenticated
