@@ -43,7 +43,6 @@ app.use('/api', api);
 app.use('/gracenote', gracenoteroute);
 
 
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     const err = new Error('Not Found');
@@ -82,8 +81,5 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
-
-
 
 app.listen(process.env.PORT || 3000);
