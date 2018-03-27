@@ -130,6 +130,13 @@ hr {
   margin-top: 20px;
 }
 
+/* SAVED MUSIC */
+
+.song-list {
+  padding-left: 5%;
+}
+
+
 /* MUSIC PLAYER FOOTER */
 
 .play-button {

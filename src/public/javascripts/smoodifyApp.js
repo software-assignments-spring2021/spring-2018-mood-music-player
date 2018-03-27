@@ -309,6 +309,8 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 				getTracks(offset);
 			}
 		}).then(function() {
+			$scope.songs = allTracks;
+			// $scope.song = allTracks[0];
 			console.log($scope.songs);
 			$scope.getSongAnalysis();
 		});
