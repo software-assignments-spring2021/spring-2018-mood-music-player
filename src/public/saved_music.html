@@ -14,11 +14,11 @@
 	</div>
 
 	<div class="content" id="saved-music-page">
-		<h2>{{data}}</h2>
-		<div ng-repeat="song in songs">
-			<a href="{{song.preview_url}}">{{song.title}}</a>
+		<div ng-repeat="song in songs" class="song-list">
+			<div class="song">
+				<a href="">{{song.name}} by <span ng-repeat="artist in song.artists">{{artist.name}}</span></a>
+			</div>
 		</div>
-		<!-- {{songs}} -->
 	</div>
 
 	<div class="music-progress-bar">

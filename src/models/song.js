@@ -1,18 +1,26 @@
 const mongoose = require('mongoose');
 
-
 const Song = new mongoose.Schema({
-	// song: {Some reference to Spotify API?},
-	
-	// if Spotify can't give anything. This is likely tentative,
-	// I made this because it wouldn't run with the comment above.
-	title: {type: String, required: true},
-	artist: {type: String, required: true},
-	genre: {type: String, required: true},
-	album: {type: String, required: true},
+	name: {type: String, required: true},
+	artist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Artist' }],
+	album: { type: mongoose.Schema.Types.ObjectId, ref: 'Album' },
 	length: {type: String, required: true},
-	mood: [{ type: String, required: true }]
+	mood: [{ type: String, required: true }],
+	spotify_id: {type: String, required: true},
+	spotify_uri: {type: String, required: true},
+	duration_ms: {type: Number},
+	analysis: {
+		danceability: {type: Number},
+		energy: {type: Number},
+		key: {type: Number},
+		loudness: {type: Number},
+		mode: {type: Number},	// major is represented by 1, minor is 0
+		speechiness: {type: Number},
+		acousticness: {type: Number},
+		instrumentalness: {type: Number},
+		valence: {type: Number},
+		tempo: {type: Number},
+	}
 });
-
 
 module.exports = mongoose.model('Song', Song);

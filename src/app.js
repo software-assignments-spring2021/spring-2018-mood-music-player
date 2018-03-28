@@ -11,6 +11,8 @@ const Song = require('./models/song');
 const Mood = require('./models/mood');
 const Playlist = require('./models/playlist');
 const User = require('./models/user');
+const Artist = require('./models/artist');
+const Album = require('./models/album');
 
 const index = require('./routes/index');
 const api = require('./routes/api');
