@@ -14,10 +14,14 @@
 	</div>
 
 	<div class="content" id="saved-music-page">
-		
+		<div ng-repeat="song in songs" class="song-list">
+			<div class="song">
+				<a href="">{{song.name}} by <span ng-repeat="artist in song.artists">{{artist.name}}</span></a>
+			</div>
+		</div>
 	</div>
 
-  <div class="music-progress-bar">
+	<div class="music-progress-bar">
 		<input ng-change="setVolume()" ng-model="vol" type="range" min="0" max="100" class="volume-bar">
 	</div>
 
