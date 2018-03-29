@@ -17,6 +17,7 @@ const Album = require('./models/album');
 const index = require('./routes/index');
 const api = require('./routes/api');
 const gracenoteroute = require('./routes/gracenoteroute')
+const musicplayerroute = require('./routes/musicplayer')
 
 const authenticate = require('./routes/authenticate')(passport);
 const spotify = require('./routes/spotify.js');
@@ -45,6 +46,7 @@ app.use('/auth', authenticate);
 app.use('/api', api);
 app.use('/spotify', spotify);
 app.use('/gracenote', gracenoteroute);
+app.use('/musicplayer', musicplayerroute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
