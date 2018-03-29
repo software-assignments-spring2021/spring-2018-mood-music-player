@@ -69,17 +69,16 @@
 
 
 
-
 	<footer class="music-player-container">
 		<div class="music-player-bar">
 			<div class="music-player-bar-left">
 				<div class="track-info">
-					<img src="../images/test-album.jpg" class="album-wrapper">
+					<img ng-src="{{imgSrc}}" class="album-wrapper">
 					<div class="title-wrapper">
-						<p>Work (feat. Drake) <i class="fas fa-heart"></i> <i class="fas fa-ban"></i></p> 
+						<p ng-bind="songTitle"><i class="fas fa-heart"></i> <i class="fas fa-ban"></i></p> 
 					</div>
 					<div class="artist-wrapper">
-						<p>Rihanna</p>
+						<p ng-bind="artistName"></p>
 					</div>
 				</div>
 
@@ -90,19 +89,19 @@
 			</div>
 			<div class="music-player-bar-center">
 				<div class="music-player-buttons">
-					<button class="shuffle-button">
+					<button ng-click="getSavedTracks()" class="shuffle-button">
 						<i class="fas fa-random"></i>
 					</button>
-					<button class="skip-back-button">
+					<button ng-click="previous()" class="skip-back-button">
 						<i class="fas fa-backward"></i>
 					</button>
-					<button class="play-button">
+					<button ng-click="play()" class="play-button">
 						<i class="far fa-play-circle"></i>
 					</button>
 					<!-- <button class="pause-button">
 						<i class="far fa-pause-circle"></i>
 					</button> -->
-					<button class="skip-forward-button">
+					<button ng-click="skip()" class="skip-forward-button">
 						<i class="fas fa-forward"></i>
 					</button>
 					<button class="replay-button">
@@ -112,12 +111,12 @@
 			</div>
 			<div class="music-player-bar-right">
 				<div class="volume-button">
-					<button class="volume-mute">
+					<button ng-click="mute()" class="volume-mute">
 						<i class="fas fa-volume-up"></i>
 					</button>
 				</div>
 				<div class="progress-bar">
-					<input type="range" min="0" max="100" class="volume-bar">
+					<input ng-change="setVolume()" ng-model="vol" type="range" min="0" max="100" class="volume-bar">
 				</div>
 			</div>
 		</div>
