@@ -9,7 +9,7 @@ function isAuthenticated (req, res, next) {
 	// request and response objects
 
 	//allow all get request methods
-	if(req.method === "GET"){
+	if(req.method === 'GET'){
 		return next();
 	}
 	if (req.isAuthenticated()){
@@ -18,7 +18,7 @@ function isAuthenticated (req, res, next) {
 
 	// if the user is not authenticated then redirect him to the login page
 	return res.redirect('/#login');
-};
+}
 
 //Register the authentication middleware
 router.use('/songs', isAuthenticated);
