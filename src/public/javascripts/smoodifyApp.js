@@ -24,7 +24,8 @@ var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 
 			$rootScope.has_token = false;
 		}
 	});
-	
+
+	// TODO: Location change success
 	$rootScope.$on('$locationChangeSuccess', function (angularEvent, newUrl, oldUrl) {
 		console.log($cookies.token);
 		// if we just redirected from gaining the access token, save it to $cookies and $rootScope
@@ -257,6 +258,7 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 	var allTracks = [];
 	var allIds = [];
 	var allFeatures = [];
+
 
 
 	var getTracks = function(offset){
