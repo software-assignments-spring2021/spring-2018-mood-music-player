@@ -107,6 +107,7 @@ app.controller('mainController', function($scope, $rootScope, $window, $location
 app.controller('browseController', function($scope, $http, $cookies, $rootScope, $window, $q){
   /* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
   /* TODO: Going to need to make token dynamic in that it obtains the current users token. Code once CORS Issue is solved.*/
+  var device = "";
   const token = $cookies.token;	
   const player = new Spotify.Player({
     name: 'Smoodify',
@@ -124,6 +125,7 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 
 	// Ready
 	player.addListener('ready', ({ device_id }) => {
+		device = device_id;
 		console.log('Ready with Device ID', device_id);
 	});
 
@@ -135,8 +137,33 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 	  }
 	});
 
+
 	/* Play a song. Trigger this function when play button is pressed */
 	$scope.play = function() {
+		/* Initialize the player volume to our volume bar's starting point */
+		player.setVolume(0.5).then(() => {
+			console.log('Volume updated!');
+		});
+
+
+		/* KEEPS GETTING Authentication Error */
+		/* Code to be able to start playing songs with our play button */
+		$http.put('https://api.spotify.com/v1/me/player', {
+			data: {
+				"device_ids": [
+					device
+		  		]
+			},
+
+			headers: {
+				'Authorization': 'Bearer ' + $cookies.token,
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			}
+		})
+		
+	
+
 		player.togglePlay().then(() => {
 			console.log('Toggle Button Fired');
 					/* code to get the metadata of the song currently playing */
@@ -332,6 +359,31 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 			// pair allTracks and allFeatures based on song id and create song object then save to db
 		});
 	}
+
+	
+
+	/* Code to play a specified song */
+	/* KEEPS GETTING Authentication Error */
+	$scope.playSong = function(song_uri) {
+		console.log(device);
+		$http.put('https://api.spotify.com/v1/me/player/play?device_id' + device, {
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + $cookies.token
+			},
+			body: {
+				"uris" : [song_uri]
+			}
+		})
+	}
+
+
+
+	
+
+
+
 });
 
 // Controller for spotify login. Currently giving a CORS Error 
@@ -361,7 +413,7 @@ app.controller('spotifyController', function($scope, $http, $location, $window) 
 
 		window.location = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join('%20')}&response_type=token`;
 
-	$scope.scopes = 'user-read-private user-read-email';
+	$scope.scopes = 'user-read-private user-read-email user-modify-playback-state';
 	/* Currently giving a CORS issue because Spotify doesn't allow Cross Domain Access */
 	/* TODO: Create a proxy server to be able to Cross Domain Access */
 	$http.get('https://accounts.spotify.com/authorize' +
