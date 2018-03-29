@@ -27,7 +27,7 @@ const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set('view engine,' 'ejs');
 
 app.use(logger('dev'));
 app.use(session({
@@ -56,10 +56,6 @@ app.use(function(req, res, next) {
 //// Initialize Passport
 const initPassport = require('./passport-init');
 initPassport(passport);
-
-// Initialize Gracenote
-const initGracenote = require('./gracenote-init');
-initGracenote(gracenote);
 
 // error handlers
 
