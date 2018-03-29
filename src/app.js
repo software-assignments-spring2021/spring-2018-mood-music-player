@@ -7,14 +7,14 @@ const session = require('express-session');
 const passport = require('passport');
 const gracenote = require('node-gracenote');
 //initialize mongoose schemas
-/*
-const Song = require('./models/song');
-const Mood = require('./models/mood');
-const Playlist = require('./models/playlist');
-const User = require('./models/user');
-const Artist = require('./models/artist');
-const Album = require('./models/album');
-*/
+
+require('./models/song');
+require('./models/mood');
+require('./models/playlist');
+require('./models/user');
+require('./models/artist');
+require('./models/album');
+
 const index = require('./routes/index');
 const api = require('./routes/api');
 const gracenoteroute = require('./routes/gracenoteroute');
