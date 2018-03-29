@@ -108,11 +108,13 @@ app.controller('mainController', function($scope, $rootScope, $window, $location
 app.controller('browseController', function($scope, $http, $cookies, $rootScope, $window, $q){
   /* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
   /* TODO: Going to need to make token dynamic in that it obtains the current users token. Code once CORS Issue is solved.*/
+  var device = "";
   const token = $cookies.token;	
   const player = new Spotify.Player({
     name: 'Smoodify',
     getOAuthToken: cb => { cb(token); }
   });
+  
   
 	// Error handling
 	player.addListener('initialization_error', ({ message }) => { console.error(message); });
@@ -125,6 +127,7 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 
 	// Ready
 	player.addListener('ready', ({ device_id }) => {
+		device = device_id;
 		console.log('Ready with Device ID', device_id);
 	});
 
@@ -133,11 +136,23 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 	player.connect().then(success => {
 		if (success) {
 			console.log('The Web Playback SDK successfully connected to Spotify!');
-	  }
+	  	}
 	});
+
+
+
 
 	/* Play a song. Trigger this function when play button is pressed */
 	$scope.play = function() {
+		/* Initialize the player volume to our volume bar's starting point */
+		player.setVolume(0.5).then(() => {
+			console.log('Volume updated!');
+		});
+
+		/* Code to play from our device */
+		$http.put('/musicplayer/' + token + " " + device, {
+		});
+	
 		player.togglePlay().then(() => {
 			console.log('Toggle Button Fired');
 					/* code to get the metadata of the song currently playing */
@@ -204,29 +219,27 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
   
 	/* Skip song. Trigger this function when skip button is pressed */
 	$scope.skip = function() {
-		player.nextTrack().then(() => {
-			console.log('Skip');
-					/* code to get the metadata of the song currently playing */
-			player.getCurrentState().then(state => {
-				if (!state) {
-					console.error('User is not playing music through the Web Playback SDK');
-					return;
-				}
-				
-				let {
-					current_track,
-					next_tracks: [next_track]
-				} = state.track_window;
-				
-				console.log('Currently Playing', current_track.name);
-				console.log('Playing Next', next_track);
 
-				/* scope variables to send back to html */
-				$scope.imgSrc = current_track.album.images[0].url;
-				/* Code to change the title <p> tag to the current song title. */
-				$scope.songTitle = current_track.name;
-				$scope.artistName = current_track.artists[0].name;
-			});
+
+		$http.post('/musicplayer/' + token, {
+		})
+
+		player.getCurrentState().then(state => {
+			if (!state) {
+				console.error('User is not playing music through the Web Playback SDK');
+				return;
+			}
+				
+			let {
+				current_track,
+				next_tracks: [next_track]
+			} = state.track_window;
+
+			/* scope variables to send back to html */
+			$scope.imgSrc = current_track.album.images[0].url;
+			/* Code to change the title <p> tag to the current song title. */
+			$scope.songTitle = current_track.name;
+			$scope.artistName = current_track.artists[0].name;
 		});
 	};
 
@@ -364,9 +377,8 @@ app.controller('spotifyController', function($scope, $http, $location, $window) 
 
 		window.location = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join('%20')}&response_type=token`;
 
-	$scope.scopes = 'user-read-private user-read-email';
-	/* Currently giving a CORS issue because Spotify doesn't allow Cross Domain Access */
-	/* TODO: Create a proxy server to be able to Cross Domain Access */
+	$scope.scopes = 'user-read-birthdate user-read-email user-read-private playlist-read-private user-top-read user-library-read playlist-modify-private user-read-currently-playing user-read-recently-played user-modify-playback-state user-read-playback-state user-library-modify streaming playlist-modify-public';
+
 	$http.get('https://accounts.spotify.com/authorize' +
       '?response_type=token' +
       '&client_id=' + 'dcddb8d13b2f4019a1dadb4b4c070661' +
