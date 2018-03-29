@@ -260,19 +260,7 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 	var allFeatures = [];
 
 
-<<<<<<< HEAD
-// TODO: Controller
-/* controller for spotify login. Currently giving a CORS Error */
-app.controller('spotifyController', function($scope, $http, $location, $window) {
-	/* Spotify Login API Code */
-	const hash = window.location.hash
-	.substring(1)
-	.split('&')
-	.reduce(function (initial, item) {
-		if (item) {
-			var parts = item.split('=');
-			initial[parts[0]] = decodeURIComponent(parts[1]);
-=======
+
 	var getTracks = function(offset){
 		$http.get(apiBaseUrl + 'me/tracks?offset=' + offset + '&limit=50', {
 			headers: {
@@ -327,7 +315,6 @@ app.controller('spotifyController', function($scope, $http, $location, $window) 
 	$scope.getSongAnalysis = function() {
 		for (var i = 0; i < allTracks.length; i++) {
 			allIds.push(allTracks[i].id);
->>>>>>> a36d46f5d6d894807777f5152596258ce4fd4faa
 		}
 		$http.get(apiBaseUrl + 'audio-features/?ids=' + allIds.slice(0,100).join(), {
 			headers: {
