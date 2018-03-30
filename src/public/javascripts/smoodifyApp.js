@@ -325,7 +325,25 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 	}
 
 	$scope.shuffle = function() {
-		
+		$scope.getPlayerStates()
+		console.log($scope.PlayerObject);
+		if (player.shuffle_state === false) {
+
+		} else {
+
+		}
+	}
+
+	$scope.getPlayerStates = function() {
+		$http.get(apiBaseUrl + 'me/player', {
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + $cookies.token
+			}
+		}).then(function(data) {
+			$scope.PlayerObject = data;
+		});
 	}
 
 	$scope.getSongAnalysis = function() {
