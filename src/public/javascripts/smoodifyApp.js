@@ -323,16 +323,6 @@ app.controller('browseController', function($scope, $http, $cookies){
 	};
 
 	$scope.shuffle = function() {
-		$scope.getPlayerStates()
-		console.log($scope.PlayerObject);
-		if (player.shuffle_state === false) {
-
-		} else {
-
-		}
-	}
-
-	$scope.getPlayerStates = function() {
 		$http.get(apiBaseUrl + 'me/player', {
 			headers: {
 				'Accept': 'application/json',
@@ -340,8 +330,21 @@ app.controller('browseController', function($scope, $http, $cookies){
 				'Authorization': 'Bearer ' + $cookies.token
 			}
 		}).then(function(data) {
-			$scope.PlayerObject = data;
+			if (data.data.shuffle_state === false) {
+				$http.put('/musicplayer/?action=shuffle&token=' + token + "&device=" + device + "&shuffle=true", {
+			
+				});
+			} else {
+				$http.put('/musicplayer/?action=shuffle&token=' + token + "&device=" + device + "&shuffle=false", {
+			
+				});
+			}
 		});
+		
+	}
+
+	$scope.getPlayerStates = function() {
+	
 	};
 
 	$scope.getSongAnalysis = function() {

@@ -9,6 +9,7 @@ router.put('/', function(req, res){
     var token = req.query.token;
     var device = req.query.device;
     var song_uri = req.query.song_uri;
+    var shuffle = req.query.shuffle;
     /* TODO Work on this Right Now */
     if (action === "play") {
         var headers = {
@@ -45,6 +46,24 @@ router.put('/', function(req, res){
             method: 'PUT',
             headers: headers,
             body: dataString
+        };
+        
+        function callback(error, response, body) {
+            if (!error && response.statusCode == 200) {
+                console.log(body);
+            }
+        }
+    } else if (action === "shuffle") {
+        var headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        };
+        
+        var options = {
+            url: 'https://api.spotify.com/v1/me/player/shuffle?state=' + shuffle,
+            method: 'PUT',
+            headers: headers,
         };
         
         function callback(error, response, body) {
