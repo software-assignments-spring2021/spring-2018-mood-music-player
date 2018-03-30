@@ -131,6 +131,32 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 		/* Code to play from our device */
 		$http.put('/musicplayer/?action=transfer&token=' + token + "&device=" + device, {
 		});
+
+		$http.get(apiBaseUrl + 'me/tracks?offset=0&limit=50', {
+			headers: {
+				'Authorization': 'Bearer ' + $cookies.token
+			}
+		}).then(function(data) {
+			if (data.items) {
+				data.items.forEach((ele) => {
+					allTracks.push(ele.track);
+				});
+			}
+			var songsLeft = data.data.total;
+			for (var offset = 0; offset <= songsLeft; offset = offset + 50) {
+				getTracks(offset);
+			}
+		}).then(function() {
+			$scope.songs = allTracks;
+			// $scope.song = allTracks[0];
+			console.log($scope.songs);
+			$scope.getSongAnalysis();
+		});
+
+		/* Initialize the player volume to our volume bar's starting point */
+		player.setVolume(0.5).then(() => {
+			console.log('Volume updated!');
+		});
 	});
 
 	// Connect to the player!
@@ -146,10 +172,7 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 
 	/* Play a song. Trigger this function when play button is pressed */
 	$scope.play = function() {
-		/* Initialize the player volume to our volume bar's starting point */
-		player.setVolume(0.5).then(() => {
-			console.log('Volume updated!');
-		});
+		
 	
 		player.togglePlay().then(() => {
 			console.log('Toggle Button Fired');
@@ -301,27 +324,8 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 		}); 
 	}
 
-	$scope.getSavedTracks = function() {
-		$http.get(apiBaseUrl + 'me/tracks?offset=0&limit=50', {
-			headers: {
-				'Authorization': 'Bearer ' + $cookies.token
-			}
-		}).then(function(data) {
-			if (data.items) {
-				data.items.forEach((ele) => {
-					allTracks.push(ele.track);
-				});
-			}
-			var songsLeft = data.data.total;
-			for (var offset = 0; offset <= songsLeft; offset = offset + 50) {
-				getTracks(offset);
-			}
-		}).then(function() {
-			$scope.songs = allTracks;
-			// $scope.song = allTracks[0];
-			console.log($scope.songs);
-			$scope.getSongAnalysis();
-		});
+	$scope.shuffle = function() {
+		
 	}
 
 	$scope.getSongAnalysis = function() {
