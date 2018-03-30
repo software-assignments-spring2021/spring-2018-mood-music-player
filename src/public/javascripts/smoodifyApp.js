@@ -105,16 +105,27 @@ app.controller('mainController', function(){
 });
 
 /* Currently separated browse page into browseController. Merge with mainController later */
+<<<<<<< HEAD
 app.controller('browseController', function($scope, $http, $cookies){
 	/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
 	/* TODO: Going to need to make token dynamic in that it obtains the current users token. Code once CORS Issue is solved.*/
 	var device = '';
+=======
+app.controller('browseController', function($scope, $http, $cookies, $rootScope, $window, $q){
+  /* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
+  /* TODO: Going to need to make token dynamic in that it obtains the current users token. Code once CORS Issue is solved.*/
+	var device = "";
+>>>>>>> 042c90bc29be26262ac120d29ec6253748f1b9be
 	const token = $cookies.token;	
 	const player = new Spotify.Player({
 		name: 'Smoodify',
 		getOAuthToken: cb => { cb(token); }
 	});
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 042c90bc29be26262ac120d29ec6253748f1b9be
 	// Error handling
 	player.addListener('initialization_error', ({ message }) => { console.error(message); });
 	player.addListener('authentication_error', ({ message }) => { console.error(message); });
@@ -128,6 +139,35 @@ app.controller('browseController', function($scope, $http, $cookies){
 	player.addListener('ready', ({ device_id }) => {
 		device = device_id;
 		console.log('Ready with Device ID', device_id);
+		/* Code to play from our device */
+		$http.put('/musicplayer/?action=transfer&token=' + token + "&device=" + device, {
+		});
+
+		$http.get(apiBaseUrl + 'me/tracks?offset=0&limit=50', {
+			headers: {
+				'Authorization': 'Bearer ' + $cookies.token
+			}
+		}).then(function(data) {
+			if (data.items) {
+				data.items.forEach((ele) => {
+					allTracks.push(ele.track);
+				});
+			}
+			var songsLeft = data.data.total;
+			for (var offset = 0; offset <= songsLeft; offset = offset + 50) {
+				getTracks(offset);
+			}
+		}).then(function() {
+			$scope.songs = allTracks;
+			// $scope.song = allTracks[0];
+			console.log($scope.songs);
+			$scope.getSongAnalysis();
+		});
+
+		/* Initialize the player volume to our volume bar's starting point */
+		player.setVolume(0.5).then(() => {
+			console.log('Volume updated!');
+		});
 	});
 
 	// Connect to the player!
@@ -135,18 +175,17 @@ app.controller('browseController', function($scope, $http, $cookies){
 	player.connect().then(success => {
 		if (success) {
 			console.log('The Web Playback SDK successfully connected to Spotify!');
+<<<<<<< HEAD
 		}
+=======
+	  	}
+>>>>>>> 042c90bc29be26262ac120d29ec6253748f1b9be
 	});
 
 
-	/* Play a song. Trigger this function when play button is pressed */
-	$scope.play = function() {
-		/* Initialize the player volume to our volume bar's starting point */
-		player.setVolume(0.5).then(() => {
-			console.log('Volume updated!');
-		});
 
 
+<<<<<<< HEAD
 		/* KEEPS GETTING Authentication Error */
 		/* Code to be able to start playing songs with our play button */
 		$http.put('https://api.spotify.com/v1/me/player', {
@@ -163,6 +202,12 @@ app.controller('browseController', function($scope, $http, $cookies){
 			}
 		});
 		
+=======
+	/* Play a song. Trigger this function when play button is pressed */
+	$scope.play = function() {
+		
+	
+>>>>>>> 042c90bc29be26262ac120d29ec6253748f1b9be
 		player.togglePlay().then(() => {
 			console.log('Toggle Button Fired');
 			/* code to get the metadata of the song currently playing */
@@ -188,6 +233,7 @@ app.controller('browseController', function($scope, $http, $cookies){
 			});
 
 			/* input variable to go into gracenote API separated by '-' */
+<<<<<<< HEAD
 			var paramString = '/gracenote/' + $scope.artistName + '-' + $scope.albumName + '-' + $scope.songTitle;
 			/* send data to back end */
 			$http.get(paramString).success(function(data) {
@@ -196,11 +242,22 @@ app.controller('browseController', function($scope, $http, $cookies){
 				$scope.data = data;
 				console.log(data);
 			});
+=======
+			//var paramString = "/gracenote/" + $scope.artistName + "-" + $scope.albumName + "-" + $scope.songTitle;
+			/* send data to back end */
+			// $http.get(paramString).success(function(data) {
+			// 	/* data variable currently holds the mood from gracenote */
+			// 	/* TODO: Currently first return is undefined, fix once we have the song list */
+			// 	$scope.data = data;
+			// 	console.log(data);
+			// })
+>>>>>>> 042c90bc29be26262ac120d29ec6253748f1b9be
 		});
 	};
 
 	/* Go back to previous song. Trigger this function when previous button is clicked */
 	$scope.previous = function() {		
+<<<<<<< HEAD
 		player.previousTrack().then(() => {
 			console.log('Previous');
 			/* code to get the metadata of the song currently playing */
@@ -209,26 +266,36 @@ app.controller('browseController', function($scope, $http, $cookies){
 					console.error('User is not playing music through the Web Playback SDK');
 					return;
 				}
-				
-				let {
-					current_track,
-					next_tracks: [next_track]
-				} = state.track_window;
-				
-				console.log('Currently Playing', current_track.name);
-				console.log('Playing Next', next_track);
+=======
 
+		$http.post('/musicplayer/?action=previous&token=' + token, {
+		})
+		
+		player.getCurrentState().then(state => {
+			if (!state) {
+				console.error('User is not playing music through the Web Playback SDK');
+				return;
+			}
+>>>>>>> 042c90bc29be26262ac120d29ec6253748f1b9be
+				
+			let {
+				current_track,
+				next_tracks: [next_track]
+			} = state.track_window;
+				
+			console.log('Currently Playing', current_track.name);
+			console.log('Playing Next', next_track);
 				/* scope variables to send back to html */
-				$scope.imgSrc = current_track.album.images[0].url;
-				/* Code to change the title <p> tag to the current song title. */
-				$scope.songTitle = current_track.name;
-				$scope.artistName = current_track.artists[0].name;
-			});
+			$scope.imgSrc = current_track.album.images[0].url;
+			/* Code to change the title <p> tag to the current song title. */
+			$scope.songTitle = current_track.name;
+			$scope.artistName = current_track.artists[0].name;
 		});
 	};
 
 	/* Skip song. Trigger this function when skip button is pressed */
 	$scope.skip = function() {
+<<<<<<< HEAD
 		player.nextTrack().then(() => {
 			console.log('Skip');
 			/* code to get the metadata of the song currently playing */
@@ -245,13 +312,31 @@ app.controller('browseController', function($scope, $http, $cookies){
 				
 				console.log('Currently Playing', current_track.name);
 				console.log('Playing Next', next_track);
+=======
+>>>>>>> 042c90bc29be26262ac120d29ec6253748f1b9be
 
-				/* scope variables to send back to html */
-				$scope.imgSrc = current_track.album.images[0].url;
-				/* Code to change the title <p> tag to the current song title. */
-				$scope.songTitle = current_track.name;
-				$scope.artistName = current_track.artists[0].name;
-			});
+
+		$http.post('/musicplayer/?action=next&token=' + token, {
+		})
+
+
+
+		player.getCurrentState().then(state => {
+			if (!state) {
+				console.error('User is not playing music through the Web Playback SDK');
+				return;
+			}
+				
+			let {
+				current_track,
+				next_tracks: [next_track]
+			} = state.track_window;
+
+			/* scope variables to send back to html */
+			$scope.imgSrc = current_track.album.images[0].url;
+			/* Code to change the title <p> tag to the current song title. */
+			$scope.songTitle = current_track.name;
+			$scope.artistName = current_track.artists[0].name;
 		});
 	};
 
@@ -312,26 +397,25 @@ app.controller('browseController', function($scope, $http, $cookies){
 		}); 
 	};
 
-	$scope.getSavedTracks = function() {
-		$http.get(apiBaseUrl + 'me/tracks?offset=0&limit=50', {
+	$scope.shuffle = function() {
+		$scope.getPlayerStates()
+		console.log($scope.PlayerObject);
+		if (player.shuffle_state === false) {
+
+		} else {
+
+		}
+	}
+
+	$scope.getPlayerStates = function() {
+		$http.get(apiBaseUrl + 'me/player', {
 			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
 				'Authorization': 'Bearer ' + $cookies.token
 			}
 		}).then(function(data) {
-			if (data.items) {
-				data.items.forEach((ele) => {
-					allTracks.push(ele.track);
-				});
-			}
-			var songsLeft = data.data.total;
-			for (var offset = 0; offset <= songsLeft; offset = offset + 50) {
-				getTracks(offset);
-			}
-		}).then(function() {
-			$scope.songs = allTracks;
-			// $scope.song = allTracks[0];
-			console.log($scope.songs);
-			$scope.getSongAnalysis();
+			$scope.PlayerObject = data;
 		});
 	};
 
@@ -357,11 +441,15 @@ app.controller('browseController', function($scope, $http, $cookies){
 		}).then(function() {
 			// pair allTracks and allFeatures based on song id and create song object then save to db
 		});
+<<<<<<< HEAD
 	};
+=======
+	}
 
-	/* Code to play a specified song */
-	/* KEEPS GETTING Authentication Error */
+>>>>>>> 042c90bc29be26262ac120d29ec6253748f1b9be
+
 	$scope.playSong = function(song_uri) {
+<<<<<<< HEAD
 		console.log(device);
 		$http.put('https://api.spotify.com/v1/me/player/play?device_id' + device, {
 			headers: {
@@ -374,6 +462,15 @@ app.controller('browseController', function($scope, $http, $cookies){
 			}
 		});
 	};
+=======
+		console.log(song_uri);
+		$http.put('/musicplayer/?action=play&?token=' + token + "&device=" + device + "&song_uri=" + song_uri, {
+			
+		});
+	}
+
+
+>>>>>>> 042c90bc29be26262ac120d29ec6253748f1b9be
 });
 
 /* Controller for spotify login. Currently giving a CORS Error */
@@ -403,9 +500,8 @@ app.controller('spotifyController', function($scope, $http, $location, $window) 
 
 	window.location = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join('%20')}&response_type=token`;
 
-	$scope.scopes = 'user-read-private user-read-email user-modify-playback-state';
-	/* Currently giving a CORS issue because Spotify doesn't allow Cross Domain Access */
-	/* TODO: Create a proxy server to be able to Cross Domain Access */
+	$scope.scopes = 'user-read-birthdate user-read-email user-read-private playlist-read-private user-top-read user-library-read playlist-modify-private user-read-currently-playing user-read-recently-played user-modify-playback-state user-read-playback-state user-library-modify streaming playlist-modify-public';
+
 	$http.get('https://accounts.spotify.com/authorize' +
 		'?response_type=token' +
 		'&client_id=' + 'dcddb8d13b2f4019a1dadb4b4c070661' +
