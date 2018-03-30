@@ -16,7 +16,7 @@ const Album = require('./models/album');
 
 const index = require('./routes/index');
 const api = require('./routes/api');
-const gracenoteroute = require('./routes/gracenoteroute')
+const gracenoteroute = require('./routes/gracenote')
 const musicplayerroute = require('./routes/musicplayer')
 
 const authenticate = require('./routes/authenticate')(passport);
@@ -58,10 +58,6 @@ app.use(function(req, res, next) {
 //// Initialize Passport
 const initPassport = require('./passport-init');
 initPassport(passport);
-
-// Initialize Gracenote
-const initGracenote = require('./gracenote-init');
-initGracenote(gracenote);
 
 // error handlers
 
