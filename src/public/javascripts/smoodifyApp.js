@@ -278,6 +278,41 @@ app.controller('browseController', function($scope, $http, $cookies){
 			console.log('Volume updated!');
 		});
 	};
+	
+	/* Get current user's profile */
+	var getUserProfile = function (){
+	$http.get('https://api.spotify.com/v1/me/player', {
+			data: {
+				"device_ids": [
+					device
+		  		]
+			},
+
+			headers: {
+				'Authorization': 'Bearer ' + $cookies.token,
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			}
+		})
+	});
+		
+		/* Get current user's saved albums */
+	var getSavedAlbums = function() {
+	$http.get('https://api.spotify.com/v1/me/albums', {
+			data: {
+				"device_ids": [
+					device //data? where do i find the data ids
+		  		]
+			},
+
+			headers: {
+				'Authorization': 'Bearer ' + $cookies.token,
+				//'Accept': 'application/json',
+				//'Content-Type': 'application/json'
+			}
+		})
+	});
+		
 
 	var apiBaseUrl= 'https://api.spotify.com/v1/';
 	var allTracks = [];
