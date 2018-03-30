@@ -16,11 +16,22 @@
 
 	<!-- Song List -->
 	<div class="content" id="saved-music-page">
-		<div ng-repeat="song in songs" class="song-list">
-			<div ng-click="playSong(song.uri)" class="song">
-				<a href="">{{song.name}} by <span ng-repeat="artist in song.artists">{{artist.name}}</span></a>
-			</div>
-		</div>
+		<table id="song-list">
+			<tr ng-repeat="song in songs" class="song-in-list">
+				<td class="play-song fas fa-play"></td>
+				<td>
+					<p class="song-name">
+						{{song.name}}
+					</p>
+					<p class="artist-album">
+					<span ng-repeat="artist in song.artists" class="artist">
+						<span ng-class='{in:$first}'>{{artist.name}}</span>
+					</span> &bull;
+					<span class="album">{{song.album.name}}</span>
+				</td>
+				<td>{{song.duration}}</td>
+			</tr>
+		</table>
 	</div>
 
 	<div class="music-progress-bar">

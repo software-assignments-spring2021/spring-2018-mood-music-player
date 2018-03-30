@@ -10,6 +10,10 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
+body::-webkit-scrollbar {
+  z-index: 10000;
+}
+
 /* SIDEBAR */
 #logo {
   text-decoration: none;
@@ -131,14 +135,42 @@ hr {
 }
 
 /* SAVED MUSIC */
+#song-list {
+  width: 90%;
+  margin-top: 5%;
+  margin-left: 5%;
+  color: white;
+  margin-bottom: 10%;
+}
 
-.song-list {
-  padding-left: 5%;
+#song-list td:not(:first-child) {
+  vertical-align: top;
+  padding: 15px 15px 10px 15px;
+}
+
+#song-list td:first-child {
+  padding: 25px 0px 10px 20px;
+}
+
+#song-list tr:hover {
+  background-color: #0e0b16;
 }
 
 
-/* MUSIC PLAYER FOOTER */
+#song-list tr:hover > .play-song {
+  visibility: visible;
+}
 
+#song-list .artist-album {
+  color: hsla(0,0%,100%,.6);
+  font-size: 13px;
+}
+
+.play-song {
+  visibility: hidden;
+}
+
+/* MUSIC PLAYER FOOTER */
 .play-button {
   font-size: 25px;
 }

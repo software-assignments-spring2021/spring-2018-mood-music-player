@@ -137,6 +137,7 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 		}).then(function(data) {
 			if (data.items) {
 				data.items.forEach((ele) => {
+					ele.track.duration = msToMS(ele.track.duration_ms);
 					allTracks.push(ele.track);
 				});
 			}
@@ -290,12 +291,19 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 		}).success(function(data) {
 			if (data.items) {
 				data.items.forEach((ele) => {
+					ele.track.duration = msToMS(ele.track.duration_ms);
 					allTracks.push(ele.track);
 				});
 			}
 		}).error(function(data){
 			console.log('offset', offset, 'broke');
 		}); 
+	}
+
+	var msToMS = function(ms) {
+		var minutes = Math.floor(ms / 60000);
+		var seconds = ((ms % 60000) / 1000).toFixed(0);
+		return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
 	}
 
 	var getFeatures = function(ids, i){
