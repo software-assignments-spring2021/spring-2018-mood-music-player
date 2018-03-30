@@ -13,7 +13,11 @@ router.get('/', function(req, res){
 
 /* code to send gracenote API results back to angular */
 router.get('/:id', function(req, res) {
+<<<<<<< HEAD:src/routes/gracenoteroute.js
 	var songProperties = req.params.id.split('-');
+=======
+	var songProperties = req.params.id.split("-");
+>>>>>>> 042c90bc29be26262ac120d29ec6253748f1b9be:src/routes/gracenote.js
 	api.searchTrack(songProperties[0], songProperties[1], songProperties[2], function(err, result) {
 		// Search Result as array
 		res.send(result[0].tracks[0].mood[0].text);
