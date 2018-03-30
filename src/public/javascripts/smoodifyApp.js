@@ -369,8 +369,8 @@ app.controller('browseController', function($scope, $http, $cookies){
 	};
 
 	$scope.playSong = function(song_uri) {
-		console.log(song_uri);
-		$http.put('/musicplayer/?action=play&?token=' + token + "&device=" + device + "&song_uri=" + song_uri, {
+		console.log(token);
+		$http.put('/musicplayer/?action=play&token=' + token + "&device=" + device + "&song_uri=" + song_uri, {
 			
 		});
 	}

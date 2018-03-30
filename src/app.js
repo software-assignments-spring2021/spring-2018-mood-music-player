@@ -17,12 +17,8 @@ require('./models/album');
 
 const index = require('./routes/index');
 const api = require('./routes/api');
-<<<<<<< HEAD
-const gracenoteroute = require('./routes/gracenoteroute');
-=======
-const gracenoteroute = require('./routes/gracenote')
-const musicplayerroute = require('./routes/musicplayer')
->>>>>>> 042c90bc29be26262ac120d29ec6253748f1b9be
+const gracenoteroute = require('./routes/gracenote');
+const musicplayerroute = require('./routes/musicplayer');
 
 const authenticate = require('./routes/authenticate')(passport);
 const spotify = require('./routes/spotify.js');
