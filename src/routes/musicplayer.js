@@ -36,11 +36,6 @@ router.post('/:id', function(req,res) {
 });
 
 
-
-
-
-
-
 /* Code to Play from our device */
 
 router.put('/:token', function(req, res) {
