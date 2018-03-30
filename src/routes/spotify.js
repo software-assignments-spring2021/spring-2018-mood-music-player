@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 
 const client_id = 'dcddb8d13b2f4019a1dadb4b4c070661';
 const client_secret = '531d0babc3c3427b9b75d9d9bdca1781';
-const redirect_uri = 'http://localhost:3000/spotify/callback';
+const redirect_uri = 'http://localhost:3000/';
 
 const getRandStr = function(n) {
 	let str = '';
@@ -26,7 +26,6 @@ router.use(express.static(__dirname + '/public'))
 router.get('/login', function(req, res) {
 	const state = getRandStr(16);
 	const scope = [
-		'user-read-birthdate',
 		'user-read-email',
 		'user-read-private',
 		'playlist-read-private',
@@ -39,60 +38,88 @@ router.get('/login', function(req, res) {
 		'user-read-playback-state',
 		'user-library-modify',
 		'streaming',
-		'playlist-modify-public'
+		'playlist-modify-public',
+		'user-read-birthdate'
 	];
 
-	res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify({
+	res.send('https://accounts.spotify.com/authorize?' + querystring.stringify({
 		response_type: 'code',
 		client_id: client_id,
-		scope: scope.join('%20'),
+		// scope: encodeURIComponent(scope.join(' ')),
 		redirect_uri: redirect_uri,
 		state: state
 	}));
 });
 
-router.get('/callback', function(req, res) {
-	const code = req.query.code || null;
-	const state = req.query.state || null;
-	const stored = req.cookies ? req.cookes[stateKey]: null;
-	if (state === null || state !== storedState) {
-		res.send({error: 'state_mismatch'});
-	} else {
-		res.clearCookie(stateKey);
-		const authOptions = {
-			url: 'https://accounts.spotify.com/api/token',
-			form: {
-				code: code,
-				redurect_uri: redirect_uri,
-				grant_type: 'authorization_code'
-			},
-			headers: {
-				'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
-			},
-			json: true
-		};
-		request.post(authOptions, function(error, response, body) {
-			if (response.statusCode === 200 && !error) {
-				const access_token = body.access_token;
-				const refresh_token = body.refresh_token;
-
-				const options = {
-					url: 'https://api.spotify.com/v1/me',
-			        headers: { 'Authorization': 'Bearer ' + access_token },
-			        json: true
-				}
-
-				request.get(options, function(error, response, body) {
-					console.log(body);
-				});
-
-				res.send({access_token: access_token, refresh_token: refresh_token});
-			} else {
-				res.send({error: 'invalid_token'});
-			}
-		});
-	}
+router.get('/callback/:code', function(req, res) {
+	const code = req.params.code;
+	const authOptions = {
+		url: 'https://accounts.spotify.com/api/token',
+		form: {
+			code: code,
+			redirect_uri: redirect_uri,
+			grant_type: 'authorization_code'
+		},
+		headers: {
+			'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+		},
+		json: true
+	};
+	request.post(authOptions, function(error, response, body) {
+		if (response.statusCode === 200 && !error) {
+			const access_token = body.access_token;
+			const refresh_token = body.refresh_token;
+			res.send({access_token: access_token, refresh_token: refresh_token});
+		} else {
+			res.send({error: 'invalid_token'});
+		}
+	});
 });
+
+
+
+// router.get('/callback', function(req, res) {
+// 	const code = req.query.code || null;
+// 	const state = req.query.state || null;
+// 	const stored = req.cookies ? req.cookes[stateKey]: null;
+// 	if (state === null || state !== storedState) {
+// 		res.send({error: 'state_mismatch'});
+// 	} else {
+// 		res.clearCookie(stateKey);
+// 		const authOptions = {
+// 			url: 'https://accounts.spotify.com/api/token',
+// 			form: {
+// 				code: code,
+// 				redurect_uri: redirect_uri,
+// 				grant_type: 'authorization_code'
+// 			},
+// 			headers: {
+// 				'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+// 			},
+// 			json: true
+// 		};
+// 		request.post(authOptions, function(error, response, body) {
+// 			if (response.statusCode === 200 && !error) {
+// 				const access_token = body.access_token;
+// 				const refresh_token = body.refresh_token;
+
+// 				const options = {
+// 					url: 'https://api.spotify.com/v1/me',
+// 			        headers: { 'Authorization': 'Bearer ' + access_token },
+// 			        json: true
+// 				}
+
+// 				request.get(options, function(error, response, body) {
+// 					console.log(body);
+// 				});
+
+// 				res.send({access_token: access_token, refresh_token: refresh_token});
+// 			} else {
+// 				res.send({error: 'invalid_token'});
+// 			}
+// 		});
+// 	}
+// });
 
 router.get('/refresh_token', function(req, res) {
 	const refresh_token = req.query.refresh_token;
