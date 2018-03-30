@@ -85,6 +85,29 @@ hr {
   bottom: 85px;
 }
 
+/* MAIN PAGE */
+#main-page {
+  text-align: center;
+  width: calc(100% - 225px);
+  position: absolute;
+  display: block;
+  -webkit-transform: translate(-50%,-50%);
+     -moz-transform: translate(-50%,-50%);
+     -o-transform: translate(-50%,-50%);
+      transform: translate(-50%,-50%);
+  left: 50%;
+  top: 35%;
+  /*border: 1px solid white;*/
+}
+
+#main-page h1 {
+  font-size: 5em;
+}
+
+#main-page .em {
+  font-size: 0.6em;
+}
+
 /* CONTENT */
 .content {
   display: block;
@@ -134,7 +157,7 @@ hr {
   margin-top: 20px;
 }
 
-/* SAVED MUSIC */
+/* SAVED SONGS */
 #song-list {
   width: 90%;
   margin-top: 5%;
@@ -148,14 +171,13 @@ hr {
   padding: 15px 15px 10px 15px;
 }
 
-#song-list td:first-child {
+#song-list td:nth-child(1) { 
   padding: 25px 0px 10px 20px;
 }
 
 #song-list tr:hover {
   background-color: #0e0b16;
 }
-
 
 #song-list tr:hover > .play-song {
   visibility: visible;

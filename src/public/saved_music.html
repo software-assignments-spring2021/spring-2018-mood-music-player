@@ -5,7 +5,7 @@
 
 		<nav id="links">
 			<a href="/">Home</a>
-			<a href="/saved" class="current-page">Saved Music</a>
+			<a href="/saved_songs" class="current-page">Saved Songs</a>
 		</nav>
 		<hr id="second-hr">
 		
@@ -18,7 +18,7 @@
 	<div class="content" id="saved-music-page">
 		<table id="song-list">
 			<tr ng-repeat="song in songs" class="song-in-list">
-				<td class="play-song fas fa-play"></td>
+				<td ng-click="playSong(song.uri)" class="play-song fas fa-play"></td>
 				<td>
 					<p class="song-name">
 						{{song.name}}

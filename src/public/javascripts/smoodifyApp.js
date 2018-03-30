@@ -79,7 +79,7 @@ app.config(function($routeProvider, $locationProvider){
 			templateUrl: 'register.html',
 			controller: 'authController',
 		})
-		.when('/saved', {
+		.when('/saved_songs', {
 			css: {
 				href: '../stylesheets/base.css',
 				preload: true
