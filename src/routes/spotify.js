@@ -4,8 +4,8 @@ const request = require('request');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
 
-const client_id = 'dcddb8d13b2f4019a1dadb4b4c070661';
-const client_secret = '531d0babc3c3427b9b75d9d9bdca1781';
+const client_id = process.env.SPOTIFY_ID || require('../config.js').spotifyId;
+const client_secret = process.env.SPOTIFY_SECRET || require('../config.js').spotifySecret;
 const redirect_uri = 'http://localhost:3000/';
 
 const getRandStr = function(n) {
@@ -20,32 +20,14 @@ const getRandStr = function(n) {
 
 const stateKey = 'spotify_auth_state';
 
-router.use(express.static(__dirname + '/public'))
-	.use(cookieParser());
+router.use(express.static(__dirname + '/public')).use(cookieParser());
 
 router.get('/login', function(req, res) {
-	const state = getRandStr(16);
-	const scope = [
-		'user-read-email',
-		'user-read-private',
-		'playlist-read-private',
-		'user-top-read',
-		'user-library-read',
-		'playlist-modify-private',
-		'user-read-currently-playing',
-		'user-read-recently-played',
-		'user-modify-playback-state',
-		'user-read-playback-state',
-		'user-library-modify',
-		'streaming',
-		'playlist-modify-public',
-		'user-read-birthdate'
-	];
+	const state = getRandStr(16);	
 
 	res.send('https://accounts.spotify.com/authorize?' + querystring.stringify({
 		response_type: 'code',
 		client_id: client_id,
-		// scope: encodeURIComponent(scope.join(' ')),
 		redirect_uri: redirect_uri,
 		state: state
 	}));
