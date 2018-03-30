@@ -87,6 +87,22 @@ app.config(function($routeProvider, $locationProvider){
 			templateUrl: 'saved_music.html',
 			controller: 'browseController'
 		})
+		.when('/saved_albums', {
+			css: {
+				href: '../stylesheets/base.css',
+				preload: true
+			},
+			templateUrl: 'saved_albums.html',
+			controller: 'browseController'
+		})
+		.when('/top_artists', {
+			css: {
+				href: '../stylesheets/base.css',
+				preload: true
+			},
+			templateUrl: 'top_artists.html',
+			controller: 'browseController'
+		})
 		.when('/spotify_login', {
 			templateUrl: 'main.html',
 			controller: 'spotifyController'
