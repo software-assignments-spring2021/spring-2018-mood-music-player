@@ -40,29 +40,56 @@ router.post('/:id', function(req,res) {
 
 router.put('/:token', function(req, res) {
     var deviceProperties = req.params.token.split(" ");
-    var token = deviceProperties[0];
-    var device = deviceProperties[1];
+    if (deviceProperties.length == 2) {
+        var token = deviceProperties[0];
+        var device = deviceProperties[1];
 
-    var headers = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
-    };
-    
-    var dataString = '{"device_ids":["' + device + '"]}';
-    
-    var options = {
-        url: 'https://api.spotify.com/v1/me/player',
-        method: 'PUT',
-        headers: headers,
-        body: dataString
-    };
-    
-    function callback(error, response, body) {
-        if (!error && response.statusCode == 200) {
-            console.log(body);
+        var headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        };
+        
+        var dataString = '{"device_ids":["' + device + '"]}';
+        
+        var options = {
+            url: 'https://api.spotify.com/v1/me/player',
+            method: 'PUT',
+            headers: headers,
+            body: dataString
+        };
+        
+        function callback(error, response, body) {
+            if (!error && response.statusCode == 200) {
+                console.log(body);
+            }
+        }
+    } else {
+        var token = deviceProperties[0];
+        var device = deviceProperties[1];
+        var song_uri = deviceProperties[2];
+        var headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        };
+        
+        var dataString = '{"uris":["' + song_uri + '"]}';
+        
+        var options = {
+            url: 'https://api.spotify.com/v1/me/player/play',
+            method: 'PUT',
+            headers: headers,
+            body: dataString
+        };
+        
+        function callback(error, response, body) {
+            if (!error && response.statusCode == 200) {
+                console.log(body);
+            }
         }
     }
+    
     
     request(options, callback);
 })

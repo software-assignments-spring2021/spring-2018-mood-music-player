@@ -348,6 +348,16 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 			// pair allTracks and allFeatures based on song id and create song object then save to db
 		});
 	}
+
+
+	$scope.playSong = function(song_uri) {
+		console.log(song_uri);
+		$http.put('/musicplayer/' + token + " " + device + " " + song_uri, {
+			
+		});
+	}
+
+
 });
 
 // Controller for spotify login. Currently giving a CORS Error 
