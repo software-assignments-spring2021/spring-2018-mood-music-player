@@ -108,13 +108,12 @@ app.controller('mainController', function($scope, $rootScope, $window, $location
 app.controller('browseController', function($scope, $http, $cookies, $rootScope, $window, $q){
   /* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
   /* TODO: Going to need to make token dynamic in that it obtains the current users token. Code once CORS Issue is solved.*/
-  var device = "";
-  const token = $cookies.token;	
-  const player = new Spotify.Player({
-    name: 'Smoodify',
-    getOAuthToken: cb => { cb(token); }
-  });
-  
+	var device = "";
+	const token = $cookies.token;	
+	const player = new Spotify.Player({
+		name: 'Smoodify',
+		getOAuthToken: cb => { cb(token); }
+	});
   
 	// Error handling
 	player.addListener('initialization_error', ({ message }) => { console.error(message); });
@@ -129,6 +128,9 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 	player.addListener('ready', ({ device_id }) => {
 		device = device_id;
 		console.log('Ready with Device ID', device_id);
+		/* Code to play from our device */
+		$http.put('/musicplayer/?action=transfer&token=' + token + "&device=" + device, {
+		});
 	});
 
 	// Connect to the player!
@@ -147,10 +149,6 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 		/* Initialize the player volume to our volume bar's starting point */
 		player.setVolume(0.5).then(() => {
 			console.log('Volume updated!');
-		});
-
-		/* Code to play from our device */
-		$http.put('/musicplayer/?action=transfer&token=' + token + "&device=" + device, {
 		});
 	
 		player.togglePlay().then(() => {
@@ -178,14 +176,14 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 			});
 
 			/* input variable to go into gracenote API separated by '-' */
-			var paramString = "/gracenote/" + $scope.artistName + "-" + $scope.albumName + "-" + $scope.songTitle;
+			//var paramString = "/gracenote/" + $scope.artistName + "-" + $scope.albumName + "-" + $scope.songTitle;
 			/* send data to back end */
-			$http.get(paramString).success(function(data) {
-				/* data variable currently holds the mood from gracenote */
-				/* TODO: Currently first return is undefined, fix once we have the song list */
-				$scope.data = data;
-				console.log(data);
-			})
+			// $http.get(paramString).success(function(data) {
+			// 	/* data variable currently holds the mood from gracenote */
+			// 	/* TODO: Currently first return is undefined, fix once we have the song list */
+			// 	$scope.data = data;
+			// 	console.log(data);
+			// })
 		});
 	};
 
@@ -222,6 +220,8 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 
 		$http.post('/musicplayer/?action=next&token=' + token, {
 		})
+
+
 
 		player.getCurrentState().then(state => {
 			if (!state) {
