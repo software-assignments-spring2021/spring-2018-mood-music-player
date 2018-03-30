@@ -150,7 +150,7 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 		});
 
 		/* Code to play from our device */
-		$http.put('/musicplayer/' + token + " " + device, {
+		$http.put('/musicplayer/?action=transfer&token=' + token + "&device=" + device, {
 		});
 	
 		player.togglePlay().then(() => {
@@ -191,29 +191,28 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 
 	/* Go back to previous song. Trigger this function when previous button is clicked */
 	$scope.previous = function() {		
-		player.previousTrack().then(() => {
-			console.log('Previous');
-					/* code to get the metadata of the song currently playing */
-			player.getCurrentState().then(state => {
-				if (!state) {
-					console.error('User is not playing music through the Web Playback SDK');
-					return;
-				}
-				
-				let {
-					current_track,
-					next_tracks: [next_track]
-				} = state.track_window;
-				
-				console.log('Currently Playing', current_track.name);
-				console.log('Playing Next', next_track);
 
+		$http.post('/musicplayer/?action=previous&token=' + token, {
+		})
+		
+		player.getCurrentState().then(state => {
+			if (!state) {
+				console.error('User is not playing music through the Web Playback SDK');
+				return;
+			}
+				
+			let {
+				current_track,
+				next_tracks: [next_track]
+			} = state.track_window;
+				
+			console.log('Currently Playing', current_track.name);
+			console.log('Playing Next', next_track);
 				/* scope variables to send back to html */
-				$scope.imgSrc = current_track.album.images[0].url;
-				/* Code to change the title <p> tag to the current song title. */
-				$scope.songTitle = current_track.name;
-				$scope.artistName = current_track.artists[0].name;
-			});
+			$scope.imgSrc = current_track.album.images[0].url;
+			/* Code to change the title <p> tag to the current song title. */
+			$scope.songTitle = current_track.name;
+			$scope.artistName = current_track.artists[0].name;
 		});
 	};
   
@@ -221,7 +220,7 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 	$scope.skip = function() {
 
 
-		$http.post('/musicplayer/' + token, {
+		$http.post('/musicplayer/?action=next&token=' + token, {
 		})
 
 		player.getCurrentState().then(state => {
@@ -352,7 +351,7 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 
 	$scope.playSong = function(song_uri) {
 		console.log(song_uri);
-		$http.put('/musicplayer/' + token + " " + device + " " + song_uri, {
+		$http.put('/musicplayer/?action=play&?token=' + token + "&device=" + device + "&song_uri=" + song_uri, {
 			
 		});
 	}
