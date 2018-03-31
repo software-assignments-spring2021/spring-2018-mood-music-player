@@ -1,5 +1,5 @@
 # smoodify
-### a music streaming application
+#### a music streaming application
 
 ## Description
 smoodify is a music streaming application that dynamically understands the user's mood and generates a playlist based on it. It relies on lyrical and music analysis to crossreference songs against the user's mood and aims to know what the user is feeling with every skip or listen.

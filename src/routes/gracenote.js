@@ -13,7 +13,7 @@ router.get('/', function(req, res){
 
 /* code to send gracenote API results back to angular */
 router.get('/:id', function(req, res) {
-	var songProperties = req.params.id.split("-");
+	var songProperties = req.params.id.split('-');
 	api.searchTrack(songProperties[0], songProperties[1], songProperties[2], function(err, result) {
 		// Search Result as array
 		res.send(result[0].tracks[0].mood[0].text);

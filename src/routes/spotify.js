@@ -16,7 +16,7 @@ const getRandStr = function(n) {
 		str += options.charAt(Math.floor(Math.random() * options.length));
 	}
 	return str;
-}
+};
 
 const stateKey = 'spotify_auth_state';
 
@@ -58,8 +58,6 @@ router.get('/callback/:code', function(req, res) {
 		}
 	});
 });
-
-
 
 // router.get('/callback', function(req, res) {
 // 	const code = req.query.code || null;
