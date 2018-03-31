@@ -114,7 +114,7 @@ app.controller('browseController', function($scope, $http, $cookies){
 		name: 'Smoodify',
 		getOAuthToken: cb => { cb(token); }
 	});
-
+	
 	// Error handling
 	player.addListener('initialization_error', ({ message }) => { console.error(message); });
 	player.addListener('authentication_error', ({ message }) => { console.error(message); });
@@ -128,6 +128,35 @@ app.controller('browseController', function($scope, $http, $cookies){
 	player.addListener('ready', ({ device_id }) => {
 		device = device_id;
 		console.log('Ready with Device ID', device_id);
+		/* Code to play from our device */
+		$http.put('/musicplayer/?action=transfer&token=' + token + "&device=" + device, {
+		});
+
+		$http.get(apiBaseUrl + 'me/tracks?offset=0&limit=50', {
+			headers: {
+				'Authorization': 'Bearer ' + $cookies.token
+			}
+		}).then(function(data) {
+			if (data.items) {
+				data.items.forEach((ele) => {
+					allTracks.push(ele.track);
+				});
+			}
+			var songsLeft = data.data.total;
+			for (var offset = 0; offset <= songsLeft; offset = offset + 50) {
+				getTracks(offset);
+			}
+		}).then(function() {
+			$scope.songs = allTracks;
+			// $scope.song = allTracks[0];
+			console.log($scope.songs);
+			$scope.getSongAnalysis();
+		});
+
+		/* Initialize the player volume to our volume bar's starting point */
+		player.setVolume(0.5).then(() => {
+			console.log('Volume updated!');
+		});
 	});
 
 	// Connect to the player!
@@ -139,30 +168,12 @@ app.controller('browseController', function($scope, $http, $cookies){
 	});
 
 
+
+
 	/* Play a song. Trigger this function when play button is pressed */
 	$scope.play = function() {
-		/* Initialize the player volume to our volume bar's starting point */
-		player.setVolume(0.5).then(() => {
-			console.log('Volume updated!');
-		});
-
-
-		/* KEEPS GETTING Authentication Error */
-		/* Code to be able to start playing songs with our play button */
-		$http.put('https://api.spotify.com/v1/me/player', {
-			data: {
-				'device_ids': [
-					device
-				]
-			},
-
-			headers: {
-				'Authorization': 'Bearer ' + $cookies.token,
-				'Accept': 'application/json',
-				'Content-Type': 'application/json'
-			}
-		});
 		
+	
 		player.togglePlay().then(() => {
 			console.log('Toggle Button Fired');
 			/* code to get the metadata of the song currently playing */
@@ -201,57 +212,56 @@ app.controller('browseController', function($scope, $http, $cookies){
 
 	/* Go back to previous song. Trigger this function when previous button is clicked */
 	$scope.previous = function() {		
-		player.previousTrack().then(() => {
-			console.log('Previous');
-			/* code to get the metadata of the song currently playing */
-			player.getCurrentState().then(state => {
-				if (!state) {
-					console.error('User is not playing music through the Web Playback SDK');
-					return;
-				}
-				
-				let {
-					current_track,
-					next_tracks: [next_track]
-				} = state.track_window;
-				
-				console.log('Currently Playing', current_track.name);
-				console.log('Playing Next', next_track);
 
+		$http.post('/musicplayer/?action=previous&token=' + token, {
+		})
+		
+		player.getCurrentState().then(state => {
+			if (!state) {
+				console.error('User is not playing music through the Web Playback SDK');
+				return;
+			}
+				
+			let {
+				current_track,
+				next_tracks: [next_track]
+			} = state.track_window;
+				
+			console.log('Currently Playing', current_track.name);
+			console.log('Playing Next', next_track);
 				/* scope variables to send back to html */
-				$scope.imgSrc = current_track.album.images[0].url;
-				/* Code to change the title <p> tag to the current song title. */
-				$scope.songTitle = current_track.name;
-				$scope.artistName = current_track.artists[0].name;
-			});
+			$scope.imgSrc = current_track.album.images[0].url;
+			/* Code to change the title <p> tag to the current song title. */
+			$scope.songTitle = current_track.name;
+			$scope.artistName = current_track.artists[0].name;
 		});
 	};
 
 	/* Skip song. Trigger this function when skip button is pressed */
 	$scope.skip = function() {
-		player.nextTrack().then(() => {
-			console.log('Skip');
-			/* code to get the metadata of the song currently playing */
-			player.getCurrentState().then(state => {
-				if (!state) {
-					console.error('User is not playing music through the Web Playback SDK');
-					return;
-				}
-				
-				let {
-					current_track,
-					next_tracks: [next_track]
-				} = state.track_window;
-				
-				console.log('Currently Playing', current_track.name);
-				console.log('Playing Next', next_track);
 
-				/* scope variables to send back to html */
-				$scope.imgSrc = current_track.album.images[0].url;
-				/* Code to change the title <p> tag to the current song title. */
-				$scope.songTitle = current_track.name;
-				$scope.artistName = current_track.artists[0].name;
-			});
+
+		$http.post('/musicplayer/?action=next&token=' + token, {
+		})
+
+
+
+		player.getCurrentState().then(state => {
+			if (!state) {
+				console.error('User is not playing music through the Web Playback SDK');
+				return;
+			}
+				
+			let {
+				current_track,
+				next_tracks: [next_track]
+			} = state.track_window;
+
+			/* scope variables to send back to html */
+			$scope.imgSrc = current_track.album.images[0].url;
+			/* Code to change the title <p> tag to the current song title. */
+			$scope.songTitle = current_track.name;
+			$scope.artistName = current_track.artists[0].name;
 		});
 	};
 
@@ -278,6 +288,41 @@ app.controller('browseController', function($scope, $http, $cookies){
 			console.log('Volume updated!');
 		});
 	};
+	
+	/* Get current user's profile */
+	var getUserProfile = function (){
+	$http.get('https://api.spotify.com/v1/me/player', {
+			data: {
+				"device_ids": [
+					device
+		  		]
+			},
+
+			headers: {
+				'Authorization': 'Bearer ' + $cookies.token,
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			}
+		})
+	});
+		
+		/* Get current user's saved albums */
+	var getSavedAlbums = function() {
+	$http.get('https://api.spotify.com/v1/me/albums', {
+			data: {
+				"device_ids": [
+					device //data? where do i find the data ids
+		  		]
+			},
+
+			headers: {
+				'Authorization': 'Bearer ' + $cookies.token,
+				//'Accept': 'application/json',
+				//'Content-Type': 'application/json'
+			}
+		})
+	});
+		
 
 	var apiBaseUrl= 'https://api.spotify.com/v1/';
 	var allTracks = [];
@@ -312,27 +357,29 @@ app.controller('browseController', function($scope, $http, $cookies){
 		}); 
 	};
 
-	$scope.getSavedTracks = function() {
-		$http.get(apiBaseUrl + 'me/tracks?offset=0&limit=50', {
+	$scope.shuffle = function() {
+		$http.get(apiBaseUrl + 'me/player', {
 			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
 				'Authorization': 'Bearer ' + $cookies.token
 			}
 		}).then(function(data) {
-			if (data.items) {
-				data.items.forEach((ele) => {
-					allTracks.push(ele.track);
+			if (data.data.shuffle_state === false) {
+				$http.put('/musicplayer/?action=shuffle&token=' + token + "&device=" + device + "&shuffle=true", {
+			
+				});
+			} else {
+				$http.put('/musicplayer/?action=shuffle&token=' + token + "&device=" + device + "&shuffle=false", {
+			
 				});
 			}
-			var songsLeft = data.data.total;
-			for (var offset = 0; offset <= songsLeft; offset = offset + 50) {
-				getTracks(offset);
-			}
-		}).then(function() {
-			$scope.songs = allTracks;
-			// $scope.song = allTracks[0];
-			console.log($scope.songs);
-			$scope.getSongAnalysis();
 		});
+		
+	}
+
+	$scope.getPlayerStates = function() {
+	
 	};
 
 	$scope.getSongAnalysis = function() {
@@ -359,21 +406,14 @@ app.controller('browseController', function($scope, $http, $cookies){
 		});
 	};
 
-	/* Code to play a specified song */
-	/* KEEPS GETTING Authentication Error */
 	$scope.playSong = function(song_uri) {
-		console.log(device);
-		$http.put('https://api.spotify.com/v1/me/player/play?device_id' + device, {
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + $cookies.token
-			},
-			body: {
-				'uris' : [song_uri]
-			}
+		console.log(token);
+		$http.put('/musicplayer/?action=play&token=' + token + "&device=" + device + "&song_uri=" + song_uri, {
+			
 		});
-	};
+	}
+
+
 });
 
 /* Controller for spotify login. Currently giving a CORS Error */
@@ -403,9 +443,8 @@ app.controller('spotifyController', function($scope, $http, $location, $window) 
 
 	window.location = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join('%20')}&response_type=token`;
 
-	$scope.scopes = 'user-read-private user-read-email user-modify-playback-state';
-	/* Currently giving a CORS issue because Spotify doesn't allow Cross Domain Access */
-	/* TODO: Create a proxy server to be able to Cross Domain Access */
+	$scope.scopes = 'user-read-birthdate user-read-email user-read-private playlist-read-private user-top-read user-library-read playlist-modify-private user-read-currently-playing user-read-recently-played user-modify-playback-state user-read-playback-state user-library-modify streaming playlist-modify-public';
+
 	$http.get('https://accounts.spotify.com/authorize' +
 		'?response_type=token' +
 		'&client_id=' + 'dcddb8d13b2f4019a1dadb4b4c070661' +
