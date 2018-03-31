@@ -24,9 +24,8 @@
 				$cookies.token = '';
 				$rootScope.has_token = false;
 			}
-		});
-		
-		// TODO: Location change success
+		});		
+		/* Location change success */
 		$rootScope.$on('$locationChangeSuccess', function (angularEvent, newUrl, oldUrl) {
 			console.log($cookies.token);
 			// if we just redirected from gaining the access token, save it to $cookies and $rootScope

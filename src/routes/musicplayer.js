@@ -2,8 +2,6 @@ var express = require('express');
 var router = express.Router();
 var request = require('request');
 
-    
-
 router.put('/', function(req, res){
     var action = req.query.action;
     var token = req.query.token;
@@ -18,7 +16,7 @@ router.put('/', function(req, res){
             'Authorization': 'Bearer ' + token
         };
         
-        var dataString = '{"uris":["' + song_uri + '"]}';
+        var dataString = '{context_uri: "' + song_uri + '"}';
         
         var options = {
             url: 'https://api.spotify.com/v1/me/player/play',
@@ -96,7 +94,6 @@ router.put('/', function(req, res){
 
 
 /* Code to skip to next song */
-
 router.post('/', function(req,res) {
     var action = req.query.action;
     var token = req.query.token;
