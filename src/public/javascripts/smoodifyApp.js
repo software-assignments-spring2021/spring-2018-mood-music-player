@@ -109,23 +109,24 @@ app.controller('browseController', function($scope, $http, $cookies){
 	/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
 	/* TODO: Going to need to make token dynamic in that it obtains the current users token. Code once CORS Issue is solved.*/
 	var device = '';
-	const token = $cookies.token;	
-	const player = new Spotify.Player({
+	const token = $cookies.token;
+	$scope.player = new Spotify.Player({
 		name: 'Smoodify',
 		getOAuthToken: cb => { cb(token); }
 	});
 	
+	
 	// Error handling
-	player.addListener('initialization_error', ({ message }) => { console.error(message); });
-	player.addListener('authentication_error', ({ message }) => { console.error(message); });
-	player.addListener('account_error', ({ message }) => { console.error(message); });
-	player.addListener('playback_error', ({ message }) => { console.error(message); });
+	$scope.player.addListener('initialization_error', ({ message }) => { console.error(message); });
+	$scope.player.addListener('authentication_error', ({ message }) => { console.error(message); });
+	$scope.player.addListener('account_error', ({ message }) => { console.error(message); });
+	$scope.player.addListener('playback_error', ({ message }) => { console.error(message); });
 
 	// Playback status updates
-	player.addListener('player_state_changed', state => { console.log(state.shuffle); });
+	$scope.player.addListener('player_state_changed', state => { console.log(state.shuffle); });
 
 	// Ready
-	player.addListener('ready', ({ device_id }) => {
+	$scope.player.addListener('ready', ({ device_id }) => {
 		device = device_id;
 		console.log('Ready with Device ID', device_id);
 		/* Code to play from our device */
@@ -154,14 +155,14 @@ app.controller('browseController', function($scope, $http, $cookies){
 		});
 
 		/* Initialize the player volume to our volume bar's starting point */
-		player.setVolume(0.5).then(() => {
+		$scope.player.setVolume(0.5).then(() => {
 			console.log('Volume updated!');
 		});
 	});
 
 	// Connect to the player!
 
-	player.connect().then(success => {
+	$scope.player.connect().then(success => {
 		if (success) {
 			console.log('The Web Playback SDK successfully connected to Spotify!');
 		}
@@ -173,50 +174,49 @@ app.controller('browseController', function($scope, $http, $cookies){
 	/* Play a song. Trigger this function when play button is pressed */
 	$scope.play = function() {
 		
+		$scope.player.getCurrentState().then(state => {
+			if (!state) {
+				console.error('User is not playing music through the Web Playback SDK');
+				return;
+			}
+			
+			let {
+				current_track,
+				next_tracks: [next_track]
+			} = state.track_window;
+			
+			console.log('Currently Playing', current_track);
+
+			/* scope variables to send back to html */
+			$scope.imgSrc = current_track.album.images[0].url;
+			/* Code to change the title <p> tag to the current song title. */
+			$scope.songTitle = current_track.name;
+			$scope.artistName = current_track.artists[0].name;
+			$scope.albumName = current_track.album.name;
+
+		}).then(function() {
+			$scope.player.togglePlay().then(() => {
+				console.log('Toggle Button Fired');
+				/* code to get the metadata of the song currently playing */
+				
 	
-		player.togglePlay().then(() => {
-			console.log('Toggle Button Fired');
-			/* code to get the metadata of the song currently playing */
-			player.getCurrentState().then(state => {
-				if (!state) {
-					console.error('User is not playing music through the Web Playback SDK');
-					return;
-				}
-				
-				let {
-					current_track,
-					next_tracks: [next_track]
-				} = state.track_window;
-				
-				console.log('Currently Playing', current_track);
-
-				/* scope variables to send back to html */
-				$scope.imgSrc = current_track.album.images[0].url;
-				/* Code to change the title <p> tag to the current song title. */
-				$scope.songTitle = current_track.name;
-				$scope.artistName = current_track.artists[0].name;
-				$scope.albumName = current_track.album.name;
+				/* input variable to go into gracenote API separated by '-' */
+				// var paramString = '/gracenote/' + $scope.artistName + '-' + $scope.albumName + '-' + $scope.songTitle;
+				// /* send data to back end */
+				// $http.get(paramString).success(function(data) {
+				// 	/* data variable currently holds the mood from gracenote */
+				// 	/* TODO: Currently first return is undefined, fix once we have the song list */
+				// 	$scope.data = data;
+				// 	console.log(data);
+				// });
 			});
-
-			/* input variable to go into gracenote API separated by '-' */
-			var paramString = '/gracenote/' + $scope.artistName + '-' + $scope.albumName + '-' + $scope.songTitle;
-			/* send data to back end */
-			$http.get(paramString).success(function(data) {
-				/* data variable currently holds the mood from gracenote */
-				/* TODO: Currently first return is undefined, fix once we have the song list */
-				$scope.data = data;
-				console.log(data);
-			});
-		});
+		});	
+		
 	};
 
 	/* Go back to previous song. Trigger this function when previous button is clicked */
 	$scope.previous = function() {		
-
-		$http.post('/musicplayer/?action=previous&token=' + token, {
-		})
-		
-		player.getCurrentState().then(state => {
+		$scope.player.getCurrentState().then(state => {
 			if (!state) {
 				console.error('User is not playing music through the Web Playback SDK');
 				return;
@@ -234,48 +234,52 @@ app.controller('browseController', function($scope, $http, $cookies){
 			/* Code to change the title <p> tag to the current song title. */
 			$scope.songTitle = current_track.name;
 			$scope.artistName = current_track.artists[0].name;
+
+			$http.post('/musicplayer/?action=previous&token=' + token, {
+			})
 		});
+	
 	};
 
 	/* Skip song. Trigger this function when skip button is pressed */
 	$scope.skip = function() {
-
-
 		$http.post('/musicplayer/?action=next&token=' + token, {
-		})
-
-
-
-		player.getCurrentState().then(state => {
-			if (!state) {
-				console.error('User is not playing music through the Web Playback SDK');
-				return;
-			}
-				
-			let {
-				current_track,
-				next_tracks: [next_track]
-			} = state.track_window;
-
-			/* scope variables to send back to html */
-			$scope.imgSrc = current_track.album.images[0].url;
-			/* Code to change the title <p> tag to the current song title. */
-			$scope.songTitle = current_track.name;
-			$scope.artistName = current_track.artists[0].name;
+		}).then(function() {
+			/* THIS .THEN IS NOT RUNNING */
+			console.log("hi");
+			$scope.player.getCurrentState().then(state => {
+				if (!state) {
+					console.error('User is not playing music through the Web Playback SDK');
+					return;
+				}
+					
+				let {
+					current_track,
+					next_tracks: [next_track]
+				} = state.track_window;
+					
+				console.log('Currently Playing', current_track.name);
+				console.log('Playing Next', next_track);
+					/* scope variables to send back to html */
+				$scope.imgSrc = current_track.album.images[0].url;
+				/* Code to change the title <p> tag to the current song title. */
+				$scope.songTitle = current_track.name;
+				$scope.artistName = current_track.artists[0].name;
+			});
 		});
 	};
 
 	
 	/* Make setVolume parameter to the value you get from volume bar */
 	$scope.mute = function() {
-		player.getVolume().then(volume => {
+		$scope.player.getVolume().then(volume => {
 			let volume_percentage = volume * 100;
 			if (volume_percentage == 0) {
-				player.setVolume(($scope.vol) / 100).then(() => {
+				$scope.player.setVolume(($scope.vol) / 100).then(() => {
 					console.log('Volume updated!');
 				});
 			} else {
-				player.setVolume(0).then(() => {
+				$scope.player.setVolume(0).then(() => {
 					console.log('Volume updated!');
 				});
 			}
@@ -284,7 +288,7 @@ app.controller('browseController', function($scope, $http, $cookies){
 
 	/* Make setVolume parameter to the value you get from volume bar */
 	$scope.setVolume = function() {
-		player.setVolume(($scope.vol) / 100).then(() => {
+		$scope.player.setVolume(($scope.vol) / 100).then(() => {
 			console.log('Volume updated!');
 		});
 	};
@@ -343,10 +347,7 @@ app.controller('browseController', function($scope, $http, $cookies){
 		
 	}
 
-	$scope.getPlayerStates = function() {
 	
-	};
-
 	$scope.getSongAnalysis = function() {
 		for (var i = 0; i < allTracks.length; i++) {
 			allIds.push(allTracks[i].id);
