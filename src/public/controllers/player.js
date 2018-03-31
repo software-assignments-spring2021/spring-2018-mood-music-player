@@ -2,7 +2,7 @@
 
     var module = angular.module('smoodifyApp');
 
-    module.controller('PlayerController', function($scope, $http, $cookies) {
+    module.controller('PlayerController', function($scope, SpotifyAPI, $http, $cookies) {
         /* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
     /* TODO: Going to need to make token dynamic in that it obtains the current users token. Code once CORS Issue is solved.*/
         var device = '';

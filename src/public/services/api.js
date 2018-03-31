@@ -7,7 +7,7 @@
         var baseUrl = 'https://api.spotify.com/v1';
 
         return {
-            getSong: function() {
+            switchToDevice: function() {
                 var ret = $q.defer();
                 $http.put(baseUrl + '/me/player', {
                     headers: {
@@ -23,6 +23,8 @@
                 });
                 return ret.promise;
             },
+
+            
             
             
             getPlayerState: function() {
@@ -40,6 +42,8 @@
             },
 
 
+
+
             playNext: function() {
                 var ret = $q.defer();
                 $http.post(apiBaseUrl + '/me/player/next', {
@@ -53,6 +57,8 @@
                 });
                 return ret.promise;
             },
+
+
 
 
             playPrevious: function() {
@@ -69,6 +75,8 @@
                 return ret.promise;
             },
 
+
+
             toggleShuffle: function() {
                 var ret = $q.defer();
                 $http.put(apiBaseUrl + '/me/player/shuffle?state=' + shuffle, {
@@ -82,6 +90,27 @@
                 });
                 return ret.promise;
             },
+
+
+
+            playClickedSong: function() {
+                var ret = $q.defer();
+                $http.put(apiBaseUrl + '/me/player/play', {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    
+                    data: {
+                        'context_uri': '["' + song_uri + '"]'
+                    }
+                }).success(function(r) {
+                    ret.resolve(r);
+                });
+                return ret.promise;
+            }
+
 
 
             
