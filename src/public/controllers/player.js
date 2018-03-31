@@ -4,7 +4,7 @@
 
     module.controller('PlayerController', function($scope, $http, $cookies) {
         /* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
-	/* TODO: Going to need to make token dynamic in that it obtains the current users token. Code once CORS Issue is solved.*/
+    /* TODO: Going to need to make token dynamic in that it obtains the current users token. Code once CORS Issue is solved.*/
         var device = '';
         const token = $cookies.token;
         $scope.player = new Spotify.Player({
@@ -101,18 +101,18 @@
                     // var paramString = '/gracenote/' + $scope.artistName + '-' + $scope.albumName + '-' + $scope.songTitle;
                     // /* send data to back end */
                     // $http.get(paramString).success(function(data) {
-                    // 	/* data variable currently holds the mood from gracenote */
-                    // 	/* TODO: Currently first return is undefined, fix once we have the song list */
-                    // 	$scope.data = data;
-                    // 	console.log(data);
+                    //  /* data variable currently holds the mood from gracenote */
+                    //  /* TODO: Currently first return is undefined, fix once we have the song list */
+                    //  $scope.data = data;
+                    //  console.log(data);
                     // });
                 });
-            });	
+            }); 
             
         };
 
         /* Go back to previous song. Trigger this function when previous button is clicked */
-        $scope.previous = function() {		
+        $scope.previous = function() {      
             $scope.player.getCurrentState().then(state => {
                 if (!state) {
                     console.error('User is not playing music through the Web Playback SDK');
@@ -190,42 +190,42 @@
             });
         };
         
+        /* Getting data from Spotify */
+        // TODO: Move to service
+        var apiBaseUrl= 'https://api.spotify.com/v1/';
+        
         /* Get current user's profile */
         var getUserProfile = function (){
-        $http.get('https://api.spotify.com/v1/me/player', {
-                data: {
-                    "device_ids": [
-                        device
-                    ]
-                },
-
+            $http.get(apiBaseUrl + 'me/player', {
                 headers: {
                     'Authorization': 'Bearer ' + $cookies.token,
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 }
-            })
-        };
+            }).success(function(data) {
+                var userData = data;
+            });
+        }
             
-            /* Get current user's saved albums */
-        var getSavedAlbums = function() {
-        $http.get('https://api.spotify.com/v1/me/albums', {
-                data: {
-                    "device_ids": [
-                        device //data? where do i find the data ids
-                    ]
-                },
+        var allAlbums = [];
 
+        /* Get current user's saved albums */
+        var getAlbums = function(offset) {
+            $http.get(apiBaseUrl + 'me/albums?offset=' + offset + '&limit=50', {
                 headers: {
-                    'Authorization': 'Bearer ' + $cookies.token,
-                    //'Accept': 'application/json',
-                    //'Content-Type': 'application/json'
+                    'Authorization': 'Bearer ' + $cookies.token
                 }
-            })
+            }).success(function(data) {
+                if (data.items) {
+                    data.items.forEach((ele) => {
+                        allAlbums.push(ele.album);
+                    });
+                }
+            }).error(function() {
+                console.log('offset', offset, 'broke');
+            });
         };
-            
 
-        var apiBaseUrl= 'https://api.spotify.com/v1/';
         var allTracks = [];
         var allIds = [];
         var allFeatures = [];
@@ -258,29 +258,7 @@
             }); 
         };
 
-        $scope.shuffle = function() {
-            $http.get(apiBaseUrl + 'me/player', {
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + $cookies.token
-                }
-            }).then(function(data) {
-                if (data.data.shuffle_state === false) {
-                    $http.put('/musicplayer/?action=shuffle&token=' + token + "&device=" + device + "&shuffle=true", {
-                
-                    });
-                } else {
-                    $http.put('/musicplayer/?action=shuffle&token=' + token + "&device=" + device + "&shuffle=false", {
-                
-                    });
-                }
-            });
-            
-        }
-
-        
-        $scope.getSongAnalysis = function() {
+        var getSongAnalysis = function() {
             for (var i = 0; i < allTracks.length; i++) {
                 allIds.push(allTracks[i].id);
             }
@@ -303,6 +281,27 @@
                 // pair allTracks and allFeatures based on song id and create song object then save to db
             });
         };
+
+        $scope.shuffle = function() {
+            $http.get(apiBaseUrl + 'me/player', {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + $cookies.token
+                }
+            }).then(function(data) {
+                if (data.data.shuffle_state === false) {
+                    $http.put('/musicplayer/?action=shuffle&token=' + token + "&device=" + device + "&shuffle=true", {
+                
+                    });
+                } else {
+                    $http.put('/musicplayer/?action=shuffle&token=' + token + "&device=" + device + "&shuffle=false", {
+                
+                    });
+                }
+            });
+            
+        }
 
         $scope.playSong = function(song_uri) {
             console.log(token);
