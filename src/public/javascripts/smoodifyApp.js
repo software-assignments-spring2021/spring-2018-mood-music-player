@@ -33,8 +33,10 @@ var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 
 			$http.get('/spotify/callback/' + code).then(function(data) {
 				const access_token = data.data.access_token;
 				const refresh_token = data.data.refresh_token;
+				const expires_in = data.data.expires_in;
 				$cookies.token = access_token;
-				$cookies.refresh_token = refresh_token	
+				$cookies.refresh_token = refresh_token;
+				$cookies.expires_in = expires_in;
 			});
 			window.location = '/';
 		}
@@ -143,8 +145,7 @@ app.controller('browseController', function($scope, $http, $cookies, $rootScope,
 		device = device_id;
 		console.log('Ready with Device ID', device_id);
 		/* Code to play from our device */
-		$http.put('/musicplayer/?action=transfer&token=' + token + "&device=" + device, {
-		});
+		$http.put('/musicplayer/?action=transfer&token=' + token + "&device=" + device, {});
 
 		$http.get(apiBaseUrl + 'me/tracks?offset=0&limit=50', {
 			headers: {
