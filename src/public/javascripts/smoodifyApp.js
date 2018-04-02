@@ -81,12 +81,28 @@
 				templateUrl: 'register.html',
 				controller: 'AuthController',
 			})
-			.when('/saved', {
+			.when('/saved_songs', {
 				css: {
 					href: '../stylesheets/base.css',
 					preload: true
 				},
-				templateUrl: 'saved_music.html',
+				templateUrl: 'saved_songs.html',
+				controller: 'PlayerController'
+			})
+			.when('/saved_albums', {
+				css: {
+					href: '../stylesheets/base.css',
+					preload: true
+				},
+				templateUrl: 'saved_albums.html',
+				controller: 'PlayerController'
+			})
+			.when('/top_artists', {
+				css: {
+					href: '../stylesheets/base.css',
+					preload: true
+				},
+				templateUrl: 'top_artists.html',
 				controller: 'PlayerController'
 			})
 			.when('/spotify_login', {

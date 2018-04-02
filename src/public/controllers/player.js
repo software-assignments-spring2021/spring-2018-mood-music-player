@@ -46,9 +46,6 @@
 				}
 			}).then(function() {
 				$scope.songs = allTracks;
-				// $scope.song = allTracks[0];
-				console.log($scope.songs);
-				$scope.getSongAnalysis();
 			});
 
 			/* Initialize the player volume to our volume bar's starting point */
