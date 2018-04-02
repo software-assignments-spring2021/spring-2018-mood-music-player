@@ -1,10 +1,10 @@
 (function(){
 
-    var module = angular.module('smoodifyApp');
+	var module = angular.module('smoodifyApp');
 
-    module.controller('MainController', function(){
+	module.controller('MainController', function(){
     
-    });
+	});
     
 })();
 
