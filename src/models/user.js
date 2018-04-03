@@ -7,7 +7,6 @@ const User = new mongoose.Schema({
 	password: {type: String, required: true}, //hash created from password
 	name: {type: String},
 	dob: {type: Date},
-	name: {type: String},
 	email: {type: String},
 	spotify_id: {type: String},
 	uri: {type: String},

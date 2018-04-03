@@ -16,7 +16,7 @@ const getRandStr = function(n) {
 		str += options.charAt(Math.floor(Math.random() * options.length));
 	}
 	return str;
-}
+};
 
 const stateKey = 'spotify_auth_state';
 
@@ -55,7 +55,7 @@ router.get('/callback', function(req, res) {
 	const code = req.query.code || null;
 	const state = req.query.state || null;
 	const stored = req.cookies ? req.cookes[stateKey]: null;
-	if (state === null || state !== storedState) {
+	if (state === null || state !== stored) {
 		res.send({error: 'state_mismatch'});
 	} else {
 		res.clearCookie(stateKey);
@@ -78,9 +78,9 @@ router.get('/callback', function(req, res) {
 
 				const options = {
 					url: 'https://api.spotify.com/v1/me',
-			        headers: { 'Authorization': 'Bearer ' + access_token },
-			        json: true
-				}
+					headers: { 'Authorization': 'Bearer ' + access_token },
+					json: true
+				};
 
 				request.get(options, function(error, response, body) {
 					console.log(body);
@@ -94,7 +94,7 @@ router.get('/callback', function(req, res) {
 	}
 });
 
-router.get('/refresh_token', function(req, res) {
+router.get('/refresh_token', function(req) {
 	const refresh_token = req.query.refresh_token;
 	const authOptions = {
 		url: 'https://accounts.spotify.com/api/token',

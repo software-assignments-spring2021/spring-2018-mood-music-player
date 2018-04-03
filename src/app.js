@@ -7,16 +7,17 @@ const session = require('express-session');
 const passport = require('passport');
 const gracenote = require('node-gracenote');
 //initialize mongoose schemas
-const Song = require('./models/song');
-const Mood = require('./models/mood');
-const Playlist = require('./models/playlist');
-const User = require('./models/user');
-const Artist = require('./models/artist');
-const Album = require('./models/album');
+
+require('./models/song');
+require('./models/mood');
+require('./models/playlist');
+require('./models/user');
+require('./models/artist');
+require('./models/album');
 
 const index = require('./routes/index');
 const api = require('./routes/api');
-const gracenoteroute = require('./routes/gracenoteroute')
+const gracenoteroute = require('./routes/gracenoteroute');
 
 const authenticate = require('./routes/authenticate')(passport);
 const spotify = require('./routes/spotify.js');
@@ -31,7 +32,7 @@ app.set('view engine,' 'ejs');
 
 app.use(logger('dev'));
 app.use(session({
-  secret: 'keyboard cat'
+	secret: 'keyboard cat'
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -48,9 +49,9 @@ app.use('/gracenote', gracenoteroute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-    const err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+	const err = new Error('Not Found');
+	err.status = 404;
+	next(err);
 });
 
 //// Initialize Passport
@@ -62,23 +63,23 @@ initPassport(passport);
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
-    });
+	app.use(function(err, req, res) {
+		res.status(err.status || 500);
+		res.render('error', {
+			message: err.message,
+			error: err
+		});
+	});
 }
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
+app.use(function(err, req, res) {
+	res.status(err.status || 500);
+	res.render('error', {
+		message: err.message,
+		error: {}
+	});
 });
 
 app.listen(process.env.PORT || 3000);
