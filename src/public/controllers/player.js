@@ -4,7 +4,6 @@
 
 	module.controller('PlayerController', function($scope, SpotifyAPI, $http, $cookies) {
 		/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
-		/* TODO: Going to need to make token dynamic in that it obtains the current users token. Code once CORS Issue is solved.*/
 		var device = '';
 		const token = $cookies.token;
 		$scope.player = new Spotify.Player({
@@ -30,23 +29,8 @@
 			$http.put('/musicplayer/?action=transfer&token=' + token + '&device=' + device, {
 			});
 
-			$http.get(apiBaseUrl + 'me/tracks?offset=0&limit=50', {
-				headers: {
-					'Authorization': 'Bearer ' + $cookies.token
-				}
-			}).then(function(data) {
-				if (data.items) {
-					data.items.forEach((ele) => {
-						allTracks.push(ele.track);
-					});
-				}
-				var songsLeft = data.data.total;
-				for (var offset = 0; offset <= songsLeft; offset = offset + 50) {
-					getTracks(offset);
-				}
-			}).then(function() {
-				$scope.songs = allTracks;
-			});
+			$scope.songs = SpotifyAPI.getTracks();		
+			$scope.albums = SpotifyAPI.getAlbums();	
 
 			/* Initialize the player volume to our volume bar's starting point */
 			$scope.player.setVolume(0.5).then(() => {
@@ -204,44 +188,11 @@
 			});
 		};
             
-		var allAlbums = [];
-
-		/* Get current user's saved albums */
-		var getAlbums = function(offset) {
-			$http.get(apiBaseUrl + 'me/albums?offset=' + offset + '&limit=50', {
-				headers: {
-					'Authorization': 'Bearer ' + $cookies.token
-				}
-			}).success(function(data) {
-				if (data.items) {
-					data.items.forEach((ele) => {
-						allAlbums.push(ele.album);
-					});
-				}
-			}).error(function() {
-				console.log('offset', offset, 'broke');
-			});
-		};
+		
 
 		var allTracks = [];
 		var allIds = [];
 		var allFeatures = [];
-
-		var getTracks = function(offset){
-			$http.get(apiBaseUrl + 'me/tracks?offset=' + offset + '&limit=50', {
-				headers: {
-					'Authorization': 'Bearer ' + $cookies.token
-				}
-			}).success(function(data) {
-				if (data.items) {
-					data.items.forEach((ele) => {
-						allTracks.push(ele.track);
-					});
-				}
-			}).error(function(/* data */){
-				console.log('offset', offset, 'broke');
-			}); 
-		};
 
 		var getFeatures = function(ids, i){
 			$http.get(apiBaseUrl + 'audio-features/?ids=' + ids, {
