@@ -1,29 +1,5 @@
 (function() {
-	var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 'ngCookies']).filter('cut', function() {
-		return function (value, wordwise, max, tail) {
-			max = parseInt(max, 10);
-			if (!value) {
-				return '';
-			} else if (!max) {
-				return value;
-			} else if (value.length <= max) {
-				return value;
-			} else {
-				value = value.substr(0, max);
-				if (wordwise) {
-					var lastspace = value.lastIndexOf(' ');
-					if (lastspace !== -1) {
-				  		//Also remove . and , so its gives a cleaner result.
-				  		if (value.charAt(lastspace-1) === '.' || value.charAt(lastspace-1) === ',') {
-							lastspace = lastspace - 1;
-				  		}
-				  		value = value.substr(0, lastspace);
-					}
-				}
-				return value + (tail || ' …');
-			}
-		};
-	}).run(function($rootScope, $http, $cookies, $location) {
+	var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 'ngCookies']).run(function($rootScope, $http, $cookies, $location) {
 		$rootScope.$on('$locationChangeStart', function (/* event */) {
 			// var for user stored in session cookie
 			let user = '';
