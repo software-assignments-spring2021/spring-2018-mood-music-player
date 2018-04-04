@@ -18,13 +18,15 @@
 					headers: {
 						'Accept': 'application/json',
 						'Content-Type': 'application/json',
-						'Authorization': 'Bearer ' + token
+						'Authorization': 'Bearer ' + $cookies.token
 					},
 					data: {
-						'device_ids': '["' + device + '"]}'
+						'device_ids': '["' + $cookies.device + '"]}'
 					}
 				}).success(function(r) {
 					ret.resolve(r);
+				}).error(function(r) {
+					console.log(r);
 				});
 				return ret.promise;
 			},
@@ -49,7 +51,7 @@
 					headers: {
 						'Accept': 'application/json',
 						'Content-Type': 'application/json',
-						'Authorization': 'Bearer ' + token
+						'Authorization': 'Bearer ' + $cookies.token
 					}
 				}).success(function(r) {
 					ret.resolve(r);
@@ -63,7 +65,7 @@
 					headers: {
 						'Accept': 'application/json',
 						'Content-Type': 'application/json',
-						'Authorization': 'Bearer ' + token
+						'Authorization': 'Bearer ' + $cookies.token
 					}
 				}).success(function(r) {
 					ret.resolve(r);
@@ -77,7 +79,7 @@
 					headers: {
 						'Accept': 'application/json',
 						'Content-Type': 'application/json',
-						'Authorization': 'Bearer ' + token
+						'Authorization': 'Bearer ' + $cookies.token
 					}
 				}).success(function(r){
 					ret.resolve(r);
@@ -91,7 +93,7 @@
 					headers: {
 						'Accept': 'application/json',
 						'Content-Type': 'application/json',
-						'Authorization': 'Bearer ' + token
+						'Authorization': 'Bearer ' + $cookies.token
 					},
                     
 					data: {

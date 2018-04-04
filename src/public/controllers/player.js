@@ -4,7 +4,7 @@
 
 	module.controller('PlayerController', function($scope, SpotifyAPI, $http, $cookies) {
 		/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
-		var device = '';
+		$cookies.device = '';
 		const token = $cookies.token;
 		$scope.player = new Spotify.Player({
 			name: 'Smoodify',
@@ -23,11 +23,10 @@
 
 		// Ready
 		$scope.player.addListener('ready', ({ device_id }) => {
-			device = device_id;
+			$cookies.device = device_id;
 			console.log('Ready with Device ID', device_id);
 			/* Code to play from our device */
-			$http.put('/musicplayer/?action=transfer&token=' + token + '&device=' + device, {
-			});
+			SpotifyAPI.switchToDevice();
 
 			$scope.songs = SpotifyAPI.getTracks();
 			$scope.albums = SpotifyAPI.getAlbums();
