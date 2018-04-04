@@ -16,7 +16,7 @@ const getRandStr = function(n) {
 		str += options.charAt(Math.floor(Math.random() * options.length));
 	}
 	return str;
-}
+};
 
 const stateKey = 'spotify_auth_state';
 
@@ -51,14 +51,13 @@ router.get('/callback/:code', function(req, res) {
 		if (response.statusCode === 200 && !error) {
 			const access_token = body.access_token;
 			const refresh_token = body.refresh_token;
-			res.send({access_token: access_token, refresh_token: refresh_token});
+			const expires_in = body.expires_in;
+			res.send({access_token: access_token, refresh_token: refresh_token, expires_in: expires_in});
 		} else {
 			res.send({error: 'invalid_token'});
 		}
 	});
 });
-
-
 
 // router.get('/callback', function(req, res) {
 // 	const code = req.query.code || null;
