@@ -173,8 +173,6 @@
 				if ( !arr.length ) {
 					return [];
 				} else {
-					var output = [];
-					
 				}
 			}
 		};
