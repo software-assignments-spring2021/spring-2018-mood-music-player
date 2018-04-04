@@ -25,7 +25,6 @@ var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 
 		}
 	});
 
-	// TODO: Location change success
 	$rootScope.$on('$locationChangeSuccess', function (angularEvent, newUrl, oldUrl) {
 		console.log($cookies.token);
 		if (newUrl.includes('code=')) {
