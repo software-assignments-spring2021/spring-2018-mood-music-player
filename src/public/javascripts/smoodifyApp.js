@@ -24,21 +24,21 @@
 				$cookies.token = '';
 				$rootScope.has_token = false;
 			}
-		});		
+		});
 		/* Location change success */
 		$rootScope.$on('$locationChangeSuccess', function (angularEvent, newUrl, oldUrl) {
-      console.log($cookies.token);
-      if (newUrl.includes('code=')) {
-        const code = newUrl.substring(oldUrl.indexOf('code')).split('&')[0].split('=')[1];
-        $http.get('/spotify/callback/' + code).then(function(data) {
-          const access_token = data.data.access_token;
-          const refresh_token = data.data.refresh_token;
-          $cookies.token = access_token;
-          $cookies.refresh_token = refresh_token	
-        });
-        window.location = '/';
-      }
-    });
+			console.log($cookies.token);
+			if (newUrl.includes('code=')) {
+				const code = newUrl.substring(oldUrl.indexOf('code')).split('&')[0].split('=')[1];
+				$http.get('/spotify/callback/' + code).then(function(data) {
+					const access_token = data.data.access_token;
+					const refresh_token = data.data.refresh_token;
+					$cookies.token = access_token;
+					$cookies.refresh_token = refresh_token	
+				});
+				window.location = '/';
+		  	}
+		});
 		
 		$rootScope.signout = function(){
 			console.log('got into signout');
