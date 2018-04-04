@@ -30,8 +30,9 @@
 			});
 
 			var allTracks = SpotifyAPI.getTracks();
-
-			/* // TODO: Create databases objects 
+			// TODO: Create databases objects 
+			// uncomment after to add code
+			/* 
 			for (var i = 0; i < allTracks.length; i++) {
 				var song = allTracks[i];
 				var artists = song.artists;		// artists array
