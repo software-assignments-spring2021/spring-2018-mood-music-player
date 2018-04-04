@@ -168,13 +168,6 @@
 				});
 				return allAlbums;
 			},
-
-			splitIntoChunks: function ( arr, n ) {
-				if ( !arr.length ) {
-					return [];
-				} else {
-				}
-			}
 		};
 	});
 })();
