@@ -240,10 +240,10 @@ hr {
   width: 180px;  
 }
 
-.cover:hover {
-
+.album-cover {
+  width: 180px;
+  background: #0000FF;
 }
-
 
 /* MUSIC PLAYER FOOTER */
 .play-button {

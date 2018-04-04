@@ -22,7 +22,7 @@
 			<div ng-repeat="album in albums" class="album-in-list">
 				<div class="play-album fas fa-play-circle"></div>
 				<div class="album-cover" ng-repeat="image in album.images | limitTo: 1">
-					<img ng-src="{{image.url}}" class="cover">
+					<!-- <img ng-src="{{image.url}}" class="cover"> -->
 				</div>
 				<div class="album-name">
 					{{album.name}}
