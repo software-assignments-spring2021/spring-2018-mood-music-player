@@ -29,47 +29,7 @@
 			$http.put('/musicplayer/?action=transfer&token=' + token + '&device=' + device, {
 			});
 
-			var allTracks = SpotifyAPI.getTracks();
-			// TODO: Create databases objects 
-			// uncomment after to add code
-			/* 
-			for (var i = 0; i < allTracks.length; i++) {
-				var song = allTracks[i];
-				var artists = song.artists;		// artists array
-				var album = song.album;			// album object
-				
-				// * check if object exists before making it (use the id from the response and spotify_id)
-				// 1. make Artist
-				// 2. make Album that references Artist
-				// 3. make Artist reference Album
-				// 4. make Song object that references both Album and Artist
-				// * don't forget to .save()
-				for (var j = 0; j < artists.length; j++) {
-					
-					Artist.findOne({}, function(err, artist) {
-						if (err) {
-							console.log(err);
-						} else if (artist === null) {
-							const artist = new Artist({
-
-							});
-
-							artist.save(function(err, artist) {
-								if (err) {
-									console.log(err);
-								} else {
-
-								}
-							});
-						} else {
-							
-						}
-					});
-				}
-			}
-			*/
-
-			$scope.songs = allTracks;
+			$scope.songs = SpotifyAPI.getTracks();
 			$scope.albums = SpotifyAPI.getAlbums();
 			console.log($scope.albums);
 
