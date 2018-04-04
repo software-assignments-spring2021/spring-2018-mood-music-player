@@ -19,22 +19,22 @@
 	<!-- Album List -->
 	<div class="content" id="saved-music-page">
 		<div id="album-list">
-			<div ng-repeat="album in albums" class="album-in-list">
-				<div class="play-album fas fa-play"></div>
-				<div class="album-cover">
-					<span ng-repeat="image in album.images | limitTo: 1">
-						<img src="{{image.url}}" class="cover">
-					</span>
-				</div>
-				<div>
-					<span class="album-name">
+			<!-- <div ng-repeat="albumrow in albums" class="album-row"> -->
+				<div ng-repeat="album in albums" class="album-in-list">
+					<div class="play-album fas fa-play"></div>
+					<div class="album-cover">
+						<span ng-repeat="image in album.images | limitTo: 1">
+							<img ng-src="{{image.url}}" class="cover">
+						</span>
+					</div>
+					<div class="album-name">
 						{{album.name}}
-					</span><br/>
-					<span class="artist-name" ng-repeat="artist in album.artists | limitTo: 1" class="artist">
+					</div>
+					<div class="artist-name" ng-repeat="artist in album.artists | limitTo: 1" class="artist">
 						{{artist.name}}
-					</span>
+					</div>
 				</div>
-			</div>
+			<!-- </div> -->
 		</div>
 	</div>
 

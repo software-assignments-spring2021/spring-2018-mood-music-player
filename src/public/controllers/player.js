@@ -29,8 +29,9 @@
 			$http.put('/musicplayer/?action=transfer&token=' + token + '&device=' + device, {
 			});
 
-			$scope.songs = SpotifyAPI.getTracks();		
-			$scope.albums = SpotifyAPI.getAlbums();	
+			$scope.songs = SpotifyAPI.getTracks();
+			$scope.albums = SpotifyAPI.getAlbums();
+			console.log($scope.albums);
 
 			/* Initialize the player volume to our volume bar's starting point */
 			$scope.player.setVolume(0.5).then(() => {

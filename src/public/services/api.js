@@ -5,6 +5,11 @@
 	module.factory('SpotifyAPI', function($q, $http, $cookies) {
 
 		var baseUrl = 'https://api.spotify.com/v1';
+		var msToMS = function(ms) {
+			var minutes = Math.floor(ms / 60000);
+  			var seconds = ((ms % 60000) / 1000).toFixed(0);
+  			return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+		}
 
 		return {
 			switchToDevice: function() {
@@ -107,6 +112,7 @@
 				}).then(function(data) {
 					if (data.items) {
 						data.items.forEach((ele) => {
+							ele.track.duration = msToMS(ele.track.duration_ms);
 							allTracks.push(ele.track);
 						});
 					}
@@ -119,6 +125,7 @@
 						}).success(function(data) {
 							if (data.items) {
 								data.items.forEach((ele) => {
+									ele.track.duration = msToMS(ele.track.duration_ms);
 									allTracks.push(ele.track);
 								});
 							}
@@ -160,6 +167,15 @@
 					}
 				});
 				return allAlbums;
+			},
+
+			splitIntoChunks: function ( arr, n ) {
+				if ( !arr.length ) {
+					return [];
+				} else {
+					var output = [];
+					
+				}
 			}
 		};
 	});

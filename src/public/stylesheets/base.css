@@ -195,10 +195,11 @@ hr {
 /* SAVED ALBUMS */
 #album-list {
   width: 95%;
-  margin-top: 5%;
+  height: 100%;
+  margin-top: 2.5%;
   margin-left: 2.5%;
   color: white;
-  margin-bottom: 10%;
+  margin-bottom: 15%;
 }
 
 .album-in-list {
@@ -210,12 +211,25 @@ hr {
 }
 
 .album-name {
+  text-align: center;
   padding-top: 0.5%;
+  padding-left: 5px;
+  width: 170px;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .artist-name {
   color: hsla(0,0%,100%,.6);
   font-size: 13px;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .play-album {
