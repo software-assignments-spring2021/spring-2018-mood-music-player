@@ -24,22 +24,20 @@
 				$cookies.token = '';
 				$rootScope.has_token = false;
 			}
-		});		
+		});
 		/* Location change success */
 		$rootScope.$on('$locationChangeSuccess', function (angularEvent, newUrl, oldUrl) {
 			console.log($cookies.token);
-			// if we just redirected from gaining the access token, save it to $cookies and $rootScope
-			if (oldUrl.includes('access_token')) {
-				if ($cookies.token === '') {	// if it hasn't been set yet, set it
-					let path = oldUrl.substring(oldUrl.indexOf('access_token')).split('&');
-					$cookies.token = path[0].split('=')[1];
-					$cookies.token_exp = path[2].split('=')[1];	
-					$rootScope.token = $cookies.token;
-					$rootScope.token_exp = $cookies.token_exp;
-					$rootScope.has_token = true;
-				}
-				$location.path('/');	// redirect to main
-			}
+			if (newUrl.includes('code=')) {
+				const code = newUrl.substring(oldUrl.indexOf('code')).split('&')[0].split('=')[1];
+				$http.get('/spotify/callback/' + code).then(function(data) {
+					const access_token = data.data.access_token;
+					const refresh_token = data.data.refresh_token;
+					$cookies.token = access_token;
+					$cookies.refresh_token = refresh_token	
+				});
+				window.location = '/';
+		  	}
 		});
 		
 		$rootScope.signout = function(){
