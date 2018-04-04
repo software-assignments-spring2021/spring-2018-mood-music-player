@@ -1,0 +1,36 @@
+/* ACCOUNT */
+#account-page {
+  width: 300px;
+  position: absolute;
+  display: block;
+  -webkit-transform: translate(-50%,-50%);
+     -moz-transform: translate(-50%,-50%);
+     -o-transform: translate(-50%,-50%);
+      transform: translate(-50%,-50%);
+  left: 50%;
+  top: 35%;
+}
+
+#profile-picture {
+  width: 200px;
+  margin: 0px 50px 100px;
+}
+
+#account-links {
+  margin-top: -100px;
+  position: absolute;
+}
+
+#account-links a {
+  text-decoration: none;
+}
+
+#account-links button {
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  display: block;
+  border-radius: 30px;
+  position: relative;
+  width: 300px;
+  margin-top: 20px;
+}
