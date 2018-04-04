@@ -203,10 +203,10 @@ hr {
 }
 
 .album-in-list {
-  float:left;
   width: 18%;
   margin: 1% 1% 1% 1%;
   text-align: center;
+  vertical-align: top;
   display: inline-block;
 }
 
