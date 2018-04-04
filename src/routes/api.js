@@ -20,6 +20,7 @@ function isAuthenticated (req, res, next) {
 	return res.redirect('/#login');
 }
 
+
 //Register the authentication middleware
 router.use('/songs', isAuthenticated);
 

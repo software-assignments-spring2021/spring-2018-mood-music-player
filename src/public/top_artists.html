@@ -5,7 +5,9 @@
 
 		<nav id="links">
 			<a href="/">Home</a>
-			<a href="/saved" class="current-page">Saved Music</a>
+			<a href="/saved_songs">Saved Songs</a>
+			<a href="/saved_albums">Saved Albums</a>
+			<a href="/top_artists" class="current-page">Top Artists</a>
 		</nav>
 		<hr id="second-hr">
 		
@@ -14,13 +16,24 @@
 	</div>
 
 
-	<!-- Song List -->
+	<!-- Artist List -->
 	<div class="content" id="saved-music-page">
-		<div ng-repeat="song in songs" class="song-list">
-			<div ng-click="playSong(song.uri)" class="song">
-				<a href="">{{song.name}} by <span ng-repeat="artist in song.artists">{{artist.name}}</span></a>
-			</div>
-		</div>
+		<!-- <table id="song-list">
+			<tr ng-repeat="song in songs" class="song-in-list">
+				<td ng-click="playSong(song.uri)" class="play-song fas fa-play"></td>
+				<td>
+					<p class="song-name">
+						{{song.name}}
+					</p>
+					<p class="artist-album">
+					<span ng-repeat="artist in song.artists" class="artist">
+						<span ng-class='{in:$first}'>{{artist.name}}</span>
+					</span> &bull;
+					<span class="album">{{song.album.name}}</span>
+				</td>
+				<td>{{song.duration}}</td>
+			</tr>
+		</table> -->
 	</div>
 
 	<div class="music-progress-bar">
