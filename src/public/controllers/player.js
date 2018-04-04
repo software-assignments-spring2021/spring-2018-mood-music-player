@@ -33,8 +33,9 @@
 			$scope.albums = SpotifyAPI.getAlbums();
 			$scope.playlists = SpotifyAPI.getPlaylists();
 			$scope.artists = SpotifyAPI.getTopArtists();
+			$scope.top_tracks = SpotifyAPI.getTopTracks();
 
-			console.log($scope.artists);
+			console.log($scope.top_tracks);
 
 			/* Initialize the player volume to our volume bar's starting point */
 			$scope.player.setVolume(0.5).then(() => {
