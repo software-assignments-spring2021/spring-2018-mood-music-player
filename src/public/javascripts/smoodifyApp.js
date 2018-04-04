@@ -95,12 +95,28 @@
 				templateUrl: 'saved_albums.html',
 				controller: 'PlayerController'
 			})
+			.when('/saved_playlists', {
+				css: {
+					href: '../stylesheets/base.css',
+					preload: true
+				},
+				templateUrl: 'saved_playlists.html',
+				controller: 'PlayerController'
+			})
 			.when('/top_artists', {
 				css: {
 					href: '../stylesheets/base.css',
 					preload: true
 				},
 				templateUrl: 'top_artists.html',
+				controller: 'PlayerController'
+			})
+			.when('/top_songs', {
+				css: {
+					href: '../stylesheets/base.css',
+					preload: true
+				},
+				templateUrl: 'top_songs.html',
 				controller: 'PlayerController'
 			})
 			.when('/spotify_login', {
