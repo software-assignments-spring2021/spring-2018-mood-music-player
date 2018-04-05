@@ -10,7 +10,7 @@
 			name: 'Smoodify',
 			getOAuthToken: cb => { cb(token); }
 		});
-		// Connect to the player AND ready it up
+
 		$scope.player.connect().then(success => {
 			if (success) {
 				$scope.player.addListener('ready', ({ device_id }) => {
@@ -22,9 +22,10 @@
 					$scope.songs = SpotifyAPI.getTracks();
           $scope.albums = SpotifyAPI.getAlbums();
           $scope.playlists = SpotifyAPI.getPlaylists();
+          $scope.artists = SpotifyAPI.getTopArtists();
+          $scope.top_tracks = SpotifyAPI.getTopTracks();
 
-          console.log($scope.playlists);
-		
+          console.log($scope.top_tracks);		
 					/* Initialize the player volume to our volume bar's starting point */
 					SpotifyAPI.setVolume(50);
 				});
