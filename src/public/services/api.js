@@ -236,6 +236,38 @@
 				});
 				return allAlbums;
 			},
+
+			getPlaylists: function() {
+				var allPlaylists = [];
+				$http.get(baseUrl + '/me/playlists?limit=50', {
+					headers: {
+						'Authorization': 'Bearer ' + $cookies.token
+					}
+				}).then(function(data) {
+					if (data.items) {
+						data.items.forEach((ele) => {
+							allPlaylists.push(ele);
+						});
+					}
+					var songsLeft = data.data.total;
+					for (var offset = 0; offset <= songsLeft; offset = offset + 50) {
+						$http.get(baseUrl + '/me/playlists?offset=' + offset + '&limit=50', {
+							headers: {
+								'Authorization': 'Bearer ' + $cookies.token
+							}
+						}).success(function(data) {
+							if (data.items) {
+								data.items.forEach((ele) => {
+									allPlaylists.push(ele);
+								});
+							}
+						}).error(function(/* data */){
+							console.log('offset', offset, 'broke');
+						});
+					}
+				});
+				return allPlaylists;
+			}
 		};
 	});
 })();

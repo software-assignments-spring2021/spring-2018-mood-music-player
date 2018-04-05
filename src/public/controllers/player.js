@@ -10,9 +10,6 @@
 			name: 'Smoodify',
 			getOAuthToken: cb => { cb(token); }
 		});
-
-
-
 		// Connect to the player AND ready it up
 		$scope.player.connect().then(success => {
 			if (success) {
@@ -23,8 +20,10 @@
 					SpotifyAPI.switchToDevice();
 		
 					$scope.songs = SpotifyAPI.getTracks();
-					$scope.albums = SpotifyAPI.getAlbums();
-					console.log($scope.albums);
+          $scope.albums = SpotifyAPI.getAlbums();
+          $scope.playlists = SpotifyAPI.getPlaylists();
+
+          console.log($scope.playlists);
 		
 					/* Initialize the player volume to our volume bar's starting point */
 					SpotifyAPI.setVolume(50);
