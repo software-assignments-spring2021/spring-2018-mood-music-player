@@ -27,9 +27,7 @@
 					console.log($scope.albums);
 		
 					/* Initialize the player volume to our volume bar's starting point */
-					$scope.player.setVolume(0.5).then(() => {
-						console.log('Volume updated!');
-					});
+					SpotifyAPI.setVolume(50);
 				});
 			}
 		});
@@ -117,27 +115,18 @@
 		};
 
         
-		/* Make setVolume parameter to the value you get from volume bar */
+		/* TODO Fix. Currently not working */
 		$scope.mute = function() {
-			$scope.player.getVolume().then(volume => {
-				let volume_percentage = volume * 100;
-				if (volume_percentage == 0) {
-					$scope.player.setVolume(($scope.vol) / 100).then(() => {
-						console.log('Volume updated!');
-					});
-				} else {
-					$scope.player.setVolume(0).then(() => {
-						console.log('Volume updated!');
-					});
-				}
-			});
+			if ($scope.vol !== 0) {
+				SpotifyAPI.setVolume($scope.vol);
+			} else {
+				SpotifyAPI.setVolume(0);
+			}
 		};
 
 		/* Make setVolume parameter to the value you get from volume bar */
 		$scope.setVolume = function() {
-			$scope.player.setVolume(($scope.vol) / 100).then(() => {
-				console.log('Volume updated!');
-			});
+			SpotifyAPI.setVolume($scope.vol);
 		};
         
 		/* Getting data from Spotify */

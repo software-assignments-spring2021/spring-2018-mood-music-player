@@ -32,6 +32,20 @@
 				return ret.promise;
 			},
 
+			setVolume: function(volume) {
+				var ret = $q.defer();
+				$http.put(baseUrl + '/me/player/volume?volume_percent=' + volume, {}, {
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + $cookies.token
+					}
+				}).success(function(r) {
+					ret.resolve(r);
+				});
+				return ret.promise;
+			},
+
 			play: function() {
 				var ret = $q.defer();
 				$http.put(baseUrl + '/me/player/play', {}, {
