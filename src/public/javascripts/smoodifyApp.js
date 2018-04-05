@@ -34,9 +34,9 @@
 					const access_token = data.data.access_token;
 					const refresh_token = data.data.refresh_token;
 					$cookies.token = access_token;
-					$cookies.refresh_token = refresh_token	
+					$cookies.refresh_token = refresh_token;
+					window.location = '/';
 				});
-				window.location = '/';
 		  	}
 		});
 		
