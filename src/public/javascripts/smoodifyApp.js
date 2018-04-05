@@ -57,8 +57,8 @@
 		$routeProvider
 			// the landing display
 			.when('/', {
-				css: ['../stylesheets/login.css', '../stylesheets/base.css'],
-				templateUrl: 'landing.html',
+				css: ['../stylesheets/login.css', '../stylesheets/base.css', '../stylesheets/main_page.css'],
+				templateUrl: '../partials/landing.html',
 				controller: 'MainController'
 			})
 			// the login display
@@ -67,7 +67,7 @@
 					href: '../stylesheets/login.css',
 					preload: true
 				},
-				templateUrl: 'login.html',
+				templateUrl: '../partials/login.html',
 				controller: 'AuthController'
 			})
 			// the signup display
@@ -76,40 +76,31 @@
 					href: '../stylesheets/login.css',
 					preload: true
 				},
-				templateUrl: 'register.html',
+				templateUrl: '../partials/register.html',
 				controller: 'AuthController',
 			})
 			.when('/saved_songs', {
-				css: {
-					href: '../stylesheets/base.css',
-					preload: true
-				},
-				templateUrl: 'saved_songs.html',
+				css: ['../stylesheets/base.css', '../stylesheets/saved_songs.css'],
+				templateUrl: '../partials/saved_songs.html',
 				controller: 'PlayerController'
 			})
 			.when('/saved_albums', {
-				css: {
-					href: '../stylesheets/base.css',
-					preload: true
-				},
-				templateUrl: 'saved_albums.html',
+				css: ['../stylesheets/base.css', '../stylesheets/saved_albums.css'],
+				templateUrl: '../partials/saved_albums.html',
 				controller: 'PlayerController'
 			})
 			.when('/top_artists', {
-				css: {
-					href: '../stylesheets/base.css',
-					preload: true
-				},
-				templateUrl: 'top_artists.html',
+				css: ['../stylesheets/base.css'],
+				templateUrl: '../partials/top_artists.html',
 				controller: 'PlayerController'
 			})
 			.when('/spotify_login', {
-				templateUrl: 'main.html',
+				templateUrl: '../partials/main.html',
 				controller: 'SpotifyController'
 			})
 			.when('/account', {
-				css: ['../stylesheets/login.css', '../stylesheets/base.css'],
-				templateUrl: 'account.html',
+				css: ['../stylesheets/login.css', '../stylesheets/base.css', '../stylesheets/account.css'],
+				templateUrl: '../partials/account.html',
 				controller: 'MainController'
 			});
 		$locationProvider.html5Mode({requireBase: false});
