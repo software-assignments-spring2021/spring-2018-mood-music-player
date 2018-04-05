@@ -75,6 +75,7 @@
 			}).then(function() {
 				$scope.player.togglePlay().then(() => {
 					console.log('Toggle Button Fired');
+					SpotifyAPI.getCurrentlyPlaying();
 					/* code to get the metadata of the song currently playing */
                     
         
@@ -95,8 +96,6 @@
 		/* Go back to previous song. Trigger this function when previous button is clicked */
 		$scope.previous = function() {      
 			SpotifyAPI.playPrevious().then(function() {
-				/* THIS .THEN IS NOT RUNNING */
-				console.log('hi');
 				$scope.player.getCurrentState().then(state => {
 					if (!state) {
 						console.error('User is not playing music through the Web Playback SDK');

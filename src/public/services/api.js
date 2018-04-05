@@ -46,6 +46,21 @@
 				return ret.promise;
 			},
 
+			getCurrentlyPlaying: function() {
+				var ret = $q.defer();
+				$http.get(baseUrl + '/me/player/currently-playing', {
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + $cookies.token
+					}
+				}).success(function(r) {
+					console.log(r);
+					ret.resolve(r);
+				});
+				return ret.promise;
+			},
+
 			playNext: function() {
 				var ret = $q.defer();
 				var data = {
