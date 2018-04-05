@@ -10,111 +10,95 @@
 			name: 'Smoodify',
 			getOAuthToken: cb => { cb(token); }
 		});
+
+
+
+		// Connect to the player AND ready it up
+		$scope.player.connect().then(success => {
+			if (success) {
+				$scope.player.addListener('ready', ({ device_id }) => {
+					$cookies.device = device_id;
+					console.log('Ready with Device ID', device_id);
+					/* Code to play from our device */
+					SpotifyAPI.switchToDevice();
+		
+					$scope.songs = SpotifyAPI.getTracks();
+					$scope.albums = SpotifyAPI.getAlbums();
+					console.log($scope.albums);
+		
+					/* Initialize the player volume to our volume bar's starting point */
+					$scope.player.setVolume(0.5).then(() => {
+						console.log('Volume updated!');
+					});
+				});
+			}
+		});
+
         
         
 		// Error handling
-		$scope.player.addListener('initialization_error', ({ message }) => { console.error(message); });
-		$scope.player.addListener('authentication_error', ({ message }) => { console.error(message); });
-		$scope.player.addListener('account_error', ({ message }) => { console.error(message); });
-		$scope.player.addListener('playback_error', ({ message }) => { console.error(message); });
+		// $scope.player.addListener('initialization_error', ({ message }) => { console.error(message); });
+		// $scope.player.addListener('authentication_error', ({ message }) => { console.error(message); });
+		// $scope.player.addListener('account_error', ({ message }) => { console.error(message); });
+		// $scope.player.addListener('playback_error', ({ message }) => { console.error(message); });
 
 		// Playback status updates
-		$scope.player.addListener('player_state_changed', state => { console.log(state.shuffle); });
+		// $scope.player.addListener('player_state_changed', state => { console.log(state.shuffle); });
 
-		// Ready
-		$scope.player.addListener('ready', ({ device_id }) => {
-			$cookies.device = device_id;
-			console.log('Ready with Device ID', device_id);
-			/* Code to play from our device */
-			SpotifyAPI.switchToDevice();
 
-			$scope.songs = SpotifyAPI.getTracks();
-			$scope.albums = SpotifyAPI.getAlbums();
-			console.log($scope.albums);
-
-			/* Initialize the player volume to our volume bar's starting point */
-			$scope.player.setVolume(0.5).then(() => {
-				console.log('Volume updated!');
-			});
-		});
-
-		// Connect to the player!
-
-		$scope.player.connect().then(success => {
-			if (success) {
-				console.log('The Web Playback SDK successfully connected to Spotify!');
-			}
-		});
 
 
 
 
 		/* Play a song. Trigger this function when play button is pressed */
 		$scope.play = function() {
-            
-			$scope.player.getCurrentState().then(state => {
-				if (!state) {
-					console.error('User is not playing music through the Web Playback SDK');
-					return;
+			SpotifyAPI.getPlayerState().then(function(data) {
+				if (data.is_playing === true) {
+					SpotifyAPI.pause();
+				} else {
+					SpotifyAPI.play().then(function(data) {
+						SpotifyAPI.getCurrentlyPlaying().then(function(data){
+							console.log(data);
+							$scope.imgSrc = data.item.album.images[0].url;
+							$scope.songTitle = data.item.name;
+							$scope.artistName = data.item.artists[0].name;
+							$scope.albumName = data.item.album.name;
+						});
+					});
 				}
-                
-				let {
-					current_track,
-					next_tracks: [next_track]
-				} = state.track_window;
-                
-				console.log('Currently Playing', current_track);
-
-				/* scope variables to send back to html */
-				$scope.imgSrc = current_track.album.images[0].url;
-				/* Code to change the title <p> tag to the current song title. */
-				$scope.songTitle = current_track.name;
-				$scope.artistName = current_track.artists[0].name;
-				$scope.albumName = current_track.album.name;
-
-			}).then(function() {
-				$scope.player.togglePlay().then(() => {
-					console.log('Toggle Button Fired');
-					SpotifyAPI.getCurrentlyPlaying();
-					/* code to get the metadata of the song currently playing */
-                    
-        
-					/* input variable to go into gracenote API separated by '-' */
-					// var paramString = '/gracenote/' + $scope.artistName + '-' + $scope.albumName + '-' + $scope.songTitle;
-					// /* send data to back end */
-					// $http.get(paramString).success(function(data) {
-					//  /* data variable currently holds the mood from gracenote */
-					//  /* TODO: Currently first return is undefined, fix once we have the song list */
-					//  $scope.data = data;
-					//  console.log(data);
-					// });
-				});
-			}); 
-            
+			});
 		};
 
 		/* Go back to previous song. Trigger this function when previous button is clicked */
 		$scope.previous = function() {      
 			SpotifyAPI.playPrevious().then(function() {
-				$scope.player.getCurrentState().then(state => {
-					if (!state) {
-						console.error('User is not playing music through the Web Playback SDK');
-						return;
-					}
-                        
-					let {
-						current_track,
-						next_tracks: [next_track]
-					} = state.track_window;
-                        
-					console.log('Currently Playing', current_track.name);
-					console.log('Playing Next', next_track);
-					/* scope variables to send back to html */
-					$scope.imgSrc = current_track.album.images[0].url;
-					/* Code to change the title <p> tag to the current song title. */
-					$scope.songTitle = current_track.name;
-					$scope.artistName = current_track.artists[0].name;
+				SpotifyAPI.getCurrentlyPlaying().then(function(data) {
+					$scope.imgSrc = data.item.album.images[0].url;
+					$scope.songTitle = data.item.name;
+					$scope.artistName = data.item.artists[0].name;
+					$scope.albumName = data.item.album.name;
 				});
+
+				
+				// $scope.player.getCurrentState().then(state => {
+				// 	if (!state) {
+				// 		console.error('User is not playing music through the Web Playback SDK');
+				// 		return;
+				// 	}
+                        
+				// 	let {
+				// 		current_track,
+				// 		next_tracks: [next_track]
+				// 	} = state.track_window;
+                        
+				// 	console.log('Currently Playing', current_track.name);
+				// 	console.log('Playing Next', next_track);
+				// 	/* scope variables to send back to html */
+				// 	$scope.imgSrc = current_track.album.images[0].url;
+				// 	/* Code to change the title <p> tag to the current song title. */
+				// 	$scope.songTitle = current_track.name;
+				// 	$scope.artistName = current_track.artists[0].name;
+				// });
 			});
         
 		};
@@ -122,26 +106,12 @@
 		/* Skip song. Trigger this function when skip button is pressed */
 		$scope.skip = function() {
 			SpotifyAPI.playNext().then(function() {
-				/* THIS .THEN IS NOT RUNNING */
-				console.log('hi');
-				$scope.player.getCurrentState().then(state => {
-					if (!state) {
-						console.error('User is not playing music through the Web Playback SDK');
-						return;
-					}
-                        
-					let {
-						current_track,
-						next_tracks: [next_track]
-					} = state.track_window;
-                        
-					console.log('Currently Playing', current_track.name);
-					console.log('Playing Next', next_track);
-					/* scope variables to send back to html */
-					$scope.imgSrc = current_track.album.images[0].url;
-					/* Code to change the title <p> tag to the current song title. */
-					$scope.songTitle = current_track.name;
-					$scope.artistName = current_track.artists[0].name;
+				SpotifyAPI.getCurrentlyPlaying().then(function(data) {
+					console.log(data.item.name);
+					$scope.imgSrc = data.item.album.images[0].url;
+					$scope.songTitle = data.item.name;
+					$scope.artistName = data.item.artists[0].name;
+					$scope.albumName = data.item.album.name;
 				});
 			});
 		};
@@ -251,10 +221,7 @@
 		};
 
 		$scope.playSong = function(song_uri) {
-			console.log(token);
-			$http.put('/musicplayer/?action=play&token=' + token + '&device=' + device + '&song_uri=' + song_uri, {
-                
-			});
+			SpotifyAPI.playClickedSong();
 		};
 	});
 })();

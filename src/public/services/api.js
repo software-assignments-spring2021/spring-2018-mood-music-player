@@ -32,6 +32,34 @@
 				return ret.promise;
 			},
 
+			play: function() {
+				var ret = $q.defer();
+				$http.put(baseUrl + '/me/player/play', {}, {
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + $cookies.token
+					}
+				}).success(function(r) {
+					ret.resolve(r);
+				});
+				return ret.promise;
+			},
+
+			pause: function() {
+				var ret = $q.defer();
+				$http.put(baseUrl + '/me/player/pause', {}, {
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + $cookies.token
+					}
+				}).success(function(r) {
+					ret.resolve(r);
+				});
+				return ret.promise;
+			},
+
 			getPlayerState: function() {
 				var ret = $q.defer();
 				$http.get(baseUrl + '/me/player', {
