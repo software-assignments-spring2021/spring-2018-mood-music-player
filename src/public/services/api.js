@@ -14,21 +14,39 @@
 		return {
 			switchToDevice: function() {
 				var ret = $q.defer();
-				$http.put(baseUrl + '/me/player', {
+				var data = {
+					device_ids: [$cookies.device]		
+				};
+				$http.put(baseUrl + '/me/player', JSON.stringify(data), {
 					headers: {
 						'Accept': 'application/json',
 						'Content-Type': 'application/json',
 						'Authorization': 'Bearer ' + $cookies.token
-					},
-					data: {
-						'device_ids': '["' + $cookies.device + '"]}'
 					}
 				}).success(function(r) {
+					console.log(r);
 					ret.resolve(r);
 				}).error(function(r) {
 					console.log(r);
 				});
 				return ret.promise;
+
+				// var ret = $q.defer();
+				// $http.put(baseUrl + '/me/player', {
+				// 	headers: {
+				// 		'Accept': 'application/json',
+				// 		'Content-Type': 'application/json',
+				// 		'Authorization': 'Bearer ' + $cookies.token
+				// 	},
+				// 	data: {
+				// 		'device_ids': '["' + $cookies.device + '"]'
+				// 	}
+				// }).success(function(r) {
+				// 	ret.resolve(r);
+				// }).error(function(r) {
+				// 	console.log(r);
+				// });
+				// return ret.promise;
 			},
 
 			getPlayerState: function() {
