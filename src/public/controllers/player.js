@@ -2,7 +2,7 @@
 
 	var module = angular.module('smoodifyApp');
 
-	module.controller('PlayerController', function($scope, SpotifyAPI, $http, $cookies) {
+	module.controller('PlayerController', function($scope, PlayerAPI, SpotifyAPI, $http, $cookies) {
 		/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
 		$cookies.device = '';
 		const token = $cookies.token;
@@ -17,7 +17,7 @@
 					$cookies.device = device_id;
 					console.log('Ready with Device ID', device_id);
 					/* Code to play from our device */
-					SpotifyAPI.switchToDevice();
+					PlayerAPI.switchToDevice();
 		
 					$scope.songs = SpotifyAPI.getTracks();
           $scope.albums = SpotifyAPI.getAlbums();
@@ -27,7 +27,7 @@
 
           console.log($scope.top_tracks);		
 					/* Initialize the player volume to our volume bar's starting point */
-					SpotifyAPI.setVolume(50);
+					PlayerAPI.setVolume(50);
 				});
 			}
 		});
@@ -50,12 +50,12 @@
 
 		/* Play a song. Trigger this function when play button is pressed */
 		$scope.play = function() {
-			SpotifyAPI.getPlayerState().then(function(data) {
+			PlayerAPI.getPlayerState().then(function(data) {
 				if (data.is_playing === true) {
-					SpotifyAPI.pause();
+					PlayerAPI.pause();
 				} else {
-					SpotifyAPI.play().then(function(data) {
-						SpotifyAPI.getCurrentlyPlaying().then(function(data){
+					PlayerAPI.play().then(function(data) {
+						PlayerAPI.getCurrentlyPlaying().then(function(data){
 							console.log(data);
 							$scope.imgSrc = data.item.album.images[0].url;
 							$scope.songTitle = data.item.name;
@@ -69,8 +69,8 @@
 
 		/* Go back to previous song. Trigger this function when previous button is clicked */
 		$scope.previous = function() {      
-			SpotifyAPI.playPrevious().then(function() {
-				SpotifyAPI.getCurrentlyPlaying().then(function(data) {
+			PlayerAPI.playPrevious().then(function() {
+				PlayerAPI.getCurrentlyPlaying().then(function(data) {
 					$scope.imgSrc = data.item.album.images[0].url;
 					$scope.songTitle = data.item.name;
 					$scope.artistName = data.item.artists[0].name;
@@ -103,8 +103,8 @@
 
 		/* Skip song. Trigger this function when skip button is pressed */
 		$scope.skip = function() {
-			SpotifyAPI.playNext().then(function() {
-				SpotifyAPI.getCurrentlyPlaying().then(function(data) {
+			PlayerAPI.playNext().then(function() {
+				PlayerAPI.getCurrentlyPlaying().then(function(data) {
 					console.log(data.item.name);
 					$scope.imgSrc = data.item.album.images[0].url;
 					$scope.songTitle = data.item.name;
@@ -118,15 +118,15 @@
 		/* TODO Fix. Currently not working */
 		$scope.mute = function() {
 			if ($scope.vol !== 0) {
-				SpotifyAPI.setVolume($scope.vol);
+				PlayerAPI.setVolume($scope.vol);
 			} else {
-				SpotifyAPI.setVolume(0);
+				PlayerAPI.setVolume(0);
 			}
 		};
 
 		/* Make setVolume parameter to the value you get from volume bar */
 		$scope.setVolume = function() {
-			SpotifyAPI.setVolume($scope.vol);
+			PlayerAPI.setVolume($scope.vol);
 		};
         
 		/* Getting data from Spotify */
@@ -210,7 +210,7 @@
 		};
 
 		$scope.playSong = function(song_uri) {
-			SpotifyAPI.playClickedSong();
+			PlayerAPI.playClickedSong();
 		};
 	});
 })();
