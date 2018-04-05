@@ -94,26 +94,27 @@
 
 		/* Go back to previous song. Trigger this function when previous button is clicked */
 		$scope.previous = function() {      
-			$scope.player.getCurrentState().then(state => {
-				if (!state) {
-					console.error('User is not playing music through the Web Playback SDK');
-					return;
-				}
-                    
-				let {
-					current_track,
-					next_tracks: [next_track]
-				} = state.track_window;
-                    
-				console.log('Currently Playing', current_track.name);
-				console.log('Playing Next', next_track);
-				/* scope variables to send back to html */
-				$scope.imgSrc = current_track.album.images[0].url;
-				/* Code to change the title <p> tag to the current song title. */
-				$scope.songTitle = current_track.name;
-				$scope.artistName = current_track.artists[0].name;
-
-				$http.post('/musicplayer/?action=previous&token=' + token, {
+			SpotifyAPI.playPrevious().then(function() {
+				/* THIS .THEN IS NOT RUNNING */
+				console.log('hi');
+				$scope.player.getCurrentState().then(state => {
+					if (!state) {
+						console.error('User is not playing music through the Web Playback SDK');
+						return;
+					}
+                        
+					let {
+						current_track,
+						next_tracks: [next_track]
+					} = state.track_window;
+                        
+					console.log('Currently Playing', current_track.name);
+					console.log('Playing Next', next_track);
+					/* scope variables to send back to html */
+					$scope.imgSrc = current_track.album.images[0].url;
+					/* Code to change the title <p> tag to the current song title. */
+					$scope.songTitle = current_track.name;
+					$scope.artistName = current_track.artists[0].name;
 				});
 			});
         
@@ -121,8 +122,7 @@
 
 		/* Skip song. Trigger this function when skip button is pressed */
 		$scope.skip = function() {
-			$http.post('/musicplayer/?action=next&token=' + token, {
-			}).then(function() {
+			SpotifyAPI.playNext().then(function() {
 				/* THIS .THEN IS NOT RUNNING */
 				console.log('hi');
 				$scope.player.getCurrentState().then(state => {

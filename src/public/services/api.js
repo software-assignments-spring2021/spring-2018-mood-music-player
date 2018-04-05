@@ -30,28 +30,11 @@
 					console.log(r);
 				});
 				return ret.promise;
-
-				// var ret = $q.defer();
-				// $http.put(baseUrl + '/me/player', {
-				// 	headers: {
-				// 		'Accept': 'application/json',
-				// 		'Content-Type': 'application/json',
-				// 		'Authorization': 'Bearer ' + $cookies.token
-				// 	},
-				// 	data: {
-				// 		'device_ids': '["' + $cookies.device + '"]'
-				// 	}
-				// }).success(function(r) {
-				// 	ret.resolve(r);
-				// }).error(function(r) {
-				// 	console.log(r);
-				// });
-				// return ret.promise;
 			},
 
 			getPlayerState: function() {
 				var ret = $q.defer();
-				$http.get(apiBaseUrl + '/me/player', {
+				$http.get(baseUrl + '/me/player', {
 					headers: {
 						'Accept': 'application/json',
 						'Content-Type': 'application/json',
@@ -65,7 +48,10 @@
 
 			playNext: function() {
 				var ret = $q.defer();
-				$http.post(apiBaseUrl + '/me/player/next', {
+				var data = {
+
+				};
+				$http.post(baseUrl + '/me/player/next', JSON.stringify(data), {
 					headers: {
 						'Accept': 'application/json',
 						'Content-Type': 'application/json',
@@ -79,7 +65,10 @@
 
 			playPrevious: function() {
 				var ret = $q.defer();
-				$http.post(apiBaseUrl + '/me/player/previous', {
+				var data = {
+
+				};
+				$http.post(baseUrl + '/me/player/previous', JSON.stringify(data), {
 					headers: {
 						'Accept': 'application/json',
 						'Content-Type': 'application/json',
@@ -93,7 +82,10 @@
 
 			toggleShuffle: function() {
 				var ret = $q.defer();
-				$http.put(apiBaseUrl + '/me/player/shuffle?state=' + shuffle, {
+				var data = {
+
+				};
+				$http.put(baseUrl + '/me/player/shuffle?state=' + shuffle, JSON.stringify(data), {
 					headers: {
 						'Accept': 'application/json',
 						'Content-Type': 'application/json',
@@ -107,15 +99,14 @@
 
 			playClickedSong: function() {
 				var ret = $q.defer();
-				$http.put(apiBaseUrl + '/me/player/play', {
+				var data = {
+					context_uri: [song_uri]
+				};
+				$http.put(baseUrl + '/me/player/play', JSON.stringify(data), {
 					headers: {
 						'Accept': 'application/json',
 						'Content-Type': 'application/json',
 						'Authorization': 'Bearer ' + $cookies.token
-					},
-                    
-					data: {
-						'context_uri': '["' + song_uri + '"]'
 					}
 				}).success(function(r) {
 					ret.resolve(r);
