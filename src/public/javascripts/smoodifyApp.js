@@ -90,24 +90,18 @@
 				controller: 'PlayerController'
 			})
 			.when('/saved_playlists', {
-				css: {
-					href: '../stylesheets/base.css',
-					preload: true
-				},
-				templateUrl: 'saved_playlists.html',
+				css: ['../stylesheets/base.css', '../stylesheets/saved_playlists.css'],
+				templateUrl: '../partials/saved_playlists.html',
 				controller: 'PlayerController'
 			})
 			.when('/top_artists', {
-				css: ['../stylesheets/base.css'],
+				css: ['../stylesheets/base.css', '../stylesheets/top_artists.css'],
 				templateUrl: '../partials/top_artists.html',
 				controller: 'PlayerController'
 			})
 			.when('/top_songs', {
-				css: {
-					href: '../stylesheets/base.css',
-					preload: true
-				},
-				templateUrl: 'top_songs.html',
+				css: ['../stylesheets/base.css', '../stylesheets/top_songs.css'],
+				templateUrl: '../partials/top_songs.html',
 				controller: 'PlayerController'
 			})
 			.when('/spotify_login', {
