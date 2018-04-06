@@ -120,6 +120,14 @@
 				return ret.promise;
 			},
 
+			delay: function() {
+				var ret = $q.defer();
+				setTimeout(function(r) {
+					ret.resolve(r);
+				}, 1000);
+				return ret.promise;
+			},
+
 			playPrevious: function() {
 				var ret = $q.defer();
 				var data = {
@@ -137,7 +145,7 @@
 				return ret.promise;
 			},
 
-			toggleShuffle: function() {
+			toggleShuffle: function(shuffle) {
 				var ret = $q.defer();
 				var data = {
 

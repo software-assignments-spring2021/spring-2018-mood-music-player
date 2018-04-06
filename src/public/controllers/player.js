@@ -2,35 +2,39 @@
 
 	var module = angular.module('smoodifyApp');
 
-	module.controller('PlayerController', function($scope, PlayerAPI, SpotifyAPI, $http, $cookies) {
+	module.controller('PlayerController', function($scope, PlayerAPI, SpotifyAPI, $http, $cookies, $rootScope) {
 		/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
 		$cookies.device = '';
 		const token = $cookies.token;
-		$scope.player = new Spotify.Player({
-			name: 'Smoodify',
-			getOAuthToken: cb => { cb(token); }
-		});
+		if ($rootScope.player === undefined) {
+			$rootScope.player = new Spotify.Player({
+				name: 'Smoodify',
+				getOAuthToken: cb => { cb(token); }
+			});
 
-		$scope.player.connect().then(success => {
-			if (success) {
-				$scope.player.addListener('ready', ({ device_id }) => {
-					$cookies.device = device_id;
-					console.log('Ready with Device ID', device_id);
-					/* Code to play from our device */
-					PlayerAPI.switchToDevice();
+			$rootScope.player.connect().then(success => {
+				if (success) {
+					$rootScope.player.addListener('ready', ({ device_id }) => {
+						$cookies.device = device_id;
+						console.log('Ready with Device ID', device_id);
+						/* Code to play from our device */
+						PlayerAPI.switchToDevice();
+			
+						$scope.songs = SpotifyAPI.getTracks();
+			$scope.albums = SpotifyAPI.getAlbums();
+			$scope.playlists = SpotifyAPI.getPlaylists();
+			$scope.artists = SpotifyAPI.getTopArtists();
+			$scope.top_tracks = SpotifyAPI.getTopTracks();
+
+			console.log($scope.top_tracks);		
+						/* Initialize the player volume to our volume bar's starting point */
+						PlayerAPI.setVolume(50);
+					});
+				}
+			});
+		}
 		
-					$scope.songs = SpotifyAPI.getTracks();
-          $scope.albums = SpotifyAPI.getAlbums();
-          $scope.playlists = SpotifyAPI.getPlaylists();
-          $scope.artists = SpotifyAPI.getTopArtists();
-          $scope.top_tracks = SpotifyAPI.getTopTracks();
-
-          console.log($scope.top_tracks);		
-					/* Initialize the player volume to our volume bar's starting point */
-					PlayerAPI.setVolume(50);
-				});
-			}
-		});
+	
 
         
         
@@ -70,12 +74,15 @@
 		/* Go back to previous song. Trigger this function when previous button is clicked */
 		$scope.previous = function() {      
 			PlayerAPI.playPrevious().then(function() {
-				PlayerAPI.getCurrentlyPlaying().then(function(data) {
-					$scope.imgSrc = data.item.album.images[0].url;
-					$scope.songTitle = data.item.name;
-					$scope.artistName = data.item.artists[0].name;
-					$scope.albumName = data.item.album.name;
+				PlayerAPI.delay().then(function() {
+					PlayerAPI.getCurrentlyPlaying().then(function(data) {
+						$scope.imgSrc = data.item.album.images[0].url;
+						$scope.songTitle = data.item.name;
+						$scope.artistName = data.item.artists[0].name;
+						$scope.albumName = data.item.album.name;
+					});
 				});
+			});
 
 				
 				// $scope.player.getCurrentState().then(state => {
@@ -97,19 +104,18 @@
 				// 	$scope.songTitle = current_track.name;
 				// 	$scope.artistName = current_track.artists[0].name;
 				// });
-			});
-        
 		};
 
 		/* Skip song. Trigger this function when skip button is pressed */
 		$scope.skip = function() {
 			PlayerAPI.playNext().then(function() {
-				PlayerAPI.getCurrentlyPlaying().then(function(data) {
-					console.log(data.item.name);
-					$scope.imgSrc = data.item.album.images[0].url;
-					$scope.songTitle = data.item.name;
-					$scope.artistName = data.item.artists[0].name;
-					$scope.albumName = data.item.album.name;
+				PlayerAPI.delay().then(function() {
+					PlayerAPI.getCurrentlyPlaying().then(function(data) {
+						$scope.imgSrc = data.item.album.images[0].url;
+						$scope.songTitle = data.item.name;
+						$scope.artistName = data.item.artists[0].name;
+						$scope.albumName = data.item.album.name;
+					});
 				});
 			});
 		};
@@ -189,24 +195,9 @@
 		};
 
 		$scope.shuffle = function() {
-			$http.get(apiBaseUrl + 'me/player', {
-				headers: {
-					'Accept': 'application/json',
-					'Content-Type': 'application/json',
-					'Authorization': 'Bearer ' + $cookies.token
-				}
-			}).then(function(data) {
-				if (data.data.shuffle_state === false) {
-					$http.put('/musicplayer/?action=shuffle&token=' + token + '&device=' + device + '&shuffle=true', {
-                
-					});
-				} else {
-					$http.put('/musicplayer/?action=shuffle&token=' + token + '&device=' + device + '&shuffle=false', {
-                
-					});
-				}
-			});
-            
+			PlayerAPI.getPlayerState().then(function(data){
+				PlayerAPI.toggleShuffle(data.data.shuffle_state);
+			});  
 		};
 
 		$scope.playSong = function(song_uri) {
