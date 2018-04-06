@@ -20,20 +20,17 @@
 					PlayerAPI.switchToDevice();
 		
 					$scope.songs = SpotifyAPI.getTracks();
-          $scope.albums = SpotifyAPI.getAlbums();
-          $scope.playlists = SpotifyAPI.getPlaylists();
-          $scope.artists = SpotifyAPI.getTopArtists();
-          $scope.top_tracks = SpotifyAPI.getTopTracks();
-
-          console.log($scope.top_tracks);		
+					$scope.albums = SpotifyAPI.getAlbums();
+					$scope.playlists = SpotifyAPI.getPlaylists();
+					$scope.artists = SpotifyAPI.getTopArtists();
+					$scope.top_tracks = SpotifyAPI.getTopTracks();
+					console.log($scope.playlists);
 					/* Initialize the player volume to our volume bar's starting point */
 					PlayerAPI.setVolume(50);
 				});
 			}
 		});
 
-        
-        
 		// Error handling
 		// $scope.player.addListener('initialization_error', ({ message }) => { console.error(message); });
 		// $scope.player.addListener('authentication_error', ({ message }) => { console.error(message); });
@@ -42,11 +39,6 @@
 
 		// Playback status updates
 		// $scope.player.addListener('player_state_changed', state => { console.log(state.shuffle); });
-
-
-
-
-
 
 		/* Play a song. Trigger this function when play button is pressed */
 		$scope.play = function() {
@@ -83,12 +75,12 @@
 				// 		console.error('User is not playing music through the Web Playback SDK');
 				// 		return;
 				// 	}
-                        
+				// 
 				// 	let {
 				// 		current_track,
 				// 		next_tracks: [next_track]
 				// 	} = state.track_window;
-                        
+				// 
 				// 	console.log('Currently Playing', current_track.name);
 				// 	console.log('Playing Next', next_track);
 				// 	/* scope variables to send back to html */
@@ -98,7 +90,6 @@
 				// 	$scope.artistName = current_track.artists[0].name;
 				// });
 			});
-        
 		};
 
 		/* Skip song. Trigger this function when skip button is pressed */
@@ -114,7 +105,6 @@
 			});
 		};
 
-        
 		/* TODO Fix. Currently not working */
 		$scope.mute = function() {
 			if ($scope.vol !== 0) {
@@ -128,11 +118,10 @@
 		$scope.setVolume = function() {
 			PlayerAPI.setVolume($scope.vol);
 		};
-        
 		/* Getting data from Spotify */
+		
 		// TODO: Move to service
 		var apiBaseUrl= 'https://api.spotify.com/v1/';
-        
 		/* Get current user's profile */
 		var getUserProfile = function (){
 			$http.get(apiBaseUrl + 'me/player', {
@@ -145,8 +134,6 @@
 				var userData = data;
 			});
 		};
-            
-		
 
 		var allTracks = [];
 		var allIds = [];
@@ -198,15 +185,12 @@
 			}).then(function(data) {
 				if (data.data.shuffle_state === false) {
 					$http.put('/musicplayer/?action=shuffle&token=' + token + '&device=' + device + '&shuffle=true', {
-                
 					});
 				} else {
 					$http.put('/musicplayer/?action=shuffle&token=' + token + '&device=' + device + '&shuffle=false', {
-                
 					});
 				}
 			});
-            
 		};
 
 		$scope.playSong = function(song_uri) {

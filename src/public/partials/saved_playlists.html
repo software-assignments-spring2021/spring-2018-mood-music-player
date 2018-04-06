@@ -6,8 +6,10 @@
 		<nav id="links">
 			<a href="/">Home</a>
 			<a href="/saved_songs">Saved Songs</a>
-			<a href="/saved_albums" class="current-page">Saved Albums</a>
+			<a href="/saved_albums">Saved Albums</a>
+			<a href="/saved_playlists" class="current-page">Saved Playlists</a>
 			<a href="/top_artists">Top Artists</a>
+			<a href="/top_songs">Top Songs</a>
 		</nav>
 		<hr id="second-hr">
 		
@@ -18,11 +20,19 @@
 
 	<!-- Playlist List -->
 	<div class="content" id="saved-music-page">
-		<div id="album-list">
-			<div ng-repeat="playlist in playlists" class="playlist-in-list">
-				{{playlist}}
-			</div>
-		</div>
+		<table id="playlist-list">
+			<tr ng-repeat="playlist in playlists" class="playlist-in-list">
+				<td class="playlist-cover" ng-repeat="image in playlist.images | limitTo: 1">
+					<div class="play-playlist far fa-play-circle"></div>
+					<img ng-src="{{image.url}}" class="cover">
+				</td>
+				<td class="playlist-info">
+					<h3>{{playlist.name}}</h3>
+					<p>by {{playlist.owner.id}}</p>
+					<p>{{playlist.tracks.total}} tracks</p>
+				</td>
+			</tr>
+		</table>
 	</div>
 
 	<div class="music-progress-bar">
