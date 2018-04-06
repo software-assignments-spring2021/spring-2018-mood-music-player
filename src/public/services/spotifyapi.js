@@ -18,7 +18,10 @@
 					'Authorization': 'Bearer ' + $cookies.token
 				}
 			}).success(function(data) {
-				ret.resolve(data.items.map( (ele)  => ele.track ));
+				ret.resolve(data.items.map( (ele)  => {
+					ele.track.duration = msToMS(ele.track.duration_ms);
+					return ele.track;
+				}));
 			});
 
 			return ret.promise;
