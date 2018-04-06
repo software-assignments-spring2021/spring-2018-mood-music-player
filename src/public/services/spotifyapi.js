@@ -11,41 +11,64 @@
   			return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
 		}
 
+		var getTracksOffset = function(offset) {
+			var ret = $q.defer();
+			$http.get(baseUrl + '/me/tracks?offset=' + offset + '&limit=50', {
+				headers: {
+					'Authorization': 'Bearer ' + $cookies.token
+				}
+			}).success(function(data) {
+				ret.resolve(data.items.map( (ele)  => ele.track ));
+			});
+
+			return ret.promise;
+		}
+
+		var numTracks = function() {
+			var ret = $q.defer();
+			$http.get(baseUrl + '/me/tracks', {
+				headers: {
+					'Authorization': 'Bearer ' + $cookies.token
+				}
+			}).then(function(data) {
+				ret.resolve(data.data.total);
+			});
+			return ret.promise;
+		}
+
+		var numTracksArray = function() {
+			var defer = $q.defer();
+			numTracks().then(function(numTracks) {
+				var arr = [];
+				for (let i = 0; i < numTracks; i = i + 50) {
+					arr.push(i);
+				}
+				defer.resolve(arr);
+			});
+			return defer.promise;
+		}
+
 		return {
-			getTracks: function() {
-				var allTracks = [];
-				$http.get(baseUrl + '/me/tracks?limit=50', {
-					headers: {
-						'Authorization': 'Bearer ' + $cookies.token
-					}
-				}).then(function(data) {
-					if (data.items) {
-						data.items.forEach((ele) => {
-							ele.track.duration = msToMS(ele.track.duration_ms);
-							allTracks.push(ele.track);
+			getTracks: function () {
+				var allDeferred = $q.defer();
+				numTracksArray().then(function(arr) {
+					var promises = [];
+					arr.map(function(i) {
+						promises.push(getTracksOffset(i));
+					});
+
+					$q.all(promises).then(function(d) {
+						var allTracks = [];
+						d.forEach((r) => {
+							Array.prototype.push.apply(allTracks, r);
 						});
-					}
-					var songsLeft = data.data.total;
-					for (var offset = 0; offset <= songsLeft; offset = offset + 50) {
-						$http.get(baseUrl + '/me/tracks?offset=' + offset + '&limit=50', {
-							headers: {
-								'Authorization': 'Bearer ' + $cookies.token
-							}
-						}).success(function(data) {
-							if (data.items) {
-								data.items.forEach((ele) => {
-									ele.track.duration = msToMS(ele.track.duration_ms);
-									allTracks.push(ele.track);
-								});
-							}
-						}).error(function(/* data */){
-							console.log('offset', offset, 'broke');
-						});
-					}
+						allDeferred.resolve(allTracks);
+					});
 				});
-				return allTracks;
-            },
-            
+				
+				return allDeferred.promise;
+			},
+
 			getAlbums: function() {
 				var allAlbums = [];
 				$http.get(baseUrl + '/me/albums?limit=50', {
