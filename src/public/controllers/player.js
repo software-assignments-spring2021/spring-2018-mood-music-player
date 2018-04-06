@@ -29,9 +29,55 @@
 			$http.put('/musicplayer/?action=transfer&token=' + token + '&device=' + device, {
 			});
 
-			$scope.songs = SpotifyAPI.getTracks();
+			var allTracks = SpotifyAPI.getTracks();
+			// TODO: Create databases objects 
+			// uncomment after to add code
+			
+			for (var i = 0; i < allTracks.length; i++) {
+				console.log("inside allTracks");
+				var song = allTracks[i];
+				var artists = song.artists;		// artists array
+				var album = song.album;			// album object
+				
+				// * check if object exists before making it (use the id from the response and spotify_id)
+				// 1. make Artist
+				// 2. make Album that references Artist
+				// 3. make Artist reference Album
+				// 4. make Song object that references both Album and Artist
+				// * don't forget to .save()
+				for (var j = 0; j < artists.length; j++) {
+					
+					Artist.findOne({spotify_id:artists[i].id}, function(err, artist) {
+						if (err) {
+							console.log(err);
+						} else if (artist === null) {
+							const artist = new Artist({
+								name: artist[i].name,
+								//album: artist[i]
+								//images: ..copy/get from artist js file to json
+								//songs: artist[i].
+							    //genres:
+								spotify_id: artist[i].id,
+								spotify_uri: artist[i].uri
+							});
+
+							artist.save(function(err, artist) {
+								if (err) {
+									console.log(err);
+								} else {
+									console.log(artist);
+								}
+							});
+						}
+					});
+				}
+				
+			}
+			
+
+			$scope.songs = allTracks;
 			$scope.albums = SpotifyAPI.getAlbums();
-			console.log($scope.albums);
+			console.log($scope.songs);
 
 			/* Initialize the player volume to our volume bar's starting point */
 			$scope.player.setVolume(0.5).then(() => {
