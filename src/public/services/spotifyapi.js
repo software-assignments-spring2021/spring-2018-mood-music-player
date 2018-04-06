@@ -209,7 +209,58 @@
 				});
 				
 				return allDeferred.promise;
-			}
+			},
+
+			getUserProfile: function (){
+				var ret = $q.defer();
+				$http.get(baseUrl + '/me', {
+					headers: {
+						'Authorization': 'Bearer ' + $cookies.token
+					}
+				}).success(function(data) {
+					ret.resolve(data);
+				});
+
+				return ret.promise;
+			},
+
+			getAudioFeaturesOne: function(id) {
+				var ret = $q.defer();
+				$http.get(baseUrl + '/audio-features/' + id, {
+					headers: {
+						'Authorization': 'Bearer ' + $cookies.token
+					}
+				}).success(function(data) {
+					ret.resolve(data);
+				});
+
+				return ret.promise;
+			},
+
+			getAudioFeaturesMany: function(ids){
+				$http.get(apiBaseUrl + 'audio-features/?ids=' + ids, {
+					headers: {
+						'Authorization': 'Bearer ' + $cookies.token
+					}
+				}).success(function(data) {
+					allFeatures.push.apply(allFeatures, data.audio_features);
+				}).error(function(/* data */){
+					console.log(i, 'broke');
+				}); 
+			},
+
+			getAudioAnalysisOne: function(id) {
+				var ret = $q.defer();
+				$http.get(baseUrl + '/audio-analysis/' + id, {
+					headers: {
+						'Authorization': 'Bearer ' + $cookies.token
+					}
+				}).success(function(data) {
+					ret.resolve(data);
+				});
+
+				return ret.promise;
+			},
 		};
 	});
 })();
