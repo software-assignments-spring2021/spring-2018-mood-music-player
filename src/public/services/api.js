@@ -103,6 +103,18 @@
 				return ret.promise;
 			},
 
+			getTracksPromises: function () {
+				var ret = $q.defer();			
+				$http.get(baseUrl + '/me/tracks?limit=50', {
+					headers: {
+						'Authorization': 'Bearer ' + $cookies.token
+					}
+				}).success(function(r) {
+					ret.resolve(r.items.map( (curr) => curr.track));
+				});
+				return ret.promise;
+			},
+			
 			getTracks: function() {
 				var allTracks = [];
 				$http.get(baseUrl + '/me/tracks?limit=50', {
@@ -134,6 +146,7 @@
 						});
 					}
 				});
+				
 				return allTracks;
 			},
 
