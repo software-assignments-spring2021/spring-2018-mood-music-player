@@ -72,8 +72,45 @@
 							}
 						});
 					}
+					Album.findOne({spotify_id:"id"}, function(err, album) {
+						if (err) {
+							console.log(err);
+						} else if (album === null) {
+							const album = new Album({
+								name: album.name,
+								artist: album.artists,
+								//images:
+								spotify_id: album.id,
+								spotify_uri: album.uri
+			
+							});
+						}
+						else {
+						console.log(album);
+						}
+					})
+			
+					}
+					Song.findOne({spotify_id:"id"}, function(err, song) {
+						if (err) {
+							console.log(err);
+							}
+							else if (song === null) {
+							const song = new Song({
+								name: song.name,
+								//artist:
+								//album:
+								//mood:
+								spotify_id: song.id,
+								spotify_uri: song.uri,
+								duration_ms: song.duration_ms
+								});
+							}
+						else {
+							console.log(song);
+							}
+							});
 				
-				}
 				$scope.songs = allTracks;
 			});
 			$scope.albums = SpotifyAPI.getAlbums();
