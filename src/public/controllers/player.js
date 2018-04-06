@@ -31,6 +31,12 @@
 			console.log(data);
 			$scope.songs = data;
 		});
+
+
+		SpotifyAPI.getAlbums().then(function(data) {
+			console.log(data);
+			$scope.albums = data;
+		});
 		// Error handling
 		// $scope.player.addListener('initialization_error', ({ message }) => { console.error(message); });
 		// $scope.player.addListener('authentication_error', ({ message }) => { console.error(message); });
