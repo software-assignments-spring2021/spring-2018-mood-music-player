@@ -1,15 +1,10 @@
 (function() {
-    
+
 	var module = angular.module('smoodifyApp');
 
 	module.factory('PlayerAPI', function($q, $http, $cookies) {
 
 		var baseUrl = 'https://api.spotify.com/v1';
-		var msToMS = function(ms) {
-			var minutes = Math.floor(ms / 60000);
-  			var seconds = ((ms % 60000) / 1000).toFixed(0);
-  			return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
-		}
 
 		return {
 			switchToDevice: function() {
