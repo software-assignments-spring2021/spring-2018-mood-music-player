@@ -9,7 +9,32 @@
 				$rootScope.player = player;
 			});
 		}
-		
+				
+		SpotifyAPI.getTracks().then(function(data) {
+			// console.log(data);
+			$scope.songs = data;
+		});
+
+		SpotifyAPI.getAlbums().then(function(data) {
+			// console.log(data);
+			$scope.albums = data;
+		});
+
+		SpotifyAPI.getTopArtists().then(function(data) {
+			// console.log(data);
+			$scope.artists = data;
+		});
+
+		SpotifyAPI.getTopTracks().then(function(data) {
+			// console.log(data);
+			$scope.top_tracks = data;
+		});
+
+		SpotifyAPI.getUserProfile().then(function(data) {
+			// console.log(data);
+			$scope.user_data = data;
+		});
+
 		// Error handling
 		// $scope.player.addListener('initialization_error', ({ message }) => { console.error(message); });
 		// $scope.player.addListener('authentication_error', ({ message }) => { console.error(message); });
@@ -89,7 +114,7 @@
 		$scope.shuffle = function() {
 			PlayerAPI.getPlayerState().then(function(data){
 				PlayerAPI.toggleShuffle(data.data.shuffle_state);
-			});  
+			});
 		};
 
 		$scope.playSong = function(song_uri) {
