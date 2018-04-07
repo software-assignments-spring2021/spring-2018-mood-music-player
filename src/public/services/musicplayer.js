@@ -2,11 +2,34 @@
 
 	var module = angular.module('smoodifyApp');
 
-	module.factory('PlayerAPI', function($q, $http, $cookies) {
+	module.factory('PlayerAPI', function($q, $http, $cookies, $rootScope) {
 
 		var baseUrl = 'https://api.spotify.com/v1';
 
 		return {
+			initialize: function() {
+				var ret = $q.defer();
+				var player = new Spotify.Player({
+					name: 'Smoodify',
+					getOAuthToken: cb => { cb($cookies.token); }
+				});
+				player.connect().then(success => {
+					if (success) {
+						player.addListener('ready', ({ device_id }) => {
+							$cookies.device = device_id;
+							console.log('Ready with Device ID', device_id);
+							/* Code to play from our device */
+							this.switchToDevice();
+
+							/* Initialize the player volume to our volume bar's starting point */
+							this.setVolume(50);
+						});
+						ret.resolve(player);
+					}
+				});
+				return ret.promise;
+			},
+
 			switchToDevice: function() {
 				var ret = $q.defer();
 				var data = {

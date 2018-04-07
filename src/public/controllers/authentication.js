@@ -11,6 +11,8 @@
 					$cookies['user'] = JSON.stringify(data.user);
 					$rootScope.authenticated = true;
 					$rootScope.current_user = data.user.username;
+					// update token
+					// update data
 					$location.path('/');
 				} else{
 					$scope.error_message = data.message;
@@ -23,7 +25,7 @@
 					$cookies['user'] = JSON.stringify(data.user);
 					$rootScope.authenticated = true;
 					$rootScope.current_user = data.user.username;
-					$location.path('/');
+					$location.path('/spotify_login');
 				} else{
 					$scope.error_message = data.message;
 				}
