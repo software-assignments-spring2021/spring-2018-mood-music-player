@@ -131,6 +131,15 @@
 		}
 
 		return {
+			refreshToken: function() {
+				var ret = $q.defer();
+				$http.get('/spotify/refresh_token?refresh_token=' + $cookies.refresh_token).success(function(data) {
+					ret.resolve(data.access_token);
+				});
+
+				return ret.promise;
+			},
+
 			getTracks: function () {
 				var allDeferred = $q.defer();
 				numTracksArray().then(function(arr) {

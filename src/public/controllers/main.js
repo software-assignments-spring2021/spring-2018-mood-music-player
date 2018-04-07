@@ -3,6 +3,13 @@
 	var module = angular.module('smoodifyApp');
 
 	module.controller('MainController', function($scope, PlayerAPI, SpotifyAPI, $http, $cookies, $rootScope, $location){
+		$scope.refresh = function() {
+			SpotifyAPI.refreshToken().then(function(token) {
+				console.log('BEFORE:', $cookies.token);
+				$cookies.token = token;
+				console.log('AFTER:', $cookies.token);
+			});
+		};
 		
 		// Error handling
 		// $scope.player.addListener('initialization_error', ({ message }) => { console.error(message); });

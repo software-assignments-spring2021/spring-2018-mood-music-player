@@ -59,49 +59,6 @@ router.get('/callback/:code', function(req, res) {
 	});
 });
 
-// router.get('/callback', function(req, res) {
-// 	const code = req.query.code || null;
-// 	const state = req.query.state || null;
-// 	const stored = req.cookies ? req.cookes[stateKey]: null;
-// 	if (state === null || state !== storedState) {
-// 		res.send({error: 'state_mismatch'});
-// 	} else {
-// 		res.clearCookie(stateKey);
-// 		const authOptions = {
-// 			url: 'https://accounts.spotify.com/api/token',
-// 			form: {
-// 				code: code,
-// 				redurect_uri: redirect_uri,
-// 				grant_type: 'authorization_code'
-// 			},
-// 			headers: {
-// 				'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
-// 			},
-// 			json: true
-// 		};
-// 		request.post(authOptions, function(error, response, body) {
-// 			if (response.statusCode === 200 && !error) {
-// 				const access_token = body.access_token;
-// 				const refresh_token = body.refresh_token;
-
-// 				const options = {
-// 					url: 'https://api.spotify.com/v1/me',
-// 			        headers: { 'Authorization': 'Bearer ' + access_token },
-// 			        json: true
-// 				}
-
-// 				request.get(options, function(error, response, body) {
-// 					console.log(body);
-// 				});
-
-// 				res.send({access_token: access_token, refresh_token: refresh_token});
-// 			} else {
-// 				res.send({error: 'invalid_token'});
-// 			}
-// 		});
-// 	}
-// });
-
 router.get('/refresh_token', function(req, res) {
 	const refresh_token = req.query.refresh_token;
 	const authOptions = {
@@ -113,6 +70,13 @@ router.get('/refresh_token', function(req, res) {
 		},
 		json: true
 	};
+
+	request.post(authOptions, function(error, response, body) {
+		if (!error && response.statusCode === 200) {
+			var access_token = body.access_token;
+			res.send({access_token: access_token});
+		}
+	});
 });
 
 module.exports = router;
