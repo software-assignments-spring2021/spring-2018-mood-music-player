@@ -6,8 +6,8 @@
 		<nav id="links">
 			<a href="/">Home</a>
 			<a href="/saved_songs">Saved Songs</a>
-			<a href="/saved_albums" class="current-page">Saved Albums</a>
-			<a href="/top_artists">Top Artists</a>
+			<a href="/saved_albums">Saved Albums</a>
+			<a href="/top_artists" class="current-page">Top Artists</a>
 		</nav>
 		<hr id="second-hr">
 		
@@ -16,22 +16,24 @@
 	</div>
 
 
-	<!-- Album List -->
+	<!-- Artist List -->
 	<div class="content" id="saved-music-page">
-		<div id="album-list">
-			<div ng-repeat="album in albums" class="album-in-list">
-				<div class="album-cover" ng-repeat="image in album.images | limitTo: 1">
-					<div class="play-album far fa-play-circle"></div>
-					<img ng-src="{{image.url}}" class="cover">
-				</div>
-				<div class="album-name">
-					{{album.name}}
-				</div>
-				<div class="artist-name" ng-repeat="artist in album.artists | limitTo: 1" class="artist">
-					{{artist.name}}
-				</div>
-			</div>
-		</div>
+		<!-- <table id="song-list">
+			<tr ng-repeat="song in songs" class="song-in-list">
+				<td ng-click="playSong(song.uri)" class="play-song fas fa-play"></td>
+				<td>
+					<p class="song-name">
+						{{song.name}}
+					</p>
+					<p class="artist-album">
+					<span ng-repeat="artist in song.artists" class="artist">
+						<span ng-class='{in:$first}'>{{artist.name}}</span>
+					</span> &bull;
+					<span class="album">{{song.album.name}}</span>
+				</td>
+				<td>{{song.duration}}</td>
+			</tr>
+		</table> -->
 	</div>
 
 	<div class="music-progress-bar">
@@ -42,12 +44,12 @@
 		<div class="music-player-bar">
 			<div class="music-player-bar-left">
 				<div class="track-info">
-					<img ng-src="{{imgSrc}}" class="album-wrapper">
+					<img ng-src="{{currentlyPlaying.imgSrc}}" class="album-wrapper">
 					<div class="title-wrapper">
-						<p ng-bind="songTitle"><i class="fas fa-heart"></i> <i class="fas fa-ban"></i></p> 
+						<p ng-bind="currentlyPlaying.songTitle"><i class="fas fa-heart"></i> <i class="fas fa-ban"></i></p> 
 					</div>
 					<div class="artist-wrapper">
-						<p ng-bind="artistName"></p>
+						<p ng-bind="currentlyPlaying.artistName"></p>
 					</div>
 				</div>
 
