@@ -39,7 +39,25 @@
 					$cookies.token = access_token;
 					$cookies.refresh_token = refresh_token;
 
-					// pull spotify data
+					SpotifyAPI.getTracks().then(function(data) {
+						$rootScope.songs = data;
+					});
+
+					SpotifyAPI.getAlbums().then(function(data) {
+						$rootScope.albums = data;
+					});
+
+					SpotifyAPI.getTopArtists().then(function(data) {
+						$rootScope.artists = data;
+					});
+
+					SpotifyAPI.getTopTracks().then(function(data) {
+						$rootScope.top_tracks = data;
+					});
+
+					SpotifyAPI.getUserProfile().then(function(data) {
+						$rootScope.user_data = data;
+					});
 					// window.location = '/';
 				});
 		  	}
@@ -52,7 +70,6 @@
 				$rootScope.authenticated = false;
 				$rootScope.current_user = '';
 				$cookies['user'] = ''; //, { path:'/', domain:'localhost'} this object may be necessary in some situations
-				$cookies['token'] = '';	// erase token until next time (for debugging)
 				console.log('removed cookie');
 			}
 		};
