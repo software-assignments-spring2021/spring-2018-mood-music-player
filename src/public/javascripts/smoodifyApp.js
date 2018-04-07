@@ -1,17 +1,20 @@
 (function() {
-	var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 'ngCookies']).run(function($rootScope, $http, $cookies, $location) {
+	var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 'ngCookies']).run(function($rootScope, $http, $cookies, $location, SpotifyAPI) {
 		$rootScope.$on('$locationChangeStart', function (/* event */) {
 			// var for user stored in session cookie
 			let user = '';
 			if (typeof $cookies['user'] == 'string' && $cookies['user'] != '') {
 				user = JSON.parse($cookies['user']);
 			}
-		
+			var path = window.location.pathname;
 			console.log('grabbing cookie');
 			if (user == '') {
 				$rootScope.authenticated = false;
 				$rootScope.current_user = '';
 				console.log('not auth\'d');
+				if (path !== '/' && path !== '/login' && path !== '/regsiter') {
+					window.location = '/';
+				}
 			}
 			// logged in session exists, set current user as authenticated
 			else {
@@ -35,7 +38,9 @@
 					const refresh_token = data.data.refresh_token;
 					$cookies.token = access_token;
 					$cookies.refresh_token = refresh_token;
-					window.location = '/';
+
+					// pull spotify data
+					// window.location = '/';
 				});
 		  	}
 		});
@@ -79,6 +84,10 @@
 				templateUrl: '../partials/register.html',
 				controller: 'AuthController',
 			})
+			.when('/browse', {
+				templateUrl: '../partials/main.html',
+				controller: 'AuthController',
+			})
 			.when('/saved_songs', {
 				css: ['../stylesheets/base.css', '../stylesheets/saved_songs.css'],
 				templateUrl: '../partials/saved_songs.html',
@@ -101,7 +110,7 @@
 			.when('/account', {
 				css: ['../stylesheets/login.css', '../stylesheets/base.css', '../stylesheets/account.css'],
 				templateUrl: '../partials/account.html',
-				controller: 'MainController'
+				controller: 'PlayerController'
 			});
 		$locationProvider.html5Mode({requireBase: false});
 	});

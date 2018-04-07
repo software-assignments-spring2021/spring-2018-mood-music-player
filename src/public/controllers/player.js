@@ -4,28 +4,12 @@
 
 	module.controller('PlayerController', function($scope, PlayerAPI, SpotifyAPI, $http, $cookies, $rootScope) {
 		/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
-		$cookies.device = '';
-		const token = $cookies.token;
 		if ($rootScope.player === undefined) {
-			$rootScope.player = new Spotify.Player({
-				name: 'Smoodify',
-				getOAuthToken: cb => { cb(token); }
-			});
-
-			$rootScope.player.connect().then(success => {
-				if (success) {
-					$rootScope.player.addListener('ready', ({ device_id }) => {
-						$cookies.device = device_id;
-						console.log('Ready with Device ID', device_id);
-						/* Code to play from our device */
-						PlayerAPI.switchToDevice();
-						/* Initialize the player volume to our volume bar's starting point */
-						PlayerAPI.setVolume(50);
-					});
-				}
+			PlayerAPI.initialize().then(function(player) {
+				$rootScope.player = player;
 			});
 		}
-		
+				
 		SpotifyAPI.getTracks().then(function(data) {
 			// console.log(data);
 			$scope.songs = data;
@@ -49,7 +33,7 @@
 		SpotifyAPI.getUserProfile().then(function(data) {
 			// console.log(data);
 			$scope.user_data = data;
-		})
+		});
 
 		// Error handling
 		// $scope.player.addListener('initialization_error', ({ message }) => { console.error(message); });
@@ -69,10 +53,12 @@
 					PlayerAPI.play().then(function(data) {
 						PlayerAPI.getCurrentlyPlaying().then(function(data){
 							console.log(data);
-							$scope.imgSrc = data.item.album.images[0].url;
-							$scope.songTitle = data.item.name;
-							$scope.artistName = data.item.artists[0].name;
-							$scope.albumName = data.item.album.name;
+							$rootScope.currentlyPlaying = {
+								'imgSrc': data.item.album.images[0].url,
+								'songTitle': data.item.name,
+								'artistName': data.item.artists[0].name,
+								'albumName': data.item.album.name
+							}
 						});
 					});
 				}
@@ -84,10 +70,12 @@
 			PlayerAPI.playPrevious().then(function() {
 				PlayerAPI.delay().then(function() {
 					PlayerAPI.getCurrentlyPlaying().then(function(data) {
-						$scope.imgSrc = data.item.album.images[0].url;
-						$scope.songTitle = data.item.name;
-						$scope.artistName = data.item.artists[0].name;
-						$scope.albumName = data.item.album.name;
+						$rootScope.currentlyPlaying = {
+							'imgSrc': data.item.album.images[0].url,
+							'songTitle': data.item.name,
+							'artistName': data.item.artists[0].name,
+							'albumName': data.item.album.name
+						}
 					});
 				});
 			});
@@ -98,10 +86,12 @@
 			PlayerAPI.playNext().then(function() {
 				PlayerAPI.delay().then(function() {
 					PlayerAPI.getCurrentlyPlaying().then(function(data) {
-						$scope.imgSrc = data.item.album.images[0].url;
-						$scope.songTitle = data.item.name;
-						$scope.artistName = data.item.artists[0].name;
-						$scope.albumName = data.item.album.name;
+						$rootScope.currentlyPlaying = {
+							'imgSrc': data.item.album.images[0].url,
+							'songTitle': data.item.name,
+							'artistName': data.item.artists[0].name,
+							'albumName': data.item.album.name
+						}
 					});
 				});
 			});
