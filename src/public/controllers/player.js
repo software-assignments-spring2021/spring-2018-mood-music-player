@@ -196,7 +196,7 @@
 
 		$scope.shuffle = function() {
 			PlayerAPI.getPlayerState().then(function(data){
-				PlayerAPI.toggleShuffle(data.data.shuffle_state);
+				PlayerAPI.toggleShuffle(data.shuffle_state);
 			});  
 		};
 

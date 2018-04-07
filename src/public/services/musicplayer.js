@@ -147,18 +147,27 @@
 
 			toggleShuffle: function(shuffle) {
 				var ret = $q.defer();
-				var data = {
-
-				};
-				$http.put(baseUrl + '/me/player/shuffle?state=' + shuffle, JSON.stringify(data), {
-					headers: {
-						'Accept': 'application/json',
-						'Content-Type': 'application/json',
-						'Authorization': 'Bearer ' + $cookies.token
-					}
-				}).success(function(r){
-					ret.resolve(r);
-				});
+				if (shuffle === true) {
+					$http.put(baseUrl + '/me/player/shuffle?state=' + false, {}, {
+						headers: {
+							'Accept': 'application/json',
+							'Content-Type': 'application/json',
+							'Authorization': 'Bearer ' + $cookies.token
+						}
+					}).success(function(r){
+						ret.resolve(r);
+					});
+				} else {
+					$http.put(baseUrl + '/me/player/shuffle?state=' + true, {}, {
+						headers: {
+							'Accept': 'application/json',
+							'Content-Type': 'application/json',
+							'Authorization': 'Bearer ' + $cookies.token
+						}
+					}).success(function(r){
+						ret.resolve(r);
+					});
+				}
 				return ret.promise;
 			},
 
