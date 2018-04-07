@@ -4,11 +4,10 @@
 
 	module.controller('MainController', function($scope, PlayerAPI, SpotifyAPI, $http, $cookies, $rootScope, $location){
 		$scope.refresh = function() {
-			console.log('inside refresh');
-			$http.get('/spotify/refresh_token?refresh_token=' + $cookies.refresh_token).success(function(data) {
-				console.log("BEFORE:\n" + $cookies.token);
-				$cookies.token = data.access_token;
-				console.log("AFTER:\n" + $cookies.token);
+			SpotifyAPI.refreshToken().then(function(token) {
+				console.log('BEFORE:', $cookies.token);
+				$cookies.token = token;
+				console.log('AFTER:', $cookies.token);
 			});
 		};
 		
@@ -97,7 +96,6 @@
 		$scope.playSong = function(song_uri) {
 			PlayerAPI.playClickedSong();
 		};
->>>>>>> #105
 	});
     
 })();

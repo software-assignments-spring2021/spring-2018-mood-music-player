@@ -11,7 +11,12 @@
 					$cookies['user'] = JSON.stringify(data.user);
 					$rootScope.authenticated = true;
 					$rootScope.current_user = data.user.username;
-					// update token
+
+					SpotifyAPI.refreshToken().then(function(token) {
+						$cookies.token = token;
+					});
+
+					/* Update data in user object 
 					SpotifyAPI.getTracks().then(function(data) {
 						$rootScope.songs = data;
 					});
@@ -31,6 +36,7 @@
 					SpotifyAPI.getUserProfile().then(function(data) {
 						$rootScope.user_data = data;
 					});
+					*/
 					$location.path('/');
 				} else{
 					$scope.error_message = data.message;

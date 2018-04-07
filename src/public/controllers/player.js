@@ -8,7 +8,28 @@
 			PlayerAPI.initialize().then(function(player) {
 				$rootScope.player = player;
 			});
+			SpotifyAPI.getTracks().then(function(data) {
+				$rootScope.songs = data;
+			});
+
+			SpotifyAPI.getAlbums().then(function(data) {
+				$rootScope.albums = data;
+			});
+
+			SpotifyAPI.getTopArtists().then(function(data) {
+				$rootScope.artists = data;
+			});
+
+			SpotifyAPI.getTopTracks().then(function(data) {
+				$rootScope.top_tracks = data;
+			});
+
+			SpotifyAPI.getUserProfile().then(function(data) {
+				$rootScope.user_data = data;
+			});
 		}
+
+
 
 		// Error handling
 		// $scope.player.addListener('initialization_error', ({ message }) => { console.error(message); });
