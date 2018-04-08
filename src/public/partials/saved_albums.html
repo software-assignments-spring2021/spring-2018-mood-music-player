@@ -21,7 +21,7 @@
 		<div id="album-list">
 			<div ng-repeat="album in albums" class="album-in-list">
 				<div class="album-cover" ng-repeat="image in album.images | limitTo: 1">
-					<div class="play-album far fa-play-circle"></div>
+					<div ng-click="playAlbum(album.uri, album.tracks.total)" class="play-album far fa-play-circle"></div>
 					<img ng-src="{{image.url}}" class="cover">
 				</div>
 				<div class="album-name">

@@ -109,12 +109,39 @@
 
 		$scope.shuffle = function() {
 			PlayerAPI.getPlayerState().then(function(data){
-				PlayerAPI.toggleShuffle(data.data.shuffle_state);
+				console.log(data.shuffle_state);
+				PlayerAPI.toggleShuffle(data.shuffle_state);
 			});
 		};
 
 		$scope.playSong = function(song_uri) {
-			PlayerAPI.playClickedSong();
+			PlayerAPI.playClickedSong(song_uri).then(function() {
+				PlayerAPI.delay().then(function() {
+					PlayerAPI.getCurrentlyPlaying().then(function(data) {
+						$rootScope.currentlyPlaying = {
+							'imgSrc': data.item.album.images[0].url,
+							'songTitle': data.item.name,
+							'artistName': data.item.artists[0].name,
+							'albumName': data.item.album.name
+						}
+					});
+				});
+			});
+		};
+
+		$scope.playAlbum = function(context_uri, total_tracks) {
+			PlayerAPI.playContext(context_uri, total_tracks).then(function() {
+				PlayerAPI.delay().then(function() {
+					PlayerAPI.getCurrentlyPlaying().then(function(data) {
+						$rootScope.currentlyPlaying = {
+							'imgSrc': data.item.album.images[0].url,
+							'songTitle': data.item.name,
+							'artistName': data.item.artists[0].name,
+							'albumName': data.item.album.name
+						}
+					});
+				});
+			});
 		};
 	});
 })();

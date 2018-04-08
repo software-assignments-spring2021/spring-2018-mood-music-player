@@ -165,25 +165,34 @@
 
 			toggleShuffle: function(shuffle) {
 				var ret = $q.defer();
-				var data = {
-
-				};
-				$http.put(baseUrl + '/me/player/shuffle?state=' + shuffle, JSON.stringify(data), {
-					headers: {
-						'Accept': 'application/json',
-						'Content-Type': 'application/json',
-						'Authorization': 'Bearer ' + $cookies.token
-					}
-				}).success(function(r){
-					ret.resolve(r);
-				});
+				if (shuffle === true) {
+					$http.put(baseUrl + '/me/player/shuffle?state=' + false, {}, {
+						headers: {
+							'Accept': 'application/json',
+							'Content-Type': 'application/json',
+							'Authorization': 'Bearer ' + $cookies.token
+						}
+					}).success(function(r){
+						ret.resolve(r);
+					});
+				} else {
+					$http.put(baseUrl + '/me/player/shuffle?state=' + true, {}, {
+						headers: {
+							'Accept': 'application/json',
+							'Content-Type': 'application/json',
+							'Authorization': 'Bearer ' + $cookies.token
+						}
+					}).success(function(r){
+						ret.resolve(r);
+					});
+				}
 				return ret.promise;
 			},
 
-			playClickedSong: function() {
+			playClickedSong: function(song_uri) {
 				var ret = $q.defer();
 				var data = {
-					context_uri: [song_uri]
+					uris: [song_uri]
 				};
 				$http.put(baseUrl + '/me/player/play', JSON.stringify(data), {
 					headers: {
@@ -196,6 +205,28 @@
 				});
 				return ret.promise;
 			},
+
+			playContext: function(context_uri, total_tracks) {
+				var num = Math.floor(Math.random() * total_tracks);
+				console.log(num);
+				var ret = $q.defer();
+				var data = {
+					context_uri: context_uri,
+					offset: {
+						position: num
+					}
+				};
+				$http.put(baseUrl + '/me/player/play', JSON.stringify(data), {
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + $cookies.token
+					}
+				}).success(function(r) {
+					ret.resolve(r);
+				});
+				return ret.promise;
+			}
 		};
 	});
 })();
