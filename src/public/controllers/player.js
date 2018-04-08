@@ -113,6 +113,7 @@
 
 		$scope.shuffle = function() {
 			PlayerAPI.getPlayerState().then(function(data){
+				console.log(data.shuffle_state);
 				PlayerAPI.toggleShuffle(data.shuffle_state);
 			});
 		};
@@ -132,8 +133,8 @@
 			});
 		};
 
-		$scope.playAlbum = function(context_uri) {
-			PlayerAPI.playContext(context_uri).then(function() {
+		$scope.playAlbum = function(context_uri, total_tracks) {
+			PlayerAPI.playContext(context_uri, total_tracks).then(function() {
 				PlayerAPI.delay().then(function() {
 					PlayerAPI.getCurrentlyPlaying().then(function(data) {
 						$rootScope.currentlyPlaying = {

@@ -206,12 +206,14 @@
 				return ret.promise;
 			},
 
-			playContext: function(context_uri) {
+			playContext: function(context_uri, total_tracks) {
+				var num = Math.floor(Math.random() * total_tracks);
+				console.log(num);
 				var ret = $q.defer();
 				var data = {
 					context_uri: context_uri,
 					offset: {
-						position: 0
+						position: num
 					}
 				};
 				$http.put(baseUrl + '/me/player/play', JSON.stringify(data), {
