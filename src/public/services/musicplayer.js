@@ -171,10 +171,10 @@
 				return ret.promise;
 			},
 
-			playClickedSong: function() {
+			playClickedSong: function(song_uri) {
 				var ret = $q.defer();
 				var data = {
-					context_uri: [song_uri]
+					uris: [song_uri]
 				};
 				$http.put(baseUrl + '/me/player/play', JSON.stringify(data), {
 					headers: {

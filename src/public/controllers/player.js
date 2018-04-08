@@ -201,7 +201,9 @@
 		};
 
 		$scope.playSong = function(song_uri) {
-			PlayerAPI.playClickedSong();
+			PlayerAPI.delay().then(function() {
+				PlayerAPI.playClickedSong(song_uri);
+			})
 		};
 	});
 })();
