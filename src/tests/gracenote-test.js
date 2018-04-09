@@ -15,15 +15,32 @@ describe('gracenote tests', function() {
 				done();
 			});
 		});
+
+		it("returns correct initial response", function(done){
+			request.get("http://localhost:3000/gracenote", function(error, response, body){
+				assert.equal('respond with a resource', body);
+				done();
+			});
+		});
+
 	});
 	
-	describe("GET /gracenote/:id", function(){
+	describe("returns correct response", function(){
 		it("returns energizing", function(done){
 			request.get("http://localhost:3000/gracenote/Vanilla%20Ice-To%20The%20Extreme-Ice%20Ice%20Baby", function(error, response, body){
 				assert.equal("Energizing", body);
 				done();
 			});
 		});
+
+		it("returns string", function(done){
+			request.get("http://localhost:3000/gracenote/Vanilla%20Ice-To%20The%20Extreme-Ice%20Ice%20Baby", function(error, response, body){
+				assert.equal('string', typeof(body));
+				done();
+			});
+		});
+
+		
 	});
 });
 
