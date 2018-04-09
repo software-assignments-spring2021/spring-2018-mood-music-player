@@ -1,6 +1,5 @@
 const chai = require('chai');
 const expect = chai.expect; 
-const spotify = require('../routes/spotify.js');
 const request = require("request");
 const assert = require('assert');
 let chaiHttp = require('chai-http');
