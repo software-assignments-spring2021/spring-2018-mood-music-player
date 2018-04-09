@@ -55,12 +55,15 @@
 					PlayerAPI.pause();
 				} else {
 					PlayerAPI.play().then(function(data) {
-						PlayerAPI.getCurrentlyPlaying().then(function(data){
+						PlayerAPI.getCurrentlyPlaying().then(function(data) {
 							console.log(data);
 							$scope.imgSrc = data.item.album.images[0].url;
 							$scope.songTitle = data.item.name;
 							$scope.artistName = data.item.artists[0].name;
 							$scope.albumName = data.item.album.name;
+							var paramString = $scope.artistName + '-' + $scope.albumName + '-' + $scope.songTitle;
+							var test = "Vanilla%20Ice-To%20The%20Extreme-Ice%20Ice%20Baby"
+							$http.get('/gracenote/' + test);
 						});
 					});
 				}
