@@ -20,8 +20,9 @@
 			<img id="profile-picture" src="../images/logo.png">
 			
 			<nav id="account-links">
-				<a href="/spotify_login" ng-hide="has_token"><button class="button button-block">Connect to Spotify</button></a>
+				<!-- <a href="/spotify_login" ng-hide="has_token"><button class="button button-block">Connect to Spotify</button></a> -->
 				<button class="button button-block" ng-show="has_token">Already Connected to Spotify</button></a>
+				<a ng-click="refresh()"><button class="button button-block">Refresh Token</button></a>
 				<a href="/" ng-click="signout()"><button class="button button-block">Logout</button></a>
 			</nav>
 		</div>
@@ -33,12 +34,12 @@
 		<div class="music-player-bar">
 			<div class="music-player-bar-left">
 				<div class="track-info">
-					<img ng-src="{{imgSrc}}" class="album-wrapper">
+					<img ng-src="{{currentlyPlaying.imgSrc}}" class="album-wrapper">
 					<div class="title-wrapper">
-						<p ng-bind="songTitle"><i class="fas fa-heart"></i> <i class="fas fa-ban"></i></p> 
+						<p ng-bind="currentlyPlaying.songTitle"><i class="fas fa-heart"></i> <i class="fas fa-ban"></i></p> 
 					</div>
 					<div class="artist-wrapper">
-						<p ng-bind="artistName"></p>
+						<p ng-bind="currentlyPlaying.artistName"></p>
 					</div>
 				</div>
 

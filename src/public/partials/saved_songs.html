@@ -44,12 +44,12 @@
 		<div class="music-player-bar">
 			<div class="music-player-bar-left">
 				<div class="track-info">
-					<img ng-src="{{imgSrc}}" class="album-wrapper">
+					<img ng-src="{{currentlyPlaying.imgSrc}}" class="album-wrapper">
 					<div class="title-wrapper">
-						<p ng-bind="songTitle"><i class="fas fa-heart"></i> <i class="fas fa-ban"></i></p> 
+						<p ng-bind="currentlyPlaying.songTitle"><i class="fas fa-heart"></i> <i class="fas fa-ban"></i></p> 
 					</div>
 					<div class="artist-wrapper">
-						<p ng-bind="artistName"></p>
+						<p ng-bind="currentlyPlaying.artistName"></p>
 					</div>
 				</div>
 
