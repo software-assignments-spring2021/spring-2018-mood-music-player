@@ -47,7 +47,7 @@
 					PlayerAPI.pause();
 				} else {
 					PlayerAPI.play().then(function(data) {
-						PlayerAPI.getCurrentlyPlaying().then(function(data){
+						PlayerAPI.getCurrentlyPlaying().then(function(data) {
 							console.log(data);
 							$rootScope.currentlyPlaying = {
 								'imgSrc': data.item.album.images[0].url,
