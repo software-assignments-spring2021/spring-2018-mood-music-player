@@ -18,7 +18,7 @@ module.exports = function(){
 				var songLyrics = res;
 				// sentiment API
 				// TODO: make code better, make sentiment code separate from lyrics-api code, get lyrics from lyric-api to sentiment.
-				var r1 = sentiment(songLyrics);
+				var r1 = sentiment(songLyrics.lyric);
 				console.log(r1);        // Score: -2, Comparative: -0.666
 				res.send({sentiment: r1});
 			}

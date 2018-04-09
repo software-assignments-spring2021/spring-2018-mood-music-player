@@ -18,26 +18,22 @@
 						$cookies.device = device_id;
 						console.log('Ready with Device ID', device_id);
 						/* Code to play from our device */
-						PlayerAPI.switchToDevice();
-			
-						$scope.songs = SpotifyAPI.getTracks();
-			$scope.albums = SpotifyAPI.getAlbums();
-			$scope.playlists = SpotifyAPI.getPlaylists();
-			$scope.artists = SpotifyAPI.getTopArtists();
-			$scope.top_tracks = SpotifyAPI.getTopTracks();
-
-			console.log($scope.top_tracks);		
+						PlayerAPI.switchToDevice();	
 						/* Initialize the player volume to our volume bar's starting point */
 						PlayerAPI.setVolume(50);
 					});
 				}
 			});
 		}
-		
-	
 
-        
-        
+		$scope.songs = SpotifyAPI.getTracks();
+		$scope.albums = SpotifyAPI.getAlbums();
+		$scope.playlists = SpotifyAPI.getPlaylists();
+		$scope.artists = SpotifyAPI.getTopArtists();
+		$scope.top_tracks = SpotifyAPI.getTopTracks();
+
+		console.log($scope.top_tracks);	
+		
 		// Error handling
 		// $scope.player.addListener('initialization_error', ({ message }) => { console.error(message); });
 		// $scope.player.addListener('authentication_error', ({ message }) => { console.error(message); });
@@ -46,11 +42,6 @@
 
 		// Playback status updates
 		// $scope.player.addListener('player_state_changed', state => { console.log(state.shuffle); });
-
-
-
-
-
 
 		/* Play a song. Trigger this function when play button is pressed */
 		$scope.play = function() {

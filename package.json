@@ -26,6 +26,7 @@
     "eslint": "^4.19.1",
     "express": "^4.16.2",
     "express-session": "^1.15.6",
+    "lyric-get": "^1.0.3",
     "mongoose": "^5.0.9",
     "mongoose-url-slugs": "^1.0.2",
     "morgan": "^1.9.0",
