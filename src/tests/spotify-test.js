@@ -40,7 +40,8 @@ describe('spotify tests', function() {
 					var current = response_array[i].split('=');
 					response_object[current[0]] = current[1];
 				}
-				assert.equal(require('../config.js').spotifyId, response_object['client_id']);
+				var spotifyId = process.env.SPOTIFY_ID || require('../config.js').spotifyId;
+				assert.equal(spotifyId, response_object['client_id']);
 				done();
 			});
 		});
