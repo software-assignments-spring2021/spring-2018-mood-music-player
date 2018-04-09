@@ -33,6 +33,7 @@
     "node-gracenote": "github:ddanninger/node-gracenote",
     "passport": "^0.4.0",
     "passport-local-mongoose": "^5.0.0",
+    "sentiment": "^4.2.0",
     "spotify-player": "^1.0.0-alpha.1"
   }
 }

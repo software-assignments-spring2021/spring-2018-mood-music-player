@@ -6,21 +6,21 @@ var router = express.Router();
 module.exports = function(){
 
 	//sends successful login state back to angular
-	router.get('/lyrics', function() {
-		// todo: change the variables to equal the artist and title retrieved from spotify API. 
-		var artist = 'Archive', title = 'Fuck U';
+	router.get('/lyrics/:song', function() {
+		// todo: change the variables to equal the artist and title retrieved from spotify API.
+		x = JSON.parse(req.params.song);
 		// todo: get the artist, song name, from spotify api and place as parameters, make the parameters dynamic.
 		// https://github.com/rhnvrm/lyric-api
-		lyric.get(artist, title, function(err, res){
+		lyric.get(x.artist, x.title, function(err, res){
 			if (err) {
 				console.log(err);
-			} else{
+			} else {
 				var songLyrics = res;
 				// sentiment API
 				// TODO: make code better, make sentiment code separate from lyrics-api code, get lyrics from lyric-api to sentiment.
 				var r1 = sentiment(songLyrics.lyric);
 				console.log(r1);        // Score: -2, Comparative: -0.666
-				res.send({sentiment: r1});
+				res.send({sentiment: r1, lyric: songLyrics.lyric});
 			}
 		});
 	});
