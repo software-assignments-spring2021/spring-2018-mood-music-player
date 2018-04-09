@@ -1,17 +1,35 @@
 (function() {
-    
+
 	var module = angular.module('smoodifyApp');
 
-	module.factory('PlayerAPI', function($q, $http, $cookies) {
+	module.factory('PlayerAPI', function($q, $http, $cookies, $rootScope) {
 
 		var baseUrl = 'https://api.spotify.com/v1';
-		var msToMS = function(ms) {
-			var minutes = Math.floor(ms / 60000);
-  			var seconds = ((ms % 60000) / 1000).toFixed(0);
-  			return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
-		}
 
 		return {
+			initialize: function() {
+				var ret = $q.defer();
+				var player = new Spotify.Player({
+					name: 'Smoodify',
+					getOAuthToken: cb => { cb($cookies.token); }
+				});
+				player.connect().then(success => {
+					if (success) {
+						player.addListener('ready', ({ device_id }) => {
+							$cookies.device = device_id;
+							console.log('Ready with Device ID', device_id);
+							/* Code to play from our device */
+							this.switchToDevice();
+
+							/* Initialize the player volume to our volume bar's starting point */
+							this.setVolume(50);
+						});
+						ret.resolve(player);
+					}
+				});
+				return ret.promise;
+			},
+
 			switchToDevice: function() {
 				var ret = $q.defer();
 				var data = {
@@ -147,25 +165,34 @@
 
 			toggleShuffle: function(shuffle) {
 				var ret = $q.defer();
-				var data = {
-
-				};
-				$http.put(baseUrl + '/me/player/shuffle?state=' + shuffle, JSON.stringify(data), {
-					headers: {
-						'Accept': 'application/json',
-						'Content-Type': 'application/json',
-						'Authorization': 'Bearer ' + $cookies.token
-					}
-				}).success(function(r){
-					ret.resolve(r);
-				});
+				if (shuffle === true) {
+					$http.put(baseUrl + '/me/player/shuffle?state=' + false, {}, {
+						headers: {
+							'Accept': 'application/json',
+							'Content-Type': 'application/json',
+							'Authorization': 'Bearer ' + $cookies.token
+						}
+					}).success(function(r){
+						ret.resolve(r);
+					});
+				} else {
+					$http.put(baseUrl + '/me/player/shuffle?state=' + true, {}, {
+						headers: {
+							'Accept': 'application/json',
+							'Content-Type': 'application/json',
+							'Authorization': 'Bearer ' + $cookies.token
+						}
+					}).success(function(r){
+						ret.resolve(r);
+					});
+				}
 				return ret.promise;
 			},
 
-			playClickedSong: function() {
+			playClickedSong: function(song_uri) {
 				var ret = $q.defer();
 				var data = {
-					context_uri: [song_uri]
+					uris: [song_uri]
 				};
 				$http.put(baseUrl + '/me/player/play', JSON.stringify(data), {
 					headers: {
@@ -178,6 +205,28 @@
 				});
 				return ret.promise;
 			},
+
+			playContext: function(context_uri, total_tracks) {
+				var num = Math.floor(Math.random() * total_tracks);
+				console.log(num);
+				var ret = $q.defer();
+				var data = {
+					context_uri: context_uri,
+					offset: {
+						position: num
+					}
+				};
+				$http.put(baseUrl + '/me/player/play', JSON.stringify(data), {
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + $cookies.token
+					}
+				}).success(function(r) {
+					ret.resolve(r);
+				});
+				return ret.promise;
+			}
 		};
 	});
 })();
