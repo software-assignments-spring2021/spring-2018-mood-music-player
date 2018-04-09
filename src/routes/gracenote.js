@@ -16,7 +16,7 @@ router.get('/:id', function(req, res) {
 	var songProperties = req.params.id.split('-');
 	api.searchTrack(songProperties[0], songProperties[1], songProperties[2], function(err, result) {
 		// Search Result as array
-		console.log(result[0].tracks[0].mood[0].text);
+		// console.log(result[0].tracks[0].mood[0].text);
 		res.send(result[0].tracks[0].mood[0].text);
 	}, {matchMode: gracenote.BEST_MATCH_ONLY});
 });
