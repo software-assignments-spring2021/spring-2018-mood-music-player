@@ -43,6 +43,7 @@
 					const refresh_token = data.data.refresh_token;
 					$cookies.token = access_token;
 					$cookies.refresh_token = refresh_token;
+					$rootScope.has_token = true;
 
 					/* Pull data and save in user object
 					SpotifyAPI.getTracks().then(function(data) {
@@ -88,7 +89,7 @@
 			.when('/', {
 				css: ['../stylesheets/login.css', '../stylesheets/base.css', '../stylesheets/main_page.css'],
 				templateUrl: '../partials/landing.html',
-				controller: 'MainController'
+				controller: 'PlayerController'
 			})
 			// the login display
 			.when('/login', {
