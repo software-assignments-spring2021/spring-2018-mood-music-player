@@ -10,7 +10,7 @@ chai.use(chaiHttp);
 describe('lyric-API and Sentiment tests', function() {
 	describe("GET /lyric", function(){
 		it("returns status code 200", function(done){
-			request.get("http://localhost:3000/lyric", function(error, response, body){
+			request.get("http://localhost:3000/lyric/?artist=Vanilla%20Ice&song=Ice%20Ice%20Baby", function(error, response, body){
 				assert.equal(200, response.statusCode);
 				done();
 			});
@@ -19,10 +19,23 @@ describe('lyric-API and Sentiment tests', function() {
 	});
 	
 	describe("returns correct response", function(){
-		it("returns energizing", function(done){
-			request.get("http://localhost:3000/lyric?artist=Vanilla%20Ice&song=Ice%20Ice%20Baby", function(error, response, body){
-				// console.log(body.sentiment);
-				assert.equal("Energizing", body);
+		it("returns -8", function(done){
+			request.get("http://localhost:3000/lyric/?artist=Vanilla%20Ice&song=Ice%20Ice%20Baby", function(error, response, body) {
+				assert.equal(-8, JSON.parse(body).sentiment.score);
+				done();
+			});
+		});
+
+		it("returns 249", function(done){
+			request.get("http://localhost:3000/lyric/?artist=Pharrell&song=Happy", function(error, response, body) {
+				assert.equal(249, JSON.parse(body).sentiment.score);
+				done();
+			});
+		});
+
+		it("returns -39", function(done){
+			request.get("http://localhost:3000/lyric/?artist=Twenty%20One%20Pilots&song=Kitchen%20Sink", function(error, response, body) {
+				assert.equal(-39, JSON.parse(body).sentiment.score);
 				done();
 			});
 		});
