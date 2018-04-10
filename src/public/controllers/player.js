@@ -8,6 +8,7 @@
 			PlayerAPI.initialize().then(function(player) {
 				$rootScope.player = player;
 			});
+
 			SpotifyAPI.getTracks().then(function(data) {
 				$rootScope.songs = data;
 			});
@@ -28,7 +29,6 @@
 				$rootScope.user_data = data;
 			});
 		}
-
 
 
 		// Error handling

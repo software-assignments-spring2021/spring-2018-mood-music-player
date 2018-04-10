@@ -5,9 +5,8 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
-const gracenote = require('node-gracenote');
-//initialize mongoose schemas
 
+//initialize mongoose schemas
 require('./models/song');
 require('./models/mood');
 require('./models/playlist');
@@ -17,6 +16,7 @@ require('./models/album');
 
 const index = require('./routes/index');
 const gracenoteroute = require('./routes/gracenote');
+const lyricroute = require('./routes/lyrics');
 const authenticate = require('./routes/authenticate')(passport);
 const spotify = require('./routes/spotify.js');
 
@@ -44,6 +44,7 @@ app.use('/', index);
 app.use('/auth', authenticate);
 app.use('/spotify', spotify);
 app.use('/gracenote', gracenoteroute);
+app.use('/lyric', lyricroute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

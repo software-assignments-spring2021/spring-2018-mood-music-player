@@ -15,15 +15,27 @@ describe('gracenote tests', function() {
 				done();
 			});
 		});
+
 	});
 	
-	describe("GET /gracenote/:id", function(){
+	describe("returns correct response", function(){
 		it("returns energizing", function(done){
-			request.get("http://localhost:3000/gracenote/Vanilla%20Ice-To%20The%20Extreme-Ice%20Ice%20Baby", function(error, response, body){
+			request.get("http://localhost:3000/gracenote/?artist=Vanilla%20Ice&album=To%20The%20Extreme&song=Ice%20Ice%20Baby", function(error, response, body){
 				assert.equal("Energizing", body);
 				done();
 			});
 		});
+
+		it("returns type string", function(done){
+			request.get("http://localhost:3000/gracenote/?artist=Vanilla%20Ice&album=To%20The%20Extreme&song=Ice%20Ice%20Baby", function(error, response, body){
+				assert.equal('string', typeof(body));
+				done();
+			});
+		});
+
+		
 	});
+
+	
 });
 
