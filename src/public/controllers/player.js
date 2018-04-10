@@ -72,7 +72,7 @@
 							}
 						});
 					}
-					Album.findOne({spotify_id:"id"}, function(err, album) {
+					Album.findOne({spotify_id:album.id}, function(err, album) {
 						if (err) {
 							console.log(err);
 						} else if (album === null) {
@@ -91,7 +91,7 @@
 					})
 			
 					}
-					Song.findOne({spotify_id:"id"}, function(err, song) {
+					Song.findOne({spotify_id:song.id}, function(err, song) {
 						if (err) {
 							console.log(err);
 							}
