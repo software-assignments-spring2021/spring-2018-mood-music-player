@@ -20,9 +20,9 @@
 			<img id="profile-picture" src="../images/logo.png">
 			
 			<nav id="account-links">
-				<!-- <a href="/spotify_login" ng-hide="has_token"><button class="button button-block">Connect to Spotify</button></a> -->
-				<button class="button button-block" ng-show="has_token">Already Connected to Spotify</button></a>
-				<a ng-click="refresh()"><button class="button button-block">Refresh Token</button></a>
+				<a href="/spotify_login" ng-hide="has_token"><button class="button button-block">Connect to Spotify</button></a>
+				<!-- <button class="button button-block" ng-show="has_token">Already Connected to Spotify</button></a> -->
+				<a ng-click="refresh()" ng-show="has_token"><button class="button button-block">Refresh Token</button></a>
 				<a href="/" ng-click="signout()"><button class="button button-block">Logout</button></a>
 			</nav>
 		</div>
