@@ -17,12 +17,7 @@ require('./models/album');
 
 const index = require('./routes/index');
 const gracenoteroute = require('./routes/gracenote');
-<<<<<<< HEAD
-const musicplayerroute = require('./routes/musicplayer');
 const lyricroute = require('./routes/lyrics');
-
-=======
->>>>>>> f1feecdb2c80a2ce7d1a62f825179c5abcbd0268
 const authenticate = require('./routes/authenticate')(passport);
 const spotify = require('./routes/spotify.js');
 
@@ -62,7 +57,6 @@ app.use(function(req, res, next) {
 //// Initialize Passport
 const initPassport = require('./passport-init');
 initPassport(passport);
-require('./gracenote-init');
 
 // error handlers
 
