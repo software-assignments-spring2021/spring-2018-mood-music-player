@@ -5,9 +5,8 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
-const gracenote = require('node-gracenote');
-//initialize mongoose schemas
 
+//initialize mongoose schemas
 require('./models/song');
 require('./models/mood');
 require('./models/playlist');
@@ -30,7 +29,7 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// app.use(logger('dev'));
+app.use(logger('dev'));
 app.use(session({
 	secret: 'keyboard cat'
 }));

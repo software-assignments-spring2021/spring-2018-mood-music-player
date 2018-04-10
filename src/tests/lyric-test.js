@@ -20,7 +20,7 @@ describe('lyric-API and Sentiment tests', function() {
 	
 	describe("returns correct response", function(){
 		it("returns energizing", function(done){
-			request.get("http://localhost:3000/lyric/?artist=Vanilla%20Ice&song=Ice%20Ice%20Baby", function(error, response, body){
+			request.get("http://localhost:3000/lyric?artist=Vanilla%20Ice&song=Ice%20Ice%20Baby", function(error, response, body){
 				// console.log(body.sentiment);
 				assert.equal("Energizing", body);
 				done();

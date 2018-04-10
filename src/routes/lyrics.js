@@ -7,7 +7,7 @@ module.exports = function() {
 	// sends successful login state back to angular
 	router.get('/', function(req, res) {
 		// https://github.com/rhnvrm/lyric-api
-		lyric.get(req.query.artist, req.query.title, function(err, res){
+		lyric.get(req.query.artist, req.query.song, function(err, res) {
 			if (err) {
 				console.log(err);
 			} else {
