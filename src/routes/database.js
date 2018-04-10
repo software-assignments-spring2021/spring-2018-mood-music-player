@@ -19,10 +19,6 @@ router.post('/artist', function(req, res) {
 		} else if (artist === null) {
 			const artist = new Artist({
 				name: name,
-				//album: artist[i]
-				//images: ..copy/get from artist js file to json
-				//songs: artist[i].
-				//genres:
 				spotify_id: id,
 				spotify_uri: uri
 			});
@@ -41,12 +37,66 @@ router.post('/artist', function(req, res) {
 
 
 router.post('/album', function(req, res) {
-	// TODO
-});
+	var name = req.query.name;
+	var artist = req.query.artists;
+	var id = req.query.id;
+	var uri = req.query.uri;
+	
+	Album.findOne({spotify_id:id}, function(err, album) {
+		if (err) {
+			console.log(err);
+		} else if (album === null) {
+			const album = new Album({
+				name: name,
+				artist: artists,
+				spotify_id: id,
+				spotify_uri: uri
 
-router.post('/song', function(req, res) {
-	// TODO
+			});
+			album.save(function(err, album) {
+				if (err) {
+					console.log(err);
+				} else {
+					console.log(album);
+					res.send(album);
+				}
+			});
+		}
+	});
 });
+	
+	
+router.post('/song', function(req, res) {
+	var name = req.query.name;
+	var id = req.query.id;
+	var uri = req.query.uri;
+	var duration_ms = req.query.duration_ms;
+	
+	Song.findOne({spotify_id:id}, function(err, song) {
+		if (err) {
+			console.log(err);
+		} else if (song === null) {
+			const song = new Song({
+				name: name,
+				//artist:
+				//album:
+				//mood: //TODO 
+				spotify_id: id,
+				spotify_uri: uri,
+				duration_ms: duration_ms
+			});
+			song.save(function(err, song) {
+				if (err) {
+					console.log(err);
+				} else {
+					console.log(song);
+					res.send(song);
+				}
+			});
+		}
+	});
+});		
+
 
 module.exports = router;
 
