@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node src/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nyc --reporter=text mocha src/tests/* --exit"
   },
   "repository": {
     "type": "git",
@@ -21,17 +21,22 @@
     "angular-css": "^1.0.8",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.18.2",
+    "chai": "^4.1.2",
+    "chai-http": "^4.0.0",
     "cookie-parser": "^1.4.3",
     "ejs": "^2.5.7",
     "eslint": "^4.19.1",
     "express": "^4.16.2",
     "express-session": "^1.15.6",
+    "lyric-get": "^1.0.3",
     "mongoose": "^5.0.9",
     "mongoose-url-slugs": "^1.0.2",
     "morgan": "^1.9.0",
     "node-gracenote": "github:ddanninger/node-gracenote",
+    "nyc": "^11.6.0",
     "passport": "^0.4.0",
     "passport-local-mongoose": "^5.0.0",
+    "sentiment": "^4.2.0",
     "spotify-player": "^1.0.0-alpha.1"
   }
 }
