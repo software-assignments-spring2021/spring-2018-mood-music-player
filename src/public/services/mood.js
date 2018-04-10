@@ -6,15 +6,15 @@
 
 		return {
 			gracenoteMood: function(artist, title, album) {
-				$http.get('/gracenote/' + artist + "-" + title + "-" + album)
-				.success(function(data) {
+				const query = '?artist=' + encodeURIComponent(artist) + '&title='+ encodeURIComponent(title) + '&album=' + encodeURIComponent(album);
+				$http.get('/gracenote/' +  query).success(function(data) {
 					console.log(data);
 				});
 			},
 
 			lyricSentimentMood: function(artist, title) {
-				$http.get('/lyric/' + JSON.stringify({artist: artist, title: title}))
-				.success(function(data) {
+				const query = '?artist=' + encodeURIComponent(artist) + '&title='+ encodeURIComponent(title);
+				$http.get('/lyric/' + query).success(function(data) {
 					console.log(data);
 				});
 			}

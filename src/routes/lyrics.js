@@ -6,9 +6,9 @@ var router = express.Router();
 module.exports = function(){
 
 	//sends successful login state back to angular
-	router.get('/lyrics/:song', function() {
+	router.get('/:song', function(req, res) {
 		// todo: change the variables to equal the artist and title retrieved from spotify API.
-		x = JSON.parse(req.params.song);
+		x = req.query;
 		// todo: get the artist, song name, from spotify api and place as parameters, make the parameters dynamic.
 		// https://github.com/rhnvrm/lyric-api
 		lyric.get(x.artist, x.title, function(err, res){
