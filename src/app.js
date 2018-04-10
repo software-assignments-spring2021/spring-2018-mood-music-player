@@ -16,13 +16,16 @@ require('./models/artist');
 require('./models/album');
 
 const index = require('./routes/index');
-const api = require('./routes/api');
 const gracenoteroute = require('./routes/gracenote');
+<<<<<<< HEAD
 const musicplayerroute = require('./routes/musicplayer');
 const lyricroute = require('./routes/lyrics');
 
+=======
+>>>>>>> f1feecdb2c80a2ce7d1a62f825179c5abcbd0268
 const authenticate = require('./routes/authenticate')(passport);
 const spotify = require('./routes/spotify.js');
+
 const mongoose = require('mongoose');
 const db = process.env.MONGODB_URI || require('./config.js').mongoKey;
 mongoose.connect(db);
@@ -32,7 +35,7 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(logger('dev'));
+// app.use(logger('dev'));
 app.use(session({
 	secret: 'keyboard cat'
 }));
@@ -45,11 +48,9 @@ app.use(passport.session());
 
 app.use('/', index);
 app.use('/auth', authenticate);
-app.use('/api', api);
 app.use('/spotify', spotify);
 app.use('/gracenote', gracenoteroute);
-app.use('/lyric', lyricroute)
-app.use('/musicplayer', musicplayerroute);
+app.use('/lyric', lyricroute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
