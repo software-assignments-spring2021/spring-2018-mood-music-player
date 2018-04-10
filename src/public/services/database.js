@@ -6,10 +6,12 @@
 
 		return {
 			newArtist: function(name, id, uri) {
+				var ret = $q.defer();
 				const query = '?name=' + encodeURIComponent(name) + '&id=' + encodeURIComponent(id) + '&uri=' + encodeURIComponent(uri);
-				$http.post('/new/artist/' + query).then(function(res) {
-					console.log(res);
+				$http.post('/new/artist/' + query).success(function(res) {
+					ret.resolve(res.data);
 				});
+				return ret.promise;
 			},
 
 			newAlbum: function() {
@@ -17,7 +19,7 @@
 			},
 
 			newSong: function() {
-				
+
 			}
 		};
 	});

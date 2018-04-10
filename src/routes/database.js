@@ -16,7 +16,7 @@ router.post('/artist', function(req, res) {
 	Artist.findOne({spotify_id:id}, function(err, artist) {
 		if (err) {
 			console.log(err);
-		} else if (artist === null) {
+		} else if (!artist) {
 			const artist = new Artist({
 				name: name,
 				//album: artist[i]
@@ -32,7 +32,7 @@ router.post('/artist', function(req, res) {
 					console.log(err);
 				} else {
 					console.log(artist);
-					res.send(artist);
+					res.send(JSON.stringify(artist));
 				}
 			});
 		}
