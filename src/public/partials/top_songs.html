@@ -5,11 +5,11 @@
 
 		<nav id="links">
 			<a href="/">Home</a>
-			<a href="/saved_songs" class="current-page">Saved Songs</a>
+			<a href="/saved_songs">Saved Songs</a>
 			<a href="/saved_albums">Saved Albums</a>
 			<a href="/saved_playlists">Saved Playlists</a>
 			<a href="/top_artists">Top Artists</a>
-			<a href="/top_songs">Top Songs</a>
+			<a href="/top_songs" class="current-page">Top Songs</a>
 		</nav>
 		<hr id="second-hr">
 		
@@ -20,7 +20,7 @@
 
 	<!-- Song List -->
 	<div class="content" id="saved-music-page">
-		<table id="song-list">
+		<!-- <table id="song-list">
 			<tr ng-repeat="song in songs" class="song-in-list">
 				<td ng-click="playSong(song.uri)" class="play-song fas fa-play"></td>
 				<td>
@@ -35,7 +35,7 @@
 				</td>
 				<td>{{song.duration}}</td>
 			</tr>
-		</table>
+		</table> -->
 	</div>
 
 	<div class="music-progress-bar">
@@ -46,12 +46,12 @@
 		<div class="music-player-bar">
 			<div class="music-player-bar-left">
 				<div class="track-info">
-					<img ng-src="{{currentlyPlaying.imgSrc}}" class="album-wrapper">
+					<img ng-src="{{imgSrc}}" class="album-wrapper">
 					<div class="title-wrapper">
-						<p ng-bind="currentlyPlaying.songTitle"><i class="fas fa-heart"></i> <i class="fas fa-ban"></i></p> 
+						<p ng-bind="songTitle"><i class="fas fa-heart"></i> <i class="fas fa-ban"></i></p> 
 					</div>
 					<div class="artist-wrapper">
-						<p ng-bind="currentlyPlaying.artistName"></p>
+						<p ng-bind="artistName"></p>
 					</div>
 				</div>
 
