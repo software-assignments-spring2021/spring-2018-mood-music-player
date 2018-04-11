@@ -13,10 +13,7 @@ const User = new mongoose.Schema({
 	account_type: {type: String},	// premium or free
 	last_updated: {type: Date},		// in order to periodically update?
 	saved_songs: [{type: mongoose.Schema.Types.ObjectId, ref: 'Song'}],
-	top_songs: [{type: mongoose.Schema.Types.ObjectId, ref: 'Song'}],
-	playlists: [{type: mongoose.Schema.Types.ObjectId, ref: 'Playlist'}],
-	artists: [{type: mongoose.Schema.Types.ObjectId, ref: 'Artist'}]
-	// friends:  [{type: mongoose.Schema.Types.ObjectId}],
+	playlists: [{type: mongoose.Schema.Types.ObjectId, ref: 'Playlist'}]
 });
 
 User.plugin(passportLocalMongoose);

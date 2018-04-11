@@ -11,8 +11,6 @@ require('./models/song');
 require('./models/mood');
 require('./models/playlist');
 require('./models/user');
-require('./models/artist');
-require('./models/album');
 
 const index = require('./routes/index');
 const gracenoteroute = require('./routes/gracenote');
@@ -46,7 +44,7 @@ app.use('/auth', authenticate);
 app.use('/spotify', spotify);
 app.use('/gracenote', gracenoteroute);
 app.use('/lyric', lyricroute);
-app.use('/new/', databaseroute);
+app.use('/api', databaseroute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -83,4 +81,4 @@ app.use(function(err, req, res) {
 	});
 });
 
-app.listen(process.env.PORT || 3000);
+app.listen(process.env.PORT || 4000);

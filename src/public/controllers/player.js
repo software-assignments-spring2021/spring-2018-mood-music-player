@@ -12,29 +12,30 @@
 			SpotifyAPI.getTracks().then(function(allTracks) {
 				for (var i = 0; i < allTracks.length; i++) {
 					console.log("inside allTracks");
-					var song = allTracks[i];
-					var artists = song.artists;		// artists array
-					var album = song.album;			// album object
-				
-					// * check if object exists before making it (use the id from the response and spotify_id)
-					// 1. make Artist
-					// 2. make Album that references Artist
-					// 3. make Artist reference Album
-					// 4. make Song object that references both Album and Artist
-					// * don't forget to .save()
-					for (var j = 0; j < artists.length; j++) {
-						DatabaseService.newArtist(artists[j].name, artists[j].id, artists[j].uri);
+					var artists = allTracks[i].artists.map(function(a) {
+						return {
+							name: a.name,
+							spotify_id: a.id,
+							spotify_uri: a.uri
+						}
+					});		// artists array
+					var album = {
+						name: allTracks[i].album.name,
+						images: allTracks[i].album.images,
+						spotify_id: allTracks[i].album.id,
+						spotify_uri: allTracks[i].album.uri
+					} // album object
+					var song = {
+						name: allTracks[i].name,
+						artist: artists,
+						album: album,
+						id: allTracks[i].id,
+						uri: allTracks[i].uri,
+						duration_ms: allTracks[i].duration_ms
 					}
-					
-					DatabaseService.newAlbum(album.name, album.artist, album.id, album.uri);
-					DatabaseService.newSong(song.name, song.id, song.uri, song.duration_ms);
-					
-					//check this ^ ... artists are in an array but album and song are just objects so no need for for loop?
-
-
-
-
-	
+					DatabaseService.newSong(song).then(function(d) {
+						// console.log(d.data);
+					});
 
 					$rootScope.songs = allTracks
 				};
