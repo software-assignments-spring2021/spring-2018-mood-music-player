@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const DATA = require('../public/javascripts/data.js');
+const request = require('request');
 
 const getAccuracy = function(net, testData) {
 	let hits = 0;
@@ -36,7 +37,25 @@ router.get('/train', function(req, res) {
 });
 
 router.get('/data', function(req, res) {
-	var song = req.query.songid;
+	/* get user token from the query */
+	var userID = req.query.user;
+	var songs = [];
+
+	/* request parameters */
+	const authOptions = {
+		url: 'https://api.spotify.com/v1/me/tracks',
+		headers: { 'Authorization': 'Bearer ' + userID },
+		json: true
+	};
+
+	/* HTTP request skeleton to pull all users saved songs id */
+	request.get(authOptions, function(error, response, body) {
+		for (let i = 0; i < body.items.size; i++) {
+			songs.push(body.items[i].track.id);
+		}
+	})
+
+
 	// TODO: get this song from spotify
 	// TODO: get metadata and import
 	res.send({category: net.run(/* here */)});
