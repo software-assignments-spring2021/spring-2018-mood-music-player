@@ -3,7 +3,7 @@
 	var module = angular.module('smoodifyApp');
 
 	module.factory('PlayerAPI', function($q, $http, $cookies, $rootScope) {
-
+		var _queue_ = [];
 		var baseUrl = 'https://api.spotify.com/v1';
 
 		return {
@@ -190,10 +190,12 @@
 			},
 
 			playClickedSong: function(song_uri) {
+				_queue_.unshift(song_uri)
 				var ret = $q.defer();
 				var data = {
-					uris: [song_uri]
+					uris: _queue_
 				};
+				console.log(_queue_);
 				$http.put(baseUrl + '/me/player/play', JSON.stringify(data), {
 					headers: {
 						'Accept': 'application/json',
