@@ -89,7 +89,7 @@
 			.when('/', {
 				css: ['../stylesheets/login.css', '../stylesheets/base.css', '../stylesheets/main_page.css'],
 				templateUrl: '../partials/landing.html',
-				controller: 'PlayerController'
+				controller: 'MainController'
 			})
 			// the login display
 			.when('/login', {
