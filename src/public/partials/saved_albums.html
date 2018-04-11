@@ -23,7 +23,7 @@
 		<div id="album-list">
 			<div ng-repeat="album in albums" class="album-in-list">
 				<div class="album-cover" ng-repeat="image in album.images | limitTo: 1">
-					<div class="play-album far fa-play-circle"></div>
+					<div ng-click="playAlbum(album.uri, album.tracks.total)" class="play-album far fa-play-circle"></div>
 					<img ng-src="{{image.url}}" class="cover">
 				</div>
 				<div class="album-name">
@@ -44,12 +44,12 @@
 		<div class="music-player-bar">
 			<div class="music-player-bar-left">
 				<div class="track-info">
-					<img ng-src="{{imgSrc}}" class="album-wrapper">
+					<img ng-src="{{currentlyPlaying.imgSrc}}" class="album-wrapper">
 					<div class="title-wrapper">
-						<p ng-bind="songTitle"><i class="fas fa-heart"></i> <i class="fas fa-ban"></i></p> 
+						<p ng-bind="currentlyPlaying.songTitle"><i class="fas fa-heart"></i> <i class="fas fa-ban"></i></p> 
 					</div>
 					<div class="artist-wrapper">
-						<p ng-bind="artistName"></p>
+						<p ng-bind="currentlyPlaying.artistName"></p>
 					</div>
 				</div>
 

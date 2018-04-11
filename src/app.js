@@ -5,9 +5,8 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
-const gracenote = require('node-gracenote');
-//initialize mongoose schemas
 
+//initialize mongoose schemas
 require('./models/song');
 require('./models/mood');
 require('./models/playlist');
@@ -16,12 +15,11 @@ require('./models/artist');
 require('./models/album');
 
 const index = require('./routes/index');
-const api = require('./routes/api');
 const gracenoteroute = require('./routes/gracenote');
-const musicplayerroute = require('./routes/musicplayer');
-
+const lyricroute = require('./routes/lyrics');
 const authenticate = require('./routes/authenticate')(passport);
 const spotify = require('./routes/spotify.js');
+
 const mongoose = require('mongoose');
 const db = process.env.MONGODB_URI || require('./config.js').mongoKey;
 mongoose.connect(db);
@@ -31,7 +29,7 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(logger('dev'));
+// app.use(logger('dev'));
 app.use(session({
 	secret: 'keyboard cat'
 }));
@@ -44,10 +42,9 @@ app.use(passport.session());
 
 app.use('/', index);
 app.use('/auth', authenticate);
-app.use('/api', api);
 app.use('/spotify', spotify);
 app.use('/gracenote', gracenoteroute);
-app.use('/musicplayer', musicplayerroute);
+app.use('/lyric', lyricroute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
