@@ -25,44 +25,16 @@
 					for (var j = 0; j < artists.length; j++) {
 						DatabaseService.newArtist(artists[j].name, artists[j].id, artists[j].uri);
 					}
+					
+					DatabaseService.newAlbum(album.name, album.artist, album.id, album.uri);
+					DatabaseService.newSong(song.name, song.id, song.uri, song.duration_ms);
+					
+					//check this ^ ... artists are in an array but album and song are just objects so no need for for loop?
 
-					/*
-					Album.findOne({spotify_id:album.id}, function(err, album) {
-						if (err) {
-							console.log(err);
-						} else if (album === null) {
-							const album = new Album({
-								name: album.name,
-								artist: album.artists,
-								//images:
-								spotify_id: album.id,
-								spotify_uri: album.uri
 
-							});
-						}
-						else {
-						console.log(album);
-						}
-					});
-					*/
 
-					/*
-					Song.findOne({spotify_id:song.id}, function(err, song) {
-						if (err) {
-							console.log(err);
-						} else if (song === null) {
-							const song = new Song({
-								name: song.name,
-								//artist:
-								//album:
-								//mood:
-								spotify_id: song.id,
-								spotify_uri: song.uri,
-								duration_ms: song.duration_ms
-								});
-							}
-						}	
-					*/				
+
+	
 
 					$rootScope.songs = allTracks
 				};
