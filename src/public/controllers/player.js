@@ -107,6 +107,13 @@
 			PlayerAPI.setVolume($scope.vol);
 		};
 
+		/* Change Progress */
+		$scope.setProgress = function() {
+			PlayerAPI.getCurrentlyPlaying().then(function(data) {
+				PlayerAPI.setProgress(data.item.duration_ms * ($scope.prog / 100));
+			})
+		}
+
 		$scope.shuffle = function() {
 			PlayerAPI.getPlayerState().then(function(data){
 				console.log(data.shuffle_state);
