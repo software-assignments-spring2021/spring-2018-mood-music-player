@@ -9,7 +9,8 @@
 				$rootScope.player = player;
 			});
 
-			MoodService.lyricSentimentMood('Vanila Ice', 'Ice Ice Baby').then(function(data) {
+			// test
+			MoodService.lyricSentimentMood('Vanilla Ice', 'Ice Ice Baby').then(function(data) {
 				console.log(data);
 			});
 
