@@ -2,8 +2,9 @@
 
 	var module = angular.module('smoodifyApp');
 
-	module.controller('PlayerController', function($scope, PlayerAPI, SpotifyAPI, $http, $cookies, $rootScope) {
+	module.controller('PlayerController', function($scope, PlayerAPI, SpotifyAPI, $http, $cookies, $rootScope, $interval) {
 		/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
+
 		if ($rootScope.player === undefined) {
 			PlayerAPI.initialize().then(function(player) {
 				$rootScope.player = player;
@@ -30,6 +31,27 @@
 			});
 		}
 
+		var bar = document.querySelector('#progress-bar');
+		var width = 0;
+		var progress_ms = 0;
+		var duration_ms = 0;
+
+
+		$interval(function() {
+			if ($rootScope.is_playing === true) {
+				if (width >= 100) {
+
+					width = 0;
+					bar.style.width = width + '%';
+				} else {
+					width = width + (10 / duration_ms) * 100;
+					bar.style.width = width + '%';
+				}
+			}
+		}, 10);
+
+
+
 
 		// Error handling
 		// $scope.player.addListener('initialization_error', ({ message }) => { console.error(message); });
@@ -42,16 +64,12 @@
 
 		/* Play a song. Trigger this function when play button is pressed */
 		$scope.play = function() {
-			var progress_ms = 0;
-			var duration_ms = 0;
 			var play_button = document.querySelector('.play-button');
-			var bar = document.querySelector('#progress-bar');
-
-
 			PlayerAPI.getPlayerState().then(function(data) {
 				if (data.is_playing === true) {
 					play_button.innerHTML = '<i class="far fa-play-circle"></i>'
 					PlayerAPI.pause();
+					$rootScope.is_playing = false;
 				} else {
 					play_button.innerHTML = '<i class="far fa-pause-circle"></i>'
 					PlayerAPI.play().then(function(data) {
@@ -67,8 +85,10 @@
 							duration_ms = data.item.duration_ms;
 							progress_percent = Math.floor((data.progress_ms / data.item.duration_ms) * 100);
 							bar.style.width = progress_percent.toString() + '%';
+
 						});
 					});
+					$rootScope.is_playing = true;
 				}
 			});
 		};
@@ -76,6 +96,8 @@
 		/* Go back to previous song. Trigger this function when previous button is clicked */
 		$scope.previous = function() {      
 			PlayerAPI.playPrevious().then(function() {
+				width = 0;
+				bar.style.width = width + '%';
 				PlayerAPI.delay().then(function() {
 					PlayerAPI.getCurrentlyPlaying().then(function(data) {
 						$rootScope.currentlyPlaying = {
@@ -92,6 +114,8 @@
 		/* Skip song. Trigger this function when skip button is pressed */
 		$scope.skip = function() {
 			PlayerAPI.playNext().then(function() {
+				width = 0;
+				bar.style.width = width + '%';
 				PlayerAPI.delay().then(function() {
 					PlayerAPI.getCurrentlyPlaying().then(function(data) {
 						$rootScope.currentlyPlaying = {
@@ -105,7 +129,7 @@
 			});
 		};
 
-		/* TODO Fix. Currently not working */
+		/* TODO $scope.vol does not have an initial value. */
 		$scope.mute = function() {
 			volume_button = document.querySelector('.volume-mute');
 			if ($scope.vol === undefined) {
@@ -170,6 +194,20 @@
 					});
 				});
 			});
+		};
+
+
+		$scope.seek = function(event) {
+			var prog_bar = document.querySelector('#progress');
+			var click_percentage = 0;
+			prog_bar.addEventListener('click', function(event) {
+				click_percentage = Math.floor(duration_ms * (event.clientX / window.screen.width));
+				width = event.clientX / window.screen.width * 100;
+				bar.style.width = width + '%';
+				PlayerAPI.setProgress(click_percentage);
+
+			})
+			
 		};
 
 
