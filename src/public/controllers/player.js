@@ -2,7 +2,7 @@
 
 	var module = angular.module('smoodifyApp');
 
-	module.controller('PlayerController', function($scope, PlayerAPI, SpotifyAPI, $http, $cookies, $rootScope, $interval) {
+	module.controller('PlayerController', function($scope, PlayerAPI, SpotifyAPI, $http, $cookies, $rootScope, $interval, $window) {
 		/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
 
 		if ($rootScope.player === undefined) {
@@ -197,16 +197,13 @@
 		};
 
 
-		$scope.seek = function(event) {
+		$scope.seek = function($event) {
 			var prog_bar = document.querySelector('#progress');
 			var click_percentage = 0;
-			prog_bar.addEventListener('click', function(event) {
-				click_percentage = Math.floor(duration_ms * (event.clientX / window.screen.width));
-				width = event.clientX / window.screen.width * 100;
-				bar.style.width = width + '%';
-				PlayerAPI.setProgress(click_percentage);
-
-			})
+			click_percentage = Math.floor(duration_ms * ($event.clientX / $window.screen.width));
+			width = $event.clientX / $window.screen.width * 100;
+			bar.style.width = width + '%';
+			PlayerAPI.setProgress(click_percentage);
 			
 		};
 
