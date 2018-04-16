@@ -37,6 +37,7 @@
 		var duration_ms = 0;
 
 
+		/* Make the progress bar progress */
 		$interval(function() {
 			if ($rootScope.is_playing === true) {
 				if (width >= 100) {
@@ -106,6 +107,7 @@
 							'artistName': data.item.artists[0].name,
 							'albumName': data.item.album.name
 						}
+						duration_ms = data.item.duration_ms;
 					});
 				});
 			});
@@ -124,6 +126,8 @@
 							'artistName': data.item.artists[0].name,
 							'albumName': data.item.album.name
 						}
+
+						duration_ms = data.item.duration_ms;
 					});
 				});
 			});
@@ -197,14 +201,13 @@
 		};
 
 
+		/* Function to seek to a part of a song */
 		$scope.seek = function($event) {
-			var prog_bar = document.querySelector('#progress');
 			var click_percentage = 0;
 			click_percentage = Math.floor(duration_ms * ($event.clientX / $window.screen.width));
 			width = $event.clientX / $window.screen.width * 100;
 			bar.style.width = width + '%';
 			PlayerAPI.setProgress(click_percentage);
-			
 		};
 
 
