@@ -32,6 +32,7 @@
 		}
 
 		var bar = document.querySelector('#progress-bar');
+		var prog_bar = document.querySelector('#progress');
 		var width = 0;
 		var progress_ms = 0;
 		var duration_ms = 0;
@@ -209,6 +210,18 @@
 			bar.style.width = width + '%';
 			PlayerAPI.setProgress(click_percentage);
 		};
+
+		$scope.enlarge = function($event) {
+			console.log($event);
+			prog_bar.style.height = 10 + 'px';
+			bar.style.height = 10 + 'px';
+		};
+
+		$scope.shrink = function($event) {
+			console.log($event);
+			prog_bar.style.height = 5 + 'px';
+			bar.style.height = 5 + 'px';
+		}
 
 
 	});
