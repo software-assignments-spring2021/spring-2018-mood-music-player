@@ -86,7 +86,16 @@ router.post('/song/:data', function(req, res) {
 			});
 		}
 	});
-});		
+});
 
+// update a song's mood for a user
+router.post('/update/song-mood', function(req, res) {
+	const mood = req.query.mood;
+	const song = req.query.song;
+	const user = req.query.user;
+	User.findOne({username: user}, function(err, user) {
+		
+	});
+});
 
 module.exports = router;
