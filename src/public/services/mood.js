@@ -20,7 +20,7 @@
 					ret.resolve(data);
 				});
 				return ret.promise;
-			}
+			},
 
 			getNetMood: function(song) {
 				// TODO: import net?
@@ -33,55 +33,55 @@
 				// TODO: add these things to our song data in database.
 				// TODO: add mongo functions.
 				if ((energy >= 0 && energy <= .125) && (valence >= 0 && valence <= .125)) {
-					return 'Somber';
+					return  {energy: energy, valence: valence, mood: 'Somber'};
 				} else if ((energy >= 0 && energy <= .125) && (valence > .125 && valence <= .375)) {
-					return 'Ominous';
+					return  {energy: energy, valence: valence, mood: 'Ominous'};
 				} else if ((energy >= 0 && energy <= .125) && (valence > .375 && valence <= .625)) {
-					return 'Sentimental';
+					return  {energy: energy, valence: valence, mood: 'Sentimental'};
 				} else if ((energy >= 0 && energy <= .125) && (valence > .625 && valence <= .875)) {
-					return 'Nostalgic';
+					return  {energy: energy, valence: valence, mood: 'Nostalgic'};
 				} else if ((energy >= 0 && energy <= .125) && (valence > .625 && valence <= 1)) {
-					return 'Peaceful';
+					return  {energy: energy, valence: valence, mood: 'Peaceful'};
 				} else if ((energy > .125 && energy <= .375) && (valence >= 0 && valence <= .125)) {
-					return 'Depressing';
+					return  {energy: energy, valence: valence, mood: 'Depressing'};
 				} else if ((energy > .125 && energy <= .375) && (valence > .125 && valence <= .375)) {
-					return 'Melancholy';
+					return  {energy: energy, valence: valence, mood: 'Melancholy'};
 				} else if ((energy > .125 && energy <= .375) && (valence > .375 && valence <= .625)) {
-					return 'Mellow';
+					return  {energy: energy, valence: valence, mood: 'Mellow'};
 				} else if ((energy > .125 && energy <= .375) && (valence > .625 && valence <= .875)) {
-					return 'Tender';
+					return  {energy: energy, valence: valence, mood: 'Tender'};
 				} else if ((energy > .125 && energy <= .375) && (valence > .875 && valence <= 1)) {
-					return 'Easygoing';
+					return  {energy: energy, valence: valence, mood: 'Easygoing'};
 				} else if ((energy > .375  && energy <= .625) && (valence >= 0 && valence <= .125)) {
-					return 'Brooding';
+					return  {energy: energy, valence: valence, mood: 'Brooding'};
 				} else if ((energy > .375 && energy <= .625) && (valence > .125 && valence <= .375)) {
-					return 'Yearning';
+					return  {energy: energy, valence: valence, mood: 'Yearning'};
 				} else if ((energy > .375 && energy <= .625) && (valence > .375 && valence <= .625)) {
-					return 'Sensual';
+					return  {energy: energy, valence: valence, mood: 'Sensual'};
 				} else if ((energy > .375 && energy <= .625) && (valence > .625 && valence <= .875)) {
-					return 'Optimistic';
+					return  {energy: energy, valence: valence, mood: 'Optimistic'};
 				} else if ((energy > .375 && energy <= .625) && (valence > .875 && valence <= 1)) {
-					return 'Content';
+					return  {energy: energy, valence: valence, mood: 'Content'};
 				} else if ((energy > .625 && energy <= .875) && (valence >= 0 && valence <= .125)) {
-					return 'Despair';
+					return  {energy: energy, valence: valence, mood: 'Despair'};
 				} else if ((energy > .625 && energy <= .875) && (valence > .125 && valence <= .375)) {
-					return 'Anxious';
+					return  {energy: energy, valence: valence, mood: 'Anxious'};
 				} else if ((energy > .625 && energy <= .875) && (valence > .375 && valence <= .625)) {
-					return 'Chill';
+					return  {energy: energy, valence: valence, mood: 'Chill'};
 				} else if ((energy > .625 && energy <= .875) && (valence > .625 && valence <= .875)) {
-					return 'Stirring';
+					return  {energy: energy, valence: valence, mood: 'Stirring'};
 				} else if ((energy > .625 && energy <= .875) && (valence > .875 && valence <= 1)) {
-					return 'Excited';
+					return  {energy: energy, valence: valence, mood: 'Excited'};
 				} else if ((energy > .875 && energy <= 1) && (valence >= 0 && valence <= .125)) {
-					return 'Aggressive';
+					return  {energy: energy, valence: valence, mood: 'Aggressive'};
 				} else if ((energy > .875 && energy <= 1) && (valence > .125 && valence <= .375)) {
-					return 'Angsty';
+					return  {energy: energy, valence: valence, mood: 'Angsty'};
 				} else if ((energy > .875 && energy <= 1) && (valence > .375 && valence <= .625)) {
-					return 'Energizing';
+					return  {energy: energy, valence: valence, mood: 'Energizing'};
 				} else if ((energy > .875 && energy <= 1) && (valence > .625 && valence <= .875)) {
-					return 'Upbeat';
+					return  {energy: energy, valence: valence, mood: 'Upbeat'};
 				} else if ((energy > .875 && energy <= 1) && (valence > .875 && valence <= 1)) {
-					return 'Empowering';
+					return  {energy: energy, valence: valence, mood: 'Empowering'};
 				} else {
 					console.log("what",energy,valence);
 				}
