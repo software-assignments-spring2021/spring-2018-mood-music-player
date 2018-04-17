@@ -191,10 +191,31 @@ footer {
 .volume-button {
   position:relative;
   top: 2px;
-  float:left;
+  display: inline-block;
+
 }
 
-.progress-bar {
+.volume-bar-wrapper {
+  position: relative;
+  top: 4px;
   width: 150px;
   background-color: #0e0b16;
+  display: inline-block;
 }
+
+
+#progress {
+  position: fixed;
+  bottom: 70px;
+  left: 0px;
+  width: 100%;
+  min-height: 5px;
+  background-color: #ddd;
+}
+
+#progress-bar {
+  width: 0%;
+  min-height: 5px;
+  background-color: #b781db;
+}
+

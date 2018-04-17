@@ -80,6 +80,11 @@
 
 
 	<footer class="music-player-container">
+		<div id='progress'>
+			<div id='progress-bar'>
+
+			</div>
+		</div>
 		<div class="music-player-bar">
 			<div class="music-player-bar-left">
 				<div class="track-info">
@@ -125,7 +130,7 @@
 						<i class="fas fa-volume-up"></i>
 					</button>
 				</div>
-				<div class="progress-bar">
+				<div class="volume-bar-wrapper">
 					<input ng-change="setVolume()" ng-model="vol" type="range" min="0" max="100" class="volume-bar">
 				</div>
 			</div>

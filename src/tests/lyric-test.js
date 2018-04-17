@@ -15,13 +15,13 @@ describe('lyric-API and Sentiment tests', function() {
 				done();
 			});
 		});
-
 	});
 	
 	describe("returns correct response", function(){
-		it("returns -8", function(done){
-			request.get("http://localhost:3000/lyric/?artist=Vanilla%20Ice&song=Ice%20Ice%20Baby", function(error, response, body) {
-				assert.equal(-8, JSON.parse(body).sentiment.score);
+		it("returns -24", function(done){
+			request.get("http://localhost:3000/lyric/?artist=Drake&song=God's%20Plan", function(error, response, body) {
+				console.log(JSON.parse(body).sentiment.score);
+				assert.equal(-24, JSON.parse(body).sentiment.score);
 				done();
 			});
 		});
