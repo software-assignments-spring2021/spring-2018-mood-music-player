@@ -8,6 +8,7 @@
 				const query = '?artist=' + encodeURIComponent(artist) + '&song='+ encodeURIComponent(song) + '&album=' + encodeURIComponent(album);
 				$http.get('/gracenote/' +  query).success(function(data) {
 					console.log(data);
+					return data;
 				});
 			},
 

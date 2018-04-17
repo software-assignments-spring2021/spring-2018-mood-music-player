@@ -16,9 +16,13 @@ function shuffle(array) {
   return array;
 }
 
-const samples = [];
+const samples = [
 
-const labels = [];
+];
+
+const labels = [
+
+];
 
 const orderedData = samples.map((sample,index) => {
     return {
