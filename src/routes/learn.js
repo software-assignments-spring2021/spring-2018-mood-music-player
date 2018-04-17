@@ -1,7 +1,7 @@
 // TODO: require whatever
 const express = require('express');
 const router = express.Router();
-// const DATA = require('../public/javascripts/data.js');
+// const DATA = require('../dataset.js');
 
 const getAccuracy = function(net, testData) {
 	let hits = 0;
