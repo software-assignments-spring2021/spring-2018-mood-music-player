@@ -1,0 +1,27 @@
+{
+  "collaborative": false,
+  "external_urls": {
+    "spotify": "http://open.spotify.com/user/wizzler/playlists/53Y8wT46QIMz5H4WQ8O22c"
+  },
+  "href": "https://api.spotify.com/v1/users/wizzler/playlists/53Y8wT46QIMz5H4WQ8O22c",
+  "id": "53Y8wT46QIMz5H4WQ8O22c",
+  "images" : [ ],
+  "name": "Wizzlers Big Playlist",
+  "owner": {
+    "external_urls": {
+      "spotify": "http://open.spotify.com/user/wizzler"
+    },
+    "href": "https://api.spotify.com/v1/users/wizzler",
+    "id": "wizzler",
+    "type": "user",
+    "uri": "spotify:user:wizzler"
+  },
+  "public": true,
+  "snapshot_id" : "bNLWdmhh+HDsbHzhckXeDC0uyKyg4FjPI/KEsKjAE526usnz2LxwgyBoMShVL+z+",
+  "tracks": {
+    "href": "https://api.spotify.com/v1/users/wizzler/playlists/53Y8wT46QIMz5H4WQ8O22c/tracks",
+    "total": 30
+  },
+  "type": "playlist",
+  "uri": "spotify:user:wizzler:playlist:53Y8wT46QIMz5H4WQ8O22c"
+}
