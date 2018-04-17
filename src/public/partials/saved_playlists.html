@@ -7,47 +7,48 @@
 			<a href="/">Home</a>
 			<a href="/saved_songs">Saved Songs</a>
 			<a href="/saved_albums">Saved Albums</a>
-			<a href="/saved_playlists">Saved Playlists</a>
+			<a href="/saved_playlists" class="current-page">Saved Playlists</a>
 			<a href="/top_artists">Top Artists</a>
 			<a href="/top_songs">Top Songs</a>
 		</nav>
 		<hr id="second-hr">
 		
 		<hr id="third-hr">
-		<a href="/account" id="account" class="current-page">My Account</a>
-	</div>
-
-	<div class="content">
-		<div id="account-page">
-			<img id="profile-picture" src="../images/logo.png">
-			
-			<nav id="account-links">
-				<a href="/spotify_login" ng-hide="has_token"><button class="button button-block">Connect to Spotify</button></a>
-				<button class="button button-block" ng-show="has_token">Already Connected to Spotify</button></a>
-				<a ng-click="refresh()"><button class="button button-block">Refresh Token</button></a>
-
-				<a href="/" ng-click="signout()"><button class="button button-block">Logout</button></a>
-			</nav>
-		</div>
+		<a href="/account" id="account">My Account</a>
 	</div>
 
 
+	<!-- Playlist List -->
+	<div class="content" id="saved-music-page">
+		<table id="playlist-list">
+			<tr ng-repeat="playlist in playlists" class="playlist-in-list">
+				<td class="playlist-cover" ng-repeat="image in playlist.images | limitTo: 1">
+					<div class="play-playlist far fa-play-circle"></div>
+					<img ng-src="{{image.url}}" class="cover">
+				</td>
+				<td class="playlist-info">
+					<h3>{{playlist.name}}</h3>
+					<p>by {{playlist.owner.id}}</p>
+					<p>{{playlist.tracks.total}} tracks</p>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+	<div class="music-progress-bar">
+		<input ng-change="setVolume()" ng-model="vol" type="range" min="0" max="100" class="volume-bar">
+	</div>
 
 	<footer class="music-player-container">
-		<div id='progress'>
-			<div id='progress-bar'>
-
-			</div>
-		</div>
 		<div class="music-player-bar">
 			<div class="music-player-bar-left">
 				<div class="track-info">
-					<img ng-src="{{currentlyPlaying.imgSrc}}" class="album-wrapper">
+					<img ng-src="{{imgSrc}}" class="album-wrapper">
 					<div class="title-wrapper">
-						<p ng-bind="currentlyPlaying.songTitle"><i class="fas fa-heart"></i> <i class="fas fa-ban"></i></p> 
+						<p ng-bind="songTitle"><i class="fas fa-heart"></i> <i class="fas fa-ban"></i></p> 
 					</div>
 					<div class="artist-wrapper">
-						<p ng-bind="currentlyPlaying.artistName"></p>
+						<p ng-bind="artistName"></p>
 					</div>
 				</div>
 
@@ -58,7 +59,7 @@
 			</div>
 			<div class="music-player-bar-center">
 				<div class="music-player-buttons">
-					<button ng-click="getSavedTracks()" class="shuffle-button">
+					<button ng-click="shuffle()" class="shuffle-button">
 						<i class="fas fa-random"></i>
 					</button>
 					<button ng-click="previous()" class="skip-back-button">
@@ -84,10 +85,11 @@
 						<i class="fas fa-volume-up"></i>
 					</button>
 				</div>
-				<div class="volume-bar-wrapper">
+				<div class="progress-bar">
 					<input ng-change="setVolume()" ng-model="vol" type="range" min="0" max="100" class="volume-bar">
 				</div>
 			</div>
 		</div>
 	</footer>
 </div>
+
