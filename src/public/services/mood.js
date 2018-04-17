@@ -47,16 +47,39 @@
 					// Tender
 				} else if ((energy > .125 && energy <= .375) && (valence > .875 && valence <= 1)) {
 					// Easygoing
+				} else if ((energy > .375  && energy <= .625) && (valence >= 0 && valence <= .125)) {
+					// Brooding
+				} else if ((energy > .375 && energy <= .625) && (valence > .125 && valence <= .375)) {
+					// Yearning
+				} else if ((energy > .375 && energy <= .625) && (valence > .375 && valence <= .625)) {
+					// Sensual
 				} else if ((energy > .375 && energy <= .625) && (valence > .625 && valence <= .875)) {
 					// Optimistic
 				} else if ((energy > .375 && energy <= .625) && (valence > .875 && valence <= 1)) {
 					// Content
+				} else if ((energy > .625 && energy <= .875) && (valence >= 0 && valence <= .125)) {
+					// Despair
+				} else if ((energy > .625 && energy <= .875) && (valence > .125 && valence <= .375)) {
+					// Anxious
+				} else if ((energy > .625 && energy <= .875) && (valence > .375 && valence <= .625)) {
+					// Chill
+				} else if ((energy > .625 && energy <= .875) && (valence > .625 && valence <= .875)) {
+					// Stirring
+				} else if ((energy > .625 && energy <= .875) && (valence > .875 && valence <= 1)) {
+					// Excited
+				} else if ((energy > .875 && energy <= 1) && (valence >= 0 && valence <= .125)) {
+					// Aggressive
+				} else if ((energy > .875 && energy <= 1) && (valence > .125 && valence <= .375)) {
+					// Angsty
+				} else if ((energy > .875 && energy <= 1) && (valence > .375 && valence <= .625)) {
+					// Energizing
+				} else if ((energy > .875 && energy <= 1) && (valence > .625 && valence <= .875)) {
+					// Upbeat
+				} else if ((energy > .875 && energy <= 1) && (valence > .875 && valence <= 1)) {
+					// Empowering
+				} else {
+					console.log("what",energy,valence);
 				}
-
-
-
-
-
 
 			}
 

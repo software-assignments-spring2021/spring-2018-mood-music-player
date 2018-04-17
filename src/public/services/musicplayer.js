@@ -64,6 +64,20 @@
 				return ret.promise;
 			},
 
+			setProgress: function(progress) {
+				var ret = $q.defer();
+				$http.put(baseUrl + '/me/player/seek?position_ms=' + progress, {}, {
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + $cookies.token
+					}
+				}).success(function(r) {
+					ret.resolve(r);
+				});
+				return ret.promise;
+			},
+
 			play: function() {
 				var ret = $q.defer();
 				$http.put(baseUrl + '/me/player/play', {}, {

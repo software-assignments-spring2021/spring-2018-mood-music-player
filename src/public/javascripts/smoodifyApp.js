@@ -119,9 +119,19 @@
 				templateUrl: '../partials/saved_albums.html',
 				controller: 'PlayerController'
 			})
+			.when('/saved_playlists', {
+				css: ['../stylesheets/base.css', '../stylesheets/saved_playlists.css'],
+				templateUrl: '../partials/saved_playlists.html',
+				controller: 'PlayerController'
+			})
 			.when('/top_artists', {
-				css: ['../stylesheets/base.css'],
+				css: ['../stylesheets/base.css', '../stylesheets/top_artists.css'],
 				templateUrl: '../partials/top_artists.html',
+				controller: 'PlayerController'
+			})
+			.when('/top_songs', {
+				css: ['../stylesheets/base.css', '../stylesheets/top_songs.css'],
+				templateUrl: '../partials/top_songs.html',
 				controller: 'PlayerController'
 			})
 			.when('/spotify_login', {
