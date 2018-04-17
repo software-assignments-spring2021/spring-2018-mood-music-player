@@ -11,14 +11,13 @@ require('./models/song');
 require('./models/mood');
 require('./models/playlist');
 require('./models/user');
-require('./models/artist');
-require('./models/album');
 
 const index = require('./routes/index');
 const gracenoteroute = require('./routes/gracenote');
 const lyricroute = require('./routes/lyrics');
 const authenticate = require('./routes/authenticate')(passport);
 const spotify = require('./routes/spotify.js');
+const databaseroute = require('./routes/database.js');
 const learnroute = require('./routes/learn.js');
 
 const mongoose = require('mongoose');
@@ -46,6 +45,7 @@ app.use('/auth', authenticate);
 app.use('/spotify', spotify);
 app.use('/gracenote', gracenoteroute);
 app.use('/lyric', lyricroute);
+app.use('/api', databaseroute);
 app.use('/learn', learnroute);
 
 // catch 404 and forward to error handler
@@ -83,4 +83,4 @@ app.use(function(err, req, res) {
 	});
 });
 
-app.listen(process.env.PORT || 3000);
+app.listen(process.env.PORT || 4000);
