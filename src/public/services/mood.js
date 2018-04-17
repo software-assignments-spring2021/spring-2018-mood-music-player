@@ -21,6 +21,18 @@
 				});
 				return ret.promise;
 			}
+
+			getNetMood: function(song) {
+				let output = net.run(song.analysis);
+				//let output2 = net2.run(song.analysis);
+				if () {
+
+				} else {
+					
+				}
+
+			}
+
 		};
 	});
 })();

@@ -81,13 +81,13 @@ const labels = [
   {energy_level: .40625, valence_level: .53125},
   {energy_level: .875, valence_level: .59375},
   {energy_level: .53125, valence_level: .46875},
-  {energy_level: ., valence_level: .},
-  {energy_level: ., valence_level: .},
-  {energy_level: ., valence_level: .},
-  {energy_level: ., valence_level: .},
-  {energy_level: ., valence_level: .},
-  {energy_level: ., valence_level: .},
-  {energy_level: ., valence_level: .},
+  // {energy_level: ., valence_level: .},
+  // {energy_level: ., valence_level: .},
+  // {energy_level: ., valence_level: .},
+  // {energy_level: ., valence_level: .},
+  // {energy_level: ., valence_level: .},
+  // {energy_level: ., valence_level: .},
+  // {energy_level: ., valence_level: .},
 ];
 
 const orderedData = samples.map((sample,index) => {
