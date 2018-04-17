@@ -13,13 +13,8 @@
 		} else {
 			/* change this once app is on heroku */
 			CLIENT_ID = 'dcddb8d13b2f4019a1dadb4b4c070661';
-			REDIRECT_URI = 'http://lab.possan.se/thirtify/callback.html';
+			REDIRECT_URI = '';
 		}
         
-
-		function getLoginURL(scopes) {
-			return; 
-		}
-
 	});
 });

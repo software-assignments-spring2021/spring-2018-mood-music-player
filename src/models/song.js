@@ -27,11 +27,9 @@ const Song = new mongoose.Schema({
 		key: {type: Number},
 		loudness: {type: Number},
 		mode: {type: Number},	// major is represented by 1, minor is 0
-		speechiness: {type: Number},
-		acousticness: {type: Number},
-		instrumentalness: {type: Number},
 		valence: {type: Number},
 		tempo: {type: Number},
+		sentiment: {type: Number}
 	}
 });
 

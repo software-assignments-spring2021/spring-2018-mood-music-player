@@ -8,7 +8,6 @@ const passport = require('passport');
 
 //initialize mongoose schemas
 require('./models/song');
-require('./models/mood');
 require('./models/playlist');
 require('./models/user');
 
@@ -28,7 +27,7 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// app.use(logger('dev'));
+app.use(logger('dev'));
 app.use(session({
 	secret: 'keyboard cat'
 }));
@@ -44,7 +43,7 @@ app.use('/auth', authenticate);
 app.use('/spotify', spotify);
 app.use('/gracenote', gracenoteroute);
 app.use('/lyric', lyricroute);
-app.use('/api', databaseroute);
+app.use('/db', databaseroute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -81,4 +80,4 @@ app.use(function(err, req, res) {
 	});
 });
 
-app.listen(process.env.PORT || 4000);
+app.listen(process.env.PORT || 3000);
