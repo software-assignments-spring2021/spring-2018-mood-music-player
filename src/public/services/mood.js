@@ -23,60 +23,65 @@
 			}
 
 			getNetMood: function(song) {
+				// TODO: import net?
+
+				// TODO: figure this shit out.
 				let output = net.run(song.analysis);
 				//let output2 = net2.run(song.analysis);
 				let energy = output.energy_level;
 				let valence = output.valence_level;
+				// TODO: add these things to our song data in database.
+				// TODO: add mongo functions.
 				if ((energy >= 0 && energy <= .125) && (valence >= 0 && valence <= .125)) {
-					// Somber
+					return 'Somber';
 				} else if ((energy >= 0 && energy <= .125) && (valence > .125 && valence <= .375)) {
-					// Ominous
+					return 'Ominous';
 				} else if ((energy >= 0 && energy <= .125) && (valence > .375 && valence <= .625)) {
-					// Sentimental
+					return 'Sentimental';
 				} else if ((energy >= 0 && energy <= .125) && (valence > .625 && valence <= .875)) {
-					// Nostalgic
+					return 'Nostalgic';
 				} else if ((energy >= 0 && energy <= .125) && (valence > .625 && valence <= 1)) {
-					// Peaceful
+					return 'Peaceful';
 				} else if ((energy > .125 && energy <= .375) && (valence >= 0 && valence <= .125)) {
-					// Depressing
+					return 'Depressing';
 				} else if ((energy > .125 && energy <= .375) && (valence > .125 && valence <= .375)) {
-					// Melancholy
+					return 'Melancholy';
 				} else if ((energy > .125 && energy <= .375) && (valence > .375 && valence <= .625)) {
-					// Mellow
+					return 'Mellow';
 				} else if ((energy > .125 && energy <= .375) && (valence > .625 && valence <= .875)) {
-					// Tender
+					return 'Tender';
 				} else if ((energy > .125 && energy <= .375) && (valence > .875 && valence <= 1)) {
-					// Easygoing
+					return 'Easygoing';
 				} else if ((energy > .375  && energy <= .625) && (valence >= 0 && valence <= .125)) {
-					// Brooding
+					return 'Brooding';
 				} else if ((energy > .375 && energy <= .625) && (valence > .125 && valence <= .375)) {
-					// Yearning
+					return 'Yearning';
 				} else if ((energy > .375 && energy <= .625) && (valence > .375 && valence <= .625)) {
-					// Sensual
+					return 'Sensual';
 				} else if ((energy > .375 && energy <= .625) && (valence > .625 && valence <= .875)) {
-					// Optimistic
+					return 'Optimistic';
 				} else if ((energy > .375 && energy <= .625) && (valence > .875 && valence <= 1)) {
-					// Content
+					return 'Content';
 				} else if ((energy > .625 && energy <= .875) && (valence >= 0 && valence <= .125)) {
-					// Despair
+					return 'Despair';
 				} else if ((energy > .625 && energy <= .875) && (valence > .125 && valence <= .375)) {
-					// Anxious
+					return 'Anxious';
 				} else if ((energy > .625 && energy <= .875) && (valence > .375 && valence <= .625)) {
-					// Chill
+					return 'Chill';
 				} else if ((energy > .625 && energy <= .875) && (valence > .625 && valence <= .875)) {
-					// Stirring
+					return 'Stirring';
 				} else if ((energy > .625 && energy <= .875) && (valence > .875 && valence <= 1)) {
-					// Excited
+					return 'Excited';
 				} else if ((energy > .875 && energy <= 1) && (valence >= 0 && valence <= .125)) {
-					// Aggressive
+					return 'Aggressive';
 				} else if ((energy > .875 && energy <= 1) && (valence > .125 && valence <= .375)) {
-					// Angsty
+					return 'Angsty';
 				} else if ((energy > .875 && energy <= 1) && (valence > .375 && valence <= .625)) {
-					// Energizing
+					return 'Energizing';
 				} else if ((energy > .875 && energy <= 1) && (valence > .625 && valence <= .875)) {
-					// Upbeat
+					return 'Upbeat';
 				} else if ((energy > .875 && energy <= 1) && (valence > .875 && valence <= 1)) {
-					// Empowering
+					return 'Empowering';
 				} else {
 					console.log("what",energy,valence);
 				}
