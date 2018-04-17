@@ -2,12 +2,19 @@
 
 	var module = angular.module('smoodifyApp');
 
+
 	module.controller('PlayerController', function($scope, PlayerAPI, SpotifyAPI, $http, $cookies, $rootScope, $interval, $window) {
+
 		/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
 
 		if ($rootScope.player === undefined) {
 			PlayerAPI.initialize().then(function(player) {
 				$rootScope.player = player;
+			});
+
+			// test
+			MoodService.lyricSentimentMood('Vanilla Ice', 'Ice Ice Baby').then(function(data) {
+				console.log(data);
 			});
 
 			SpotifyAPI.getTracks().then(function(data) {
@@ -61,10 +68,8 @@
 				}
 			}
 		}, 10);
-
-
-
-
+    
+    
 		// Error handling
 		// $scope.player.addListener('initialization_error', ({ message }) => { console.error(message); });
 		// $scope.player.addListener('authentication_error', ({ message }) => { console.error(message); });

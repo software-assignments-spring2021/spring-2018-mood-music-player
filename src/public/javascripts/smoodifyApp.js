@@ -32,10 +32,6 @@
 		/* Location change success */
 		$rootScope.$on('$locationChangeSuccess', function (angularEvent, newUrl, oldUrl) {
 			console.log($cookies.token);
-			$http.get('/lyric').then(function(data) {
-				console.log('WHY');
-				console.log(data);
-			});
 			if (newUrl.includes('code=')) {
 				const code = newUrl.substring(oldUrl.indexOf('code')).split('&')[0].split('=')[1];
 				$http.get('/spotify/callback/' + code).then(function(data) {
@@ -43,6 +39,7 @@
 					const refresh_token = data.data.refresh_token;
 					$cookies.token = access_token;
 					$cookies.refresh_token = refresh_token;
+					$rootScope.has_token = true;
 
 					/* Pull data and save in user object
 					SpotifyAPI.getTracks().then(function(data) {
@@ -122,9 +119,19 @@
 				templateUrl: '../partials/saved_albums.html',
 				controller: 'PlayerController'
 			})
+			.when('/saved_playlists', {
+				css: ['../stylesheets/base.css', '../stylesheets/saved_playlists.css'],
+				templateUrl: '../partials/saved_playlists.html',
+				controller: 'PlayerController'
+			})
 			.when('/top_artists', {
-				css: ['../stylesheets/base.css'],
+				css: ['../stylesheets/base.css', '../stylesheets/top_artists.css'],
 				templateUrl: '../partials/top_artists.html',
+				controller: 'PlayerController'
+			})
+			.when('/top_songs', {
+				css: ['../stylesheets/base.css', '../stylesheets/top_songs.css'],
+				templateUrl: '../partials/top_songs.html',
 				controller: 'PlayerController'
 			})
 			.when('/spotify_login', {
