@@ -2,7 +2,7 @@
 
 	var module = angular.module('smoodifyApp');
 
-	module.controller('PlayerController', function($scope, PlayerAPI, SpotifyAPI, $http, $cookies, $rootScope, $interval, $window, DatabaseService) {
+	module.controller('PlayerController', function($scope, $http, $cookies, $rootScope, $interval, $window, PlayerAPI, SpotifyAPI, MoodService, DatabaseService) {
 		/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
 
 		if ($rootScope.player === undefined) {
@@ -40,8 +40,9 @@
 
 					$rootScope.songs = allTracks
 				};
+			});
 
-      SpotifyAPI.getTracks().then(function(data) {
+      		SpotifyAPI.getTracks().then(function(data) {
 				$rootScope.songs = data;
 			});
 
@@ -61,11 +62,11 @@
 				$rootScope.user_data = data;
 			});
 		}
-    
-    // test
-    MoodService.lyricSentimentMood('Vanilla Ice', 'Ice Ice Baby').then(function(data) {
-      console.log(data);
-    });
+
+		// test
+		MoodService.lyricSentimentMood('Vanilla Ice', 'Ice Ice Baby').then(function(data) {
+			console.log(data);
+		});
 
 		var bar = document.querySelector('#progress-bar');
 		var prog_bar = document.querySelector('#progress');
@@ -265,7 +266,5 @@
 			prog_bar.style.height = 5 + 'px';
 			bar.style.height = 5 + 'px';
 		}
-
-
 	});
 })();
