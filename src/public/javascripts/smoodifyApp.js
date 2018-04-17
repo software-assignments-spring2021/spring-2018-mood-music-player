@@ -32,10 +32,6 @@
 		/* Location change success */
 		$rootScope.$on('$locationChangeSuccess', function (angularEvent, newUrl, oldUrl) {
 			console.log($cookies.token);
-			$http.get('/lyric').then(function(data) {
-				console.log('WHY');
-				console.log(data);
-			});
 			if (newUrl.includes('code=')) {
 				const code = newUrl.substring(oldUrl.indexOf('code')).split('&')[0].split('=')[1];
 				$http.get('/spotify/callback/' + code).then(function(data) {
@@ -89,7 +85,7 @@
 			.when('/', {
 				css: ['../stylesheets/login.css', '../stylesheets/base.css', '../stylesheets/main_page.css'],
 				templateUrl: '../partials/landing.html',
-				controller: 'PlayerController'
+				controller: 'MainController'
 			})
 			// the login display
 			.when('/login', {

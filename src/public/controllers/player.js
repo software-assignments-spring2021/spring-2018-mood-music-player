@@ -2,11 +2,16 @@
 
 	var module = angular.module('smoodifyApp');
 
-	module.controller('PlayerController', function($scope, PlayerAPI, SpotifyAPI, $http, $cookies, $rootScope) {
+	module.controller('PlayerController', function($scope, PlayerAPI, MoodService, SpotifyAPI, $http, $cookies, $rootScope) {
 		/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
 		if ($rootScope.player === undefined) {
 			PlayerAPI.initialize().then(function(player) {
 				$rootScope.player = player;
+			});
+
+			// test
+			MoodService.lyricSentimentMood('Vanilla Ice', 'Ice Ice Baby').then(function(data) {
+				console.log(data);
 			});
 
 			SpotifyAPI.getTracks().then(function(data) {
