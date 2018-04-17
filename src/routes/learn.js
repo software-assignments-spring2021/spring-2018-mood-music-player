@@ -37,24 +37,24 @@ router.get('/train', function(req, res) {
 });
 
 router.get('/data', function(req, res) {
-	/* get user token from the query */
-	var userID = req.query.user;
-	var songs = [];
 
-	/* request parameters */
-	const authOptions = {
-		url: 'https://api.spotify.com/v1/me/tracks',
-		headers: { 'Authorization': 'Bearer ' + userID },
-		json: true
-	};
+	// /* get user token from the query */
+	// var userID = req.query.user;
+	// var songs = [];
 
-	/* HTTP request skeleton to pull all users saved songs id */
-	request.get(authOptions, function(error, response, body) {
-		for (let i = 0; i < body.items.size; i++) {
-			songs.push(body.items[i].track.id);
-		}
-	})
+	// /* request parameters */
+	// const authOptions = {
+	// 	url: 'https://api.spotify.com/v1/me/tracks',
+	// 	headers: { 'Authorization': 'Bearer ' + userID },
+	// 	json: true
+	// };
 
+	// /* HTTP request skeleton to pull all users saved songs id */
+	// request.get(authOptions, function(error, response, body) {
+	// 	for (let i = 0; i < body.items.size; i++) {
+	// 		songs.push(body.items[i].track.id);
+	// 	}
+	// })
 
 	// TODO: get this song from spotify
 	// TODO: get metadata and import

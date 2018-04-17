@@ -32,10 +32,6 @@
 		/* Location change success */
 		$rootScope.$on('$locationChangeSuccess', function (angularEvent, newUrl, oldUrl) {
 			console.log($cookies.token);
-			$http.get('/lyric').then(function(data) {
-				console.log('WHY');
-				console.log(data);
-			});
 			if (newUrl.includes('code=')) {
 				const code = newUrl.substring(oldUrl.indexOf('code')).split('&')[0].split('=')[1];
 				$http.get('/spotify/callback/' + code).then(function(data) {
@@ -43,6 +39,7 @@
 					const refresh_token = data.data.refresh_token;
 					$cookies.token = access_token;
 					$cookies.refresh_token = refresh_token;
+					$rootScope.has_token = true;
 
 					/* Pull data and save in user object
 					SpotifyAPI.getTracks().then(function(data) {
