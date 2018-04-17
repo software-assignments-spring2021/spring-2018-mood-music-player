@@ -25,10 +25,12 @@
 			getNetMood: function(song) {
 				let output = net.run(song.analysis);
 				//let output2 = net2.run(song.analysis);
-				if () {
+				let energy = output.energy_level;
+				let valence = output.valence_level;
+				if ((energy > 0 && energy < .125) && (valence > 0 && valence < .125)) {
+					// Somber
+				} else if ((energy > 0 && energy < .125) && (valence > 0 && valence < .125)) {
 
-				} else {
-					
 				}
 
 			}
