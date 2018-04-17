@@ -17,6 +17,7 @@ const lyricroute = require('./routes/lyrics');
 const authenticate = require('./routes/authenticate')(passport);
 const spotify = require('./routes/spotify.js');
 const databaseroute = require('./routes/database.js');
+const learnroute = require('./routes/learn.js');
 
 const mongoose = require('mongoose');
 const db = process.env.MONGODB_URI || require('./config.js').mongoKey;
@@ -44,6 +45,7 @@ app.use('/spotify', spotify);
 app.use('/gracenote', gracenoteroute);
 app.use('/lyric', lyricroute);
 app.use('/db', databaseroute);
+app.use('/learn', learnroute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

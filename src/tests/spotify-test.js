@@ -59,15 +59,4 @@ describe('spotify tests', function() {
 			});
 		});
 	});
-	
-	describe("GET /spotify/refresh_token", function(){
-		it("returns correct access_token", function(done){
-			var refresh_token = 'AQD5t_4qc_kFnnleNLZp50kibmLCS_Ar1uJSatoyTDY6fRVqAE9kuCA-9KVeXj1d7DVfu3VYtb1g-OtyWL7r8qZ-gw-l3uJLa4aENztgSqnwl8MZ8NLMeDUo19e7RqzpzbM';
-			request.get("http://localhost:3000/spotify/refresh_token?refresh_token=" + refresh_token, function(error, response, body){
-				var access_token = JSON.parse(body).access_token;
-				assert.equal(272, access_token.length);
-				done();
-			});
-		});
-	});
 });

@@ -39,6 +39,29 @@
 					const refresh_token = data.data.refresh_token;
 					$cookies.token = access_token;
 					$cookies.refresh_token = refresh_token;
+					$rootScope.has_token = true;
+
+					/* Pull data and save in user object
+					SpotifyAPI.getTracks().then(function(data) {
+						$rootScope.songs = data;
+					});
+
+					SpotifyAPI.getAlbums().then(function(data) {
+						$rootScope.albums = data;
+					});
+
+					SpotifyAPI.getTopArtists().then(function(data) {
+						$rootScope.artists = data;
+					});
+
+					SpotifyAPI.getTopTracks().then(function(data) {
+						$rootScope.top_tracks = data;
+					});
+
+					SpotifyAPI.getUserProfile().then(function(data) {
+						$rootScope.user_data = data;
+					});
+					*/
 					// window.location = '/';
 				});
 		  	}
@@ -98,9 +121,19 @@
 				templateUrl: '../partials/saved_albums.html',
 				controller: 'PlayerController'
 			})
+			.when('/saved_playlists', {
+				css: ['../stylesheets/base.css', '../stylesheets/saved_playlists.css'],
+				templateUrl: '../partials/saved_playlists.html',
+				controller: 'PlayerController'
+			})
 			.when('/top_artists', {
-				css: ['../stylesheets/base.css'],
+				css: ['../stylesheets/base.css', '../stylesheets/top_artists.css'],
 				templateUrl: '../partials/top_artists.html',
+				controller: 'PlayerController'
+			})
+			.when('/top_songs', {
+				css: ['../stylesheets/base.css', '../stylesheets/top_songs.css'],
+				templateUrl: '../partials/top_songs.html',
 				controller: 'PlayerController'
 			})
 			.when('/spotify_login', {
