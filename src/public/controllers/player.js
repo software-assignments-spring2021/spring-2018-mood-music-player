@@ -42,9 +42,19 @@
 		$interval(function() {
 			if ($rootScope.is_playing === true) {
 				if (width >= 100) {
-
-					width = 0;
-					bar.style.width = width + '%';
+					PlayerAPI.delay().then(function() {
+						PlayerAPI.getCurrentlyPlaying().then(function(data) {
+							$rootScope.currentlyPlaying = {
+								'imgSrc': data.item.album.images[0].url,
+								'songTitle': data.item.name,
+								'artistName': data.item.artists[0].name,
+								'albumName': data.item.album.name
+							}
+							duration_ms = data.item.duration_ms;
+						});
+						width = 0;
+						bar.style.width = width + '%';
+					});
 				} else {
 					width = width + (10 / duration_ms) * 100;
 					bar.style.width = width + '%';
@@ -200,7 +210,6 @@
 				});
 			});
 		};
-
 
 		/* Function to seek to a part of a song */
 		$scope.seek = function($event) {
