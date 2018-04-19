@@ -61,62 +61,17 @@
 					{mood: 'Empowering', energy: 1, valence: 1, distance: 1},
 				];
 
-
-
-				if ((energy >= 0 && energy <= .125) && (valence >= 0 && valence <= .125)) {
-					return  {energy: energy, valence: valence, mood: 'Somber'};
-				} else if ((energy >= 0 && energy <= .125) && (valence > .125 && valence <= .375)) {
-					return  {energy: energy, valence: valence, mood: 'Ominous'};
-				} else if ((energy >= 0 && energy <= .125) && (valence > .375 && valence <= .625)) {
-					return  {energy: energy, valence: valence, mood: 'Sentimental'};
-				} else if ((energy >= 0 && energy <= .125) && (valence > .625 && valence <= .875)) {
-					return  {energy: energy, valence: valence, mood: 'Nostalgic'};
-				} else if ((energy >= 0 && energy <= .125) && (valence > .625 && valence <= 1)) {
-					return  {energy: energy, valence: valence, mood: 'Peaceful'};
-				} else if ((energy > .125 && energy <= .375) && (valence >= 0 && valence <= .125)) {
-					return  {energy: energy, valence: valence, mood: 'Depressing'};
-				} else if ((energy > .125 && energy <= .375) && (valence > .125 && valence <= .375)) {
-					return  {energy: energy, valence: valence, mood: 'Melancholy'};
-				} else if ((energy > .125 && energy <= .375) && (valence > .375 && valence <= .625)) {
-					return  {energy: energy, valence: valence, mood: 'Mellow'};
-				} else if ((energy > .125 && energy <= .375) && (valence > .625 && valence <= .875)) {
-					return  {energy: energy, valence: valence, mood: 'Tender'};
-				} else if ((energy > .125 && energy <= .375) && (valence > .875 && valence <= 1)) {
-					return  {energy: energy, valence: valence, mood: 'Easygoing'};
-				} else if ((energy > .375  && energy <= .625) && (valence >= 0 && valence <= .125)) {
-					return  {energy: energy, valence: valence, mood: 'Brooding'};
-				} else if ((energy > .375 && energy <= .625) && (valence > .125 && valence <= .375)) {
-					return  {energy: energy, valence: valence, mood: 'Yearning'};
-				} else if ((energy > .375 && energy <= .625) && (valence > .375 && valence <= .625)) {
-					return  {energy: energy, valence: valence, mood: 'Sensual'};
-				} else if ((energy > .375 && energy <= .625) && (valence > .625 && valence <= .875)) {
-					return  {energy: energy, valence: valence, mood: 'Optimistic'};
-				} else if ((energy > .375 && energy <= .625) && (valence > .875 && valence <= 1)) {
-					return  {energy: energy, valence: valence, mood: 'Content'};
-				} else if ((energy > .625 && energy <= .875) && (valence >= 0 && valence <= .125)) {
-					return  {energy: energy, valence: valence, mood: 'Despair'};
-				} else if ((energy > .625 && energy <= .875) && (valence > .125 && valence <= .375)) {
-					return  {energy: energy, valence: valence, mood: 'Anxious'};
-				} else if ((energy > .625 && energy <= .875) && (valence > .375 && valence <= .625)) {
-					return  {energy: energy, valence: valence, mood: 'Chill'};
-				} else if ((energy > .625 && energy <= .875) && (valence > .625 && valence <= .875)) {
-					return  {energy: energy, valence: valence, mood: 'Stirring'};
-				} else if ((energy > .625 && energy <= .875) && (valence > .875 && valence <= 1)) {
-					return  {energy: energy, valence: valence, mood: 'Excited'};
-				} else if ((energy > .875 && energy <= 1) && (valence >= 0 && valence <= .125)) {
-					return  {energy: energy, valence: valence, mood: 'Aggressive'};
-				} else if ((energy > .875 && energy <= 1) && (valence > .125 && valence <= .375)) {
-					return  {energy: energy, valence: valence, mood: 'Angsty'};
-				} else if ((energy > .875 && energy <= 1) && (valence > .375 && valence <= .625)) {
-					return  {energy: energy, valence: valence, mood: 'Energizing'};
-				} else if ((energy > .875 && energy <= 1) && (valence > .625 && valence <= .875)) {
-					return  {energy: energy, valence: valence, mood: 'Upbeat'};
-				} else if ((energy > .875 && energy <= 1) && (valence > .875 && valence <= 1)) {
-					return  {energy: energy, valence: valence, mood: 'Empowering'};
-				} else {
-					console.log("what",energy,valence);
+				for (let i = 0; i < moods.length(); i++) {
+					moods[i].distance = Math.sqrt(Math.pow(moods[i].energy - output.energy_level, 2) + Math.pow(moods[i].valence - output.valence_level, 2));
 				}
 
+				// TODO: sort by distance, idealy it will solve ties by preferring center,
+				// will likely have to implement own. Only 25 elements at all times, might not need O(nlogn). 
+				// Ties will likely only occur when we have very little data.
+
+
+
+				return moods;
 			}
 
 		};
