@@ -2,7 +2,7 @@
 
 	var module = angular.module('smoodifyApp');
 
-	module.controller('PlayerController', function($scope, $http, $cookies, $rootScope, $interval, $window, DatabaseService, PlayerAPI, SpotifyAPI, MoodService) {
+	module.controller('PlayerController', function($scope, $http, $cookies, $rootScope, $interval, $window, PlayerAPI, SpotifyAPI, MoodService, DatabaseService) {
 		/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
 
 		if ($rootScope.player === undefined) {
@@ -209,7 +209,5 @@
 			prog_bar.style.height = 5 + 'px';
 			bar.style.height = 5 + 'px';
 		}
-
-
 	});
 })();
