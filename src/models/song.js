@@ -17,6 +17,7 @@ const Song = new mongoose.Schema({
 		spotify_id: {type: String, required: true},
 		spotify_uri: {type: String, required: true},
 	},
+	// This will be sorted with primary mood first.
 	mood: [{ 
 		mood: {type: String, required: true},
 		energy: {type: String, required: true},
