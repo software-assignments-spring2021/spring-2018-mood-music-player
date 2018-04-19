@@ -22,16 +22,13 @@
 				return ret.promise;
 			},
 
-			getNetMood: function(song) {
-				// TODO: import net?
-
-				// TODO: figure this shit out.
+			getNetMood: function(song, net) {
+				// TODO: import net? can we call net from there?
+				// TODO: figure out if we need one neural network or two.
 				let output = net.run(song.analysis);
 				//let output2 = net2.run(song.analysis);
-				let energy = output.energy_level;
-				let valence = output.valence_level;
-				// TODO: add these things to our song data in database.
-				// TODO: add mongo functions.
+				// TODO: add these things to our song data in database. returning to be saved in db? 
+				// TODO: add mongo functions. Assuming mongo functions are called from outside?
 
 				const moods = [
 					{mood: 'Somber', energy: 0, valence: 0, distance: 1},
