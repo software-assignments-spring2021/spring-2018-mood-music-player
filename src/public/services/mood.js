@@ -5,7 +5,7 @@
 	module.factory('MoodService', function($q, $http, $rootScope) {
 		return {
 			gracenoteMood: function(artist, song, album) {
-				const query = '?artist=' + encodeURIComponent(artist) + '&song='+ encodeURIComponent(song) + '&album=' + encodeURIComponent(album);
+				'?artist=' + encodeURIComponent(artist) + '&song='+ encodeURIComponent(song) + '&album=' + encodeURIComponent(album),
 				$http.get('/gracenote/' +  query).success(function(data) {
 					console.log(data);
 					return data;
@@ -14,7 +14,7 @@
 
 			lyricSentimentMood: function(artist, song) {
 				var ret = $q.defer();
-				const query = '?artist=' + encodeURIComponent(artist) + '&song='+ encodeURIComponent(song);
+				'?artist=' + encodeURIComponent(artist) + '&song='+ encodeURIComponent(song),
 				$http.get('/lyric/' + query).success(function(data) {
 					console.log(data);
 					ret.resolve(data);
@@ -32,6 +32,37 @@
 				let valence = output.valence_level;
 				// TODO: add these things to our song data in database.
 				// TODO: add mongo functions.
+
+				const moods = [
+					{mood: 'Somber', energy: 0, valence: 0, distance: 1},
+					{mood: 'Ominous', energy: 0, valence: 0.25, distance: 1},
+					{mood: 'Sentimental', energy: 0, valence: 0.50, distance: 1},
+					{mood: 'Nostalgic', energy: 0, valence: 0.75, distance: 1},
+					{mood: 'Peaceful', energy: 0, valence: 1, distance: 1},
+					{mood: 'Depressing', energy: 0.25, valence: 0, distance: 1},
+					{mood: 'Melancholy', energy: 0.25, valence: 0.25, distance: 1},
+					{mood: 'Mellow', energy: 0.25, valence: 0.50, distance: 1},
+					{mood: 'Tender', energy: 0.25, valence: 0.75, distance: 1},
+					{mood: 'Easygoing', energy: 0.25, valence: 1, distance: 1},
+					{mood: 'Brooding', energy: 0.50 , valence: 0, distance: 1},
+					{mood: 'Yearning', energy: 0.50 , valence: 0.25, distance: 1},
+					{mood: 'Sentimental', energy: 0.50 , valence: 0.50, distance: 1},
+					{mood: 'Optimistic', energy: 0.50 , valence: 0.75, distance: 1},
+					{mood: 'Content', energy: 0.50 , valence: 1, distance: 1},
+					{mood: 'Despair', energy: 0.75, valence: 0, distance: 1},
+					{mood: 'Anxious', energy: 0.75, valence: 0.25, distance: 1},
+					{mood: 'Chill', energy: 0.75, valence: 0.50, distance: 1},
+					{mood: 'Stirring', energy: 0.75, valence: 0.75, distance: 1},
+					{mood: 'Excited', energy: 0.75, valence: 1, distance: 1},
+					{mood: 'Aggressive', energy: 1, valence: 0, distance: 1},
+					{mood: 'Angsty', energy: 1, valence: 0.25, distance: 1},
+					{mood: 'Energizing', energy: 1, valence: 0.50, distance: 1},
+					{mood: 'Upbeat', energy: 1, valence: 0.75, distance: 1},
+					{mood: 'Empowering', energy: 1, valence: 1, distance: 1},
+				];
+
+
+
 				if ((energy >= 0 && energy <= .125) && (valence >= 0 && valence <= .125)) {
 					return  {energy: energy, valence: valence, mood: 'Somber'};
 				} else if ((energy >= 0 && energy <= .125) && (valence > .125 && valence <= .375)) {
