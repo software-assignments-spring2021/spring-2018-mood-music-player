@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const Playlist = new mongoose.Schema({
 	name: {type: String, required: true},
-	mood: [{type: mongoose.Schema.Types.ObjectId, ref: 'Mood' }],
+	mood: [{type: String, required: true}],
 	songs: [{type: mongoose.Schema.Types.ObjectId, ref: 'Song' }],
 
 	// If we want to track who a playlist belongs to and what time it was made,

@@ -1,10 +1,10 @@
 (function() {
-	var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 'ngCookies']).run(function($rootScope, $http, $cookies, $location, SpotifyAPI) {
+	var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 'ngCookies']).run(function($rootScope, $http, $cookies, $window, $location, SpotifyAPI, DatabaseService) {
 		$rootScope.$on('$locationChangeStart', function (/* event */) {
 			// var for user stored in session cookie
 			let user = '';
 			if (typeof $cookies['user'] == 'string' && $cookies['user'] != '') {
-				user = JSON.parse($cookies['user']);
+				user = $cookies['user'];
 			}
 			var path = window.location.pathname;
 			console.log('grabbing cookie');
@@ -15,14 +15,14 @@
 				if (path !== '/' && path !== '/login' && path !== '/regsiter') {
 					window.location = '/';
 				}
-			}
-			// logged in session exists, set current user as authenticated
-			else {
+			} else {
 				console.log('yes auth\'d');
 				$rootScope.authenticated = true;
-				$rootScope.current_user = user;
+				$rootScope.current_user = JSON.parse($window.localStorage.getItem('user'));
+				console.log($rootScope.current_user);
 			}
-		
+			// logged in session exists, set current user as authenticated
+			
 			if ($cookies.token === undefined) {
 				$cookies.token = '';
 				$rootScope.has_token = false;
@@ -41,6 +41,37 @@
 					$cookies.refresh_token = refresh_token;
 					$rootScope.has_token = true;
 
+					SpotifyAPI.getTracks().then(function(allTracks) {
+						for (var i = 0; i < allTracks.length; i++) {
+							console.log("inside allTracks");
+							var artists = allTracks[i].artists.map(function(a) {
+								return {
+									name: a.name,
+									spotify_id: a.id,
+									spotify_uri: a.uri
+								}
+							});		// artists array
+							var album = {
+								name: allTracks[i].album.name,
+								images: allTracks[i].album.images,
+								spotify_id: allTracks[i].album.id,
+								spotify_uri: allTracks[i].album.uri
+							} // album object
+							var song = {
+								name: allTracks[i].name,
+								artist: artists,
+								album: album,
+								id: allTracks[i].id,
+								uri: allTracks[i].uri,
+								duration_ms: allTracks[i].duration_ms
+							}
+							DatabaseService.saveSongToUser($rootScope.current_user.username, song).then(function(d) {
+								$window.localStorage.setItem('user', JSON.stringify(d.data));
+							});
+						};
+						
+						$rootScope.songs = allTracks;
+					});
 					/* Pull data and save in user object
 					SpotifyAPI.getTracks().then(function(data) {
 						$rootScope.songs = data;
@@ -73,6 +104,8 @@
 				$http.get('auth/signout');
 				$rootScope.authenticated = false;
 				$rootScope.current_user = '';
+				$window.localStorage.removeItem('user');
+				console.log($window.localStorage.getItem('user'));
 				$cookies['user'] = ''; //, { path:'/', domain:'localhost'} this object may be necessary in some situations
 				console.log('removed cookie');
 			}
