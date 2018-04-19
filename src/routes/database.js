@@ -3,34 +3,6 @@ const router = express.Router();
 const Song = require('../models/song');
 const User = require('../models/user');
 
-// add song to db 
-router.post('/song/:data', function(req, res) {
-	const data = JSON.parse(decodeURIComponent(req.params.data));
-	Song.findOne({spotify_id:data.id}, function(err, song) {
-		if (err) {
-			console.log(err);
-		} else if (song === null) {
-			const song = new Song({
-				name: data.name,
-				artist: data.artist,
-				album: data.album,
-				//mood: //TODO 
-				spotify_id: data.id,
-				spotify_uri: data.uri,
-				duration_ms: data.duration_ms
-			});
-			song.save(function(err, s) {
-				if (err) {
-					console.log(err);
-				} else {
-					// console.log(s);
-					res.status(200).send(s);
-				}
-			});
-		}
-	});
-});
-
 // add song to user's saved songs
 router.post('/save/song', function(req, res) {
 	const user = req.query.user;
@@ -39,12 +11,10 @@ router.post('/save/song', function(req, res) {
 		name: data.name,
 		artist: data.artist,
 		album: data.album,
-		//mood: //TODO 
 		spotify_id: data.id,
 		spotify_uri: data.uri,
 		duration_ms: data.duration_ms
 	});
-
 	song.save(function(err, s) {
 		if (err) {
 			console.log(err);
@@ -69,29 +39,6 @@ router.post('/save/song', function(req, res) {
 	});
 });
 
-// find if song is in user's saved songs
-router.get('/find/song/', function(req, res) {
-	const user = req.query.user;
-	const song = req.query.song;
-	User.findOne({username: user}, function(err, foundUser) {
-		if (err) {
-			console.log(err);
-		} else if (!foundUser) {
-			console.log('user ' + user + ' not found');
-			res.send({error: 'user ' + user + ' not found'});
-		} else {
-			const savedSongs = foundUser.saved_songs;
-			for (let i = 0; i < savedSongs.length; i++) {
-				if (savedSongs[i].spotify_id === song) {
-					console.log(savedSongs[i].name + ' found');
-					res.status(200).send({found: true});
-				}
-			}
-			res.status(200).send({found: false});
-		}
-	});
-});
-
 // get songs from a user's saved songs that share a mood
 router.get('/find/mood', function(req, res) {
 	const user = req.query.user;
@@ -101,6 +48,7 @@ router.get('/find/mood', function(req, res) {
 	});
 });
 
+// find a user
 router.get('/find/user', function(req, res) {
 	const user = req.query.user;
 	User.findOne({username: user}, function(err, user) {
@@ -120,8 +68,17 @@ router.post('/update/song-mood', function(req, res) {
 	const song = req.query.song;
 	const user = req.query.user;
 
-	User.findOne({username: user}, function(err, user) {
-
+	User.findOne({username: user}, function(err, u) {
+		if (err) {
+			console.log(err)
+		} else if (!u) {
+			res.status(200).send({error: 'user not found'});
+		} else {
+			const savedSongs = u.saved_songs;
+			for (let i = 0; i < savedSongs.length; i++) {
+				
+			}
+		}
 	});
 });
 

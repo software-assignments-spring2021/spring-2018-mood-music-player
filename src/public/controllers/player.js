@@ -2,72 +2,14 @@
 
 	var module = angular.module('smoodifyApp');
 
-	module.controller('PlayerController', function($scope, PlayerAPI, SpotifyAPI, $http, $cookies, $rootScope, $interval, $window, DatabaseService) {
+	module.controller('PlayerController', function($scope, $http, $cookies, $rootScope, $interval, $window, DatabaseService, PlayerAPI, SpotifyAPI, MoodService) {
 		/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
 
 		if ($rootScope.player === undefined) {
 			PlayerAPI.initialize().then(function(player) {
 				$rootScope.player = player;
-				SpotifyAPI.getTracks().then(function(allTracks) {
-					for (var i = 0; i < allTracks.length; i++) {
-						console.log("inside allTracks");
-						var artists = allTracks[i].artists.map(function(a) {
-							return {
-								name: a.name,
-								spotify_id: a.id,
-								spotify_uri: a.uri
-							}
-						});		// artists array
-						var album = {
-							name: allTracks[i].album.name,
-							images: allTracks[i].album.images,
-							spotify_id: allTracks[i].album.id,
-							spotify_uri: allTracks[i].album.uri
-						} // album object
-						var song = {
-							name: allTracks[i].name,
-							artist: artists,
-							album: album,
-							id: allTracks[i].id,
-							uri: allTracks[i].uri,
-							duration_ms: allTracks[i].duration_ms
-						}
-						DatabaseService.findSong($rootScope.current_user.username, song.id).then(function(res) {
-							if (res.data.found) {
-								console.log('song ' + song.name + ' in user\'s saved songs');
-							} else if (!res.data.found) {
-								DatabaseService.saveSongToUser($rootScope.current_user.username, song).then(function(d) {
-									console.log(d.data);
-								});
-							}
-						});
-					};
-
-					$rootScope.songs = allTracks
-				});
-
-				// SpotifyAPI.getAlbums().then(function(data) {
-				// 	$rootScope.albums = data;
-				// });
-
-				// SpotifyAPI.getTopArtists().then(function(data) {
-				// 	$rootScope.artists = data;
-				// });
-
-				// SpotifyAPI.getTopTracks().then(function(data) {
-				// 	$rootScope.top_tracks = data;
-				// });
-
-				// SpotifyAPI.getUserProfile().then(function(data) {
-				// 	$rootScope.user_data = data;
-				// });
 			});
 		}
-	
-		// test
-		MoodService.lyricSentimentMood('Vanilla Ice', 'Ice Ice Baby').then(function(data) {
-			console.log(data);
-		});
 
 		var bar = document.querySelector('#progress-bar');
 		var prog_bar = document.querySelector('#progress');

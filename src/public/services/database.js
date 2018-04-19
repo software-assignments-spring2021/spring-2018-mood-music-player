@@ -5,28 +5,10 @@
 	module.factory('DatabaseService', function($q, $http, $cookies) {
 
 		return {
-			newSong: function(song) {
-				var ret = $q.defer();
-				const query = encodeURIComponent(JSON.stringify(song));
-				$http.post('/db/song/' + query).then(function(res) {
-					ret.resolve(res);
-				});
-				return ret.promise;
-			},
-
 			saveSongToUser: function(user, song) {
 				var ret = $q.defer();
 				const query = '?user=' + encodeURIComponent(user) + '&song=' + encodeURIComponent(JSON.stringify(song));
 				$http.post('/db/save/song/' + query).then(function(res) {
-					ret.resolve(res);
-				});
-				return ret.promise;
-			},
-
-			findSong: function(user, song) {
-				var ret = $q.defer();
-				const query = '?user=' + encodeURIComponent(user) + '&song=' + encodeURIComponent(song);
-				$http.get('/db/find/song/' + query).then(function(res) {
 					ret.resolve(res);
 				});
 				return ret.promise;
