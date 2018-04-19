@@ -8,7 +8,6 @@ const passport = require('passport');
 
 //initialize mongoose schemas
 require('./models/song');
-require('./models/mood');
 require('./models/playlist');
 require('./models/user');
 
@@ -45,7 +44,7 @@ app.use('/auth', authenticate);
 app.use('/spotify', spotify);
 app.use('/gracenote', gracenoteroute);
 app.use('/lyric', lyricroute);
-app.use('/api', databaseroute);
+app.use('/db', databaseroute);
 app.use('/learn', learnroute);
 
 // catch 404 and forward to error handler

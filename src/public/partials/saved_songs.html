@@ -21,14 +21,14 @@
 	<!-- Song List -->
 	<div class="content" id="saved-music-page">
 		<table id="song-list">
-			<tr ng-repeat="song in songs" class="song-in-list">
+			<tr ng-repeat="song in current_user.saved_songs" class="song-in-list">
 				<td ng-click="playSong(song.uri)" class="play-song fas fa-play"></td>
 				<td>
 					<p class="song-name">
 						{{song.name}}
 					</p>
 					<p class="artist-album">
-					<span ng-repeat="artist in song.artists" class="artist">
+					<span ng-repeat="artist in song.artist" class="artist">
 						<span ng-class='{in:$first}'>{{artist.name}}</span>
 					</span> &bull;
 					<span class="album">{{song.album.name}}</span>
