@@ -13,7 +13,6 @@
 					$window.localStorage.setItem('user', JSON.stringify(data.user));
 					$rootScope.authenticated = true;
 					// $rootScope.current_user = data.user;
-
 					SpotifyAPI.refreshToken().then(function(token) {
 						$cookies.token = token;
 					});
