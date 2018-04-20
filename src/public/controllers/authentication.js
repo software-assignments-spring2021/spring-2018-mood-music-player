@@ -39,7 +39,7 @@
 						$rootScope.user_data = data;
 					});
 					*/
-					$location.path('/');
+					$location.path('/browse');
 				} else{
 					$scope.error_message = data.message;
 				}
@@ -56,6 +56,22 @@
 					$scope.error_message = data.message;
 				}
 			});
+		};
+
+		const text = document.querySelector('#intro-text');
+		const register = document.querySelector('#register-text');
+		const login = document.querySelector('#login-text');
+
+		$scope.switchRegister = function() {
+			text.style.display = 'none';
+			login.style.display = 'none';
+			register.style.display = 'inline-block';
+		};
+
+		$scope.switchLogin = function() {
+			text.style.display = 'none';
+			register.style.display = 'none';
+			login.style.display = 'inline-block';
 		};
 	});
     

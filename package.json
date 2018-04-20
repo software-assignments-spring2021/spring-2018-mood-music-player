@@ -39,6 +39,7 @@
     "passport-local-mongoose": "^5.0.0",
     "request": "^2.85.0",
     "sentiment": "^4.2.0",
+    "spinkit": "^1.2.5",
     "spotify-player": "^1.0.0-alpha.1"
   }
 }

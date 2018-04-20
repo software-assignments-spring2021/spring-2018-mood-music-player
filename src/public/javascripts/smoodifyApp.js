@@ -20,6 +20,9 @@
 				$rootScope.authenticated = true;
 				$rootScope.current_user = JSON.parse($window.localStorage.getItem('user'));
 				console.log($rootScope.current_user);
+				if (path === '/') {
+					$location.path('/browse');
+				}
 			}
 			// logged in session exists, set current user as authenticated
 			
@@ -69,14 +72,12 @@
 								$window.localStorage.setItem('user', JSON.stringify(d.data));
 							});
 						};
+
+						$cookies.loaded = true;
+						$location.path('/browse');
 						
-						$rootScope.songs = allTracks;
 					});
 					/* Pull data and save in user object
-					SpotifyAPI.getTracks().then(function(data) {
-						$rootScope.songs = data;
-					});
-
 					SpotifyAPI.getAlbums().then(function(data) {
 						$rootScope.albums = data;
 					});
@@ -93,7 +94,6 @@
 						$rootScope.user_data = data;
 					});
 					*/
-					// window.location = '/';
 				});
 		  	}
 		});
@@ -116,31 +116,26 @@
 		$routeProvider
 			// the landing display
 			.when('/', {
-				css: ['../stylesheets/login.css', '../stylesheets/base.css', '../stylesheets/main_page.css'],
+				css: ['../stylesheets/login.css', '../stylesheets/base.css'],
 				templateUrl: '../partials/landing.html',
-				controller: 'MainController'
+				controller: 'AuthController'
 			})
 			// the login display
 			.when('/login', {
-				css: {
-					href: '../stylesheets/login.css',
-					preload: true
-				},
+				css: ['../stylesheets/login.css'],
 				templateUrl: '../partials/login.html',
 				controller: 'AuthController'
 			})
 			// the signup display
 			.when('/register', {
-				css: {
-					href: '../stylesheets/login.css',
-					preload: true
-				},
+				css: ['../stylesheets/login.css'],
 				templateUrl: '../partials/register.html',
 				controller: 'AuthController',
 			})
 			.when('/browse', {
-				templateUrl: '../partials/main.html',
-				controller: 'AuthController',
+				css: ['../stylesheets/browse.css', '../stylesheets/base.css'],
+				templateUrl: '../partials/browse.html',
+				controller: 'MainController',
 			})
 			.when('/saved_songs', {
 				css: ['../stylesheets/base.css', '../stylesheets/saved_songs.css'],
@@ -168,7 +163,7 @@
 				controller: 'PlayerController'
 			})
 			.when('/spotify_login', {
-				templateUrl: '../partials/main.html',
+				templateUrl: '../partials/browse.html',
 				controller: 'SpotifyController'
 			})
 			.when('/account', {
