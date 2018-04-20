@@ -12,16 +12,17 @@
 				$rootScope.authenticated = false;
 				$rootScope.current_user = '';
 				console.log('not auth\'d');
-				if (path !== '/' && path !== '/login' && path !== '/regsiter') {
-					window.location = '/';
+				if (path !== '/') {
+					$location.url('/');
 				}
 			} else {
 				console.log('yes auth\'d');
 				$rootScope.authenticated = true;
 				$rootScope.current_user = JSON.parse($window.localStorage.getItem('user'));
 				console.log($rootScope.current_user);
-				if (path === '/' && $cookies.token) {
-					$location.path('/browse');
+				console.log($cookies.loaded);
+				if (path === '/') {
+					$location.url('/browse');
 				}
 			}
 			
@@ -72,7 +73,7 @@
 							});
 						};
 
-						$location.path('/browse');
+						$location.url('/browse');
 						
 					});
 					/* Pull data and save in user object
@@ -109,7 +110,7 @@
 			}
 		};
 	});
-		
+
 	app.config(function($routeProvider, $locationProvider){
 		$routeProvider
 			// the landing display
