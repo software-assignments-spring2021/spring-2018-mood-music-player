@@ -24,14 +24,14 @@
 		<link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet">
 		<link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
 		<link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+	</head>
+	<body ng-app="smoodifyApp">
 		<script src="https://sdk.scdn.co/spotify-player.js"></script>
 		<script>
 			window.onSpotifyWebPlaybackSDKReady = () => {
 				// You can now initialize Spotify.Player and use the SDK
 			};
 		</script>
-	</head>
-	<body ng-app="smoodifyApp">
 		<div id="main" class="container">
 			<div ng-view></div>
 		</div>

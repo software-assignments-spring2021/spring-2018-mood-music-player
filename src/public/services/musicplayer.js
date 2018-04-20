@@ -9,22 +9,27 @@
 		return {
 			initialize: function() {
 				var ret = $q.defer();
+
+				/* ReferenceError: Spotify is not defined in MainController */
 				var player = new Spotify.Player({
 					name: 'Smoodify',
 					getOAuthToken: cb => { cb($cookies.token); }
 				});
+
+				/* Initialize the first song to the beginning of the song */
+				/* FIX: only initializes if you were playing a song on another device */
+				this.setProgress(0);
+
 				player.connect().then(success => {
 					if (success) {
 						player.addListener('ready', ({ device_id }) => {
 							$cookies.device = device_id;
 							console.log('Ready with Device ID', device_id);
 							/* Code to play from our device */
-							this.switchToDevice().then(this.setProgress(0));
+							this.switchToDevice();
 							
-
-							this.setVolume(50);
 							/* Initialize the player volume to our volume bar's starting point */
-							
+							this.setVolume(50);
 						});
 						ret.resolve(player);
 					}
@@ -35,7 +40,7 @@
 			switchToDevice: function() {
 				var ret = $q.defer();
 				var data = {
-					device_ids: [$cookies.device]		
+					device_ids: [$cookies.device],
 				};
 				$http.put(baseUrl + '/me/player', JSON.stringify(data), {
 					headers: {

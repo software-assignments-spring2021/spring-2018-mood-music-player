@@ -4,12 +4,19 @@
 
 	module.controller('MainController', function($scope, $http, $cookies, $rootScope, $interval, $window, PlayerAPI, SpotifyAPI, MoodService, DatabaseService) {
 
+		if ($rootScope.player === undefined) {
+			PlayerAPI.initialize().then(function(player) {
+				$rootScope.player = player;
+			});
+		}
 
 		var bar = document.querySelector('#progress-bar');
 		var prog_bar = document.querySelector('#progress');
 		var width = 0;
 		var progress_ms = 0;
 		var duration_ms = 0;
+
+		
 
 
 		/* Make the progress bar progress */

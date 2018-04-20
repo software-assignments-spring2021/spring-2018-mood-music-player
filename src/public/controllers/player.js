@@ -10,7 +10,7 @@
 			});
 		}
 
-
+		
 		var bar = document.querySelector('#progress-bar');
 		var prog_bar = document.querySelector('#progress');
 		var width = 0;
@@ -183,7 +183,7 @@
 		$scope.seek = function($event) {
 			var click_percentage = 0;
 			click_percentage = Math.floor(duration_ms * ($event.clientX / $window.screen.width));
-			width = $event.clientX / $window.screen.width * 100;
+			width = ($event.clientX / $window.screen.width) * 100;
 			bar.style.width = width + '%';
 			PlayerAPI.setProgress(click_percentage);
 		};
