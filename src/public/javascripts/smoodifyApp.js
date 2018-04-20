@@ -104,8 +104,8 @@
 				$rootScope.authenticated = false;
 				$rootScope.current_user = '';
 				$window.localStorage.removeItem('user');
-				console.log($window.localStorage.getItem('user'));
 				$cookies['user'] = '';
+				$rootScope.player = undefined;
 				console.log('removed cookie');
 			}
 		};
@@ -134,7 +134,7 @@
 			.when('/browse', {
 				css: ['../stylesheets/browse.css', '../stylesheets/base.css'],
 				templateUrl: '../partials/browse.html',
-				controller: 'PlayerController',
+				controller: 'MainController',
 			})
 			.when('/saved_songs', {
 				css: ['../stylesheets/base.css', '../stylesheets/saved_songs.css'],
