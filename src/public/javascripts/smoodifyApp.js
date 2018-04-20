@@ -105,7 +105,7 @@
 				$rootScope.current_user = '';
 				$window.localStorage.removeItem('user');
 				$cookies['user'] = '';
-				$rootScope.player = undefined;
+				$rootScope.player.disconnect();
 				console.log('removed cookie');
 			}
 		};
