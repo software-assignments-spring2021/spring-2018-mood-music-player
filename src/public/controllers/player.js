@@ -207,5 +207,9 @@
 				console.log('AFTER:', $cookies.token);
 			});
 		};
+
+		$scope.signout = function() {
+			$rootScope.player.disconnect();
+		}
 	});
 })();
