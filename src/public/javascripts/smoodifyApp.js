@@ -21,7 +21,7 @@
 				$rootScope.current_user = JSON.parse($window.localStorage.getItem('user'));
 				console.log($rootScope.current_user);
 				console.log($cookies.loaded);
-				if (path === '/') {
+				if (path === '/' && $rootScope.current_user.saved_songs.length > 0) {
 					$location.url('/browse');
 				}
 			}
