@@ -19,10 +19,12 @@
 							$cookies.device = device_id;
 							console.log('Ready with Device ID', device_id);
 							/* Code to play from our device */
-							this.switchToDevice();
+							this.switchToDevice().then(this.setProgress(0));
+							
 
-							/* Initialize the player volume to our volume bar's starting point */
 							this.setVolume(50);
+							/* Initialize the player volume to our volume bar's starting point */
+							
 						});
 						ret.resolve(player);
 					}

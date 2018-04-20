@@ -4,12 +4,12 @@
 
 	module.controller('PlayerController', function($scope, $http, $cookies, $rootScope, $interval, $window, PlayerAPI, SpotifyAPI, MoodService, DatabaseService) {
 		/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
-
 		if ($rootScope.player === undefined) {
 			PlayerAPI.initialize().then(function(player) {
 				$rootScope.player = player;
 			});
 		}
+
 
 		var bar = document.querySelector('#progress-bar');
 		var prog_bar = document.querySelector('#progress');
