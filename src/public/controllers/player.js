@@ -4,7 +4,6 @@
 
 	module.controller('PlayerController', function($scope, $http, $cookies, $rootScope, $interval, $window, PlayerAPI, SpotifyAPI, MoodService, DatabaseService) {
 		/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
-
 		if ($rootScope.player === undefined) {
 			PlayerAPI.initialize().then(function(player) {
 				$rootScope.player = player;
@@ -41,16 +40,6 @@
 				}
 			}
 		}, 10);
-    
-    
-		// Error handling
-		// $scope.player.addListener('initialization_error', ({ message }) => { console.error(message); });
-		// $scope.player.addListener('authentication_error', ({ message }) => { console.error(message); });
-		// $scope.player.addListener('account_error', ({ message }) => { console.error(message); });
-		// $scope.player.addListener('playback_error', ({ message }) => { console.error(message); });
-
-		// Playback status updates
-		// $scope.player.addListener('player_state_changed', state => { console.log(state.shuffle); });
 
 		/* Play a song. Trigger this function when play button is pressed */
 		$scope.play = function() {
@@ -208,6 +197,14 @@
 			console.log($event);
 			prog_bar.style.height = 5 + 'px';
 			bar.style.height = 5 + 'px';
-		}
+		};
+
+		$scope.refresh = function() {
+			SpotifyAPI.refreshToken().then(function(token) {
+				console.log('BEFORE:', $cookies.token);
+				$cookies.token = token;
+				console.log('AFTER:', $cookies.token);
+			});
+		};
 	});
 })();
