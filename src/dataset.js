@@ -57,7 +57,7 @@ const samples = [
 const labels = [
   {energy_level: .75, valence_level: .6825},
   {energy_level: .84375, valence_level: .75},
-  {energy_level: .4375, valence_level: .3 75},
+  {energy_level: .4375, valence_level: .375},
   {energy_level: .21875, valence_level: .56875},
   {energy_level: .78125, valence_level: .5},
   {energy_level: .8125, valence_level: .5625},

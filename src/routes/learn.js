@@ -58,7 +58,7 @@ router.get('/data', function(req, res) {
 
 	// TODO: get this song from spotify
 	// TODO: get metadata and import
-	res.send({category: net.run(/* here */)});
+	res.send({output: 'hi'});//net.run(/* here */)});
 });
 
 module.exports = router;
