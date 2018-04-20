@@ -4,7 +4,6 @@
 
 	module.controller('PlayerController', function($scope, $http, $cookies, $rootScope, $interval, $window, PlayerAPI, SpotifyAPI, MoodService, DatabaseService) {
 		/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
-
 		if ($rootScope.player === undefined) {
 			PlayerAPI.initialize().then(function(player) {
 				$rootScope.player = player;
@@ -41,16 +40,6 @@
 				}
 			}
 		}, 10);
-    
-    
-		// Error handling
-		// $scope.player.addListener('initialization_error', ({ message }) => { console.error(message); });
-		// $scope.player.addListener('authentication_error', ({ message }) => { console.error(message); });
-		// $scope.player.addListener('account_error', ({ message }) => { console.error(message); });
-		// $scope.player.addListener('playback_error', ({ message }) => { console.error(message); });
-
-		// Playback status updates
-		// $scope.player.addListener('player_state_changed', state => { console.log(state.shuffle); });
 
 		/* Play a song. Trigger this function when play button is pressed */
 		$scope.play = function() {
@@ -208,6 +197,56 @@
 			console.log($event);
 			prog_bar.style.height = 5 + 'px';
 			bar.style.height = 5 + 'px';
-		}
+		};
+
+		$scope.refresh = function() {
+			SpotifyAPI.refreshToken().then(function(token) {
+				console.log('BEFORE:', $cookies.token);
+				$cookies.token = token;
+				console.log('AFTER:', $cookies.token);
+			});
+		};
+
+		$scope.updateSongs = function() {
+			SpotifyAPI.getTracks().then(function(allTracks) {
+				const current = $rootScope.current_user.saved_songs.length;
+				console.log(current);
+				console.log(allTracks.length);
+				if (allTracks.length > current) {
+					for (var i = 0; i < allTracks.length - current; i++) {
+						console.log(allTracks[i]);
+						console.log("inside allTracks");
+						// var artists = allTracks[i].artists.map(function(a) {
+						// 	return {
+						// 		name: a.name,
+						// 		spotify_id: a.id,
+						// 		spotify_uri: a.uri
+						// 	}
+						// });		// artists array
+						// var album = {
+						// 	name: allTracks[i].album.name,
+						// 	images: allTracks[i].album.images,
+						// 	spotify_id: allTracks[i].album.id,
+						// 	spotify_uri: allTracks[i].album.uri
+						// } // album object
+						// var song = {
+						// 	name: allTracks[i].name,
+						// 	artist: artists,
+						// 	album: album,
+						// 	id: allTracks[i].id,
+						// 	uri: allTracks[i].uri,
+						// 	duration_ms: allTracks[i].duration_ms
+						// }
+						// DatabaseService.saveSongToUser($rootScope.current_user.username, song).then(function(d) {
+						// 	$window.localStorage.setItem('user', JSON.stringify(d.data));
+						// });
+					};
+				} else {
+					console.log("up to date");
+					// add popup saying "everything is up to date"
+				}
+			});
+		};
+
 	});
 })();
