@@ -38,27 +38,23 @@ router.get('/train', function(req, res) {
 
 router.get('/data', function(req, res) {
 
-	// /* get user token from the query */
-	// var userID = req.query.user;
-	// var songs = [];
+	req.get()
+	const analysis = JSON.parse(decodeURIComponent(req.query.song)).analysis;
 
-	// /* request parameters */
-	// const authOptions = {
-	// 	url: 'https://api.spotify.com/v1/me/tracks',
-	// 	headers: { 'Authorization': 'Bearer ' + userID },
-	// 	json: true
-	// };
+	const analysis = {
+		danceability: analysis.danceability, 
+		energy: analysis.energy, 
+		key: analysis.key, 
+		loudness: analysis.loudness, 
+		mode: analysis.mode, 
+		valence: analysis.valence, 
+		tempo: analysis.tempo
+	};
 
-	// /* HTTP request skeleton to pull all users saved songs id */
-	// request.get(authOptions, function(error, response, body) {
-	// 	for (let i = 0; i < body.items.size; i++) {
-	// 		songs.push(body.items[i].track.id);
-	// 	}
-	// })
+	// TODO: potentially save songs to song db
+	output = net.run(analysis);
 
-	// TODO: get this song from spotify
-	// TODO: get metadata and import
-	res.send({output: 'hi'});//net.run(/* here */)});
+	res.send({output: output});//net.run(/* here */)});
 });
 
 module.exports = router;

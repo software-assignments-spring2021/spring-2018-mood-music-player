@@ -25,7 +25,7 @@
 			getNetMood: function(song) {
 				// TODO: import net? can we call net from there?
 				// TODO: figure out if we need one neural network or two.
-				$http.get('/learn/data?song=' + encodeURIComponent(song)).then(function(res) {
+				$http.get('/learn/data?song=' + encodeURIComponent(JSON.stringify(song))).then(function(res) {
 
 					// const output = net.run(song.analysis);
 					// let output2 = net2.run(song.analysis);
