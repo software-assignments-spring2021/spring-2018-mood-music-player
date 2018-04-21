@@ -164,6 +164,7 @@
 			});
 		};
 
+
 		$scope.playAlbum = function(context_uri, total_tracks) {
 			PlayerAPI.playContext(context_uri, total_tracks).then(function() {
 				PlayerAPI.delay().then(function() {
