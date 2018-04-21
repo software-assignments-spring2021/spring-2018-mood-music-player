@@ -4,13 +4,13 @@
 
 	module.controller('PlayerController', function($scope, $http, $cookies, $rootScope, $interval, $window, PlayerAPI, SpotifyAPI, MoodService, DatabaseService) {
 		/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
-
 		if ($rootScope.player === undefined) {
 			PlayerAPI.initialize().then(function(player) {
 				$rootScope.player = player;
 			});
 		}
 
+		
 		var bar = document.querySelector('#progress-bar');
 		var prog_bar = document.querySelector('#progress');
 		var width = 0;
@@ -41,16 +41,6 @@
 				}
 			}
 		}, 10);
-    
-    
-		// Error handling
-		// $scope.player.addListener('initialization_error', ({ message }) => { console.error(message); });
-		// $scope.player.addListener('authentication_error', ({ message }) => { console.error(message); });
-		// $scope.player.addListener('account_error', ({ message }) => { console.error(message); });
-		// $scope.player.addListener('playback_error', ({ message }) => { console.error(message); });
-
-		// Playback status updates
-		// $scope.player.addListener('player_state_changed', state => { console.log(state.shuffle); });
 
 		/* Play a song. Trigger this function when play button is pressed */
 		$scope.play = function() {
@@ -174,6 +164,7 @@
 			});
 		};
 
+
 		$scope.playAlbum = function(context_uri, total_tracks) {
 			PlayerAPI.playContext(context_uri, total_tracks).then(function() {
 				PlayerAPI.delay().then(function() {
@@ -193,7 +184,7 @@
 		$scope.seek = function($event) {
 			var click_percentage = 0;
 			click_percentage = Math.floor(duration_ms * ($event.clientX / $window.screen.width));
-			width = $event.clientX / $window.screen.width * 100;
+			width = ($event.clientX / $window.screen.width) * 100;
 			bar.style.width = width + '%';
 			PlayerAPI.setProgress(click_percentage);
 		};
@@ -208,6 +199,14 @@
 			console.log($event);
 			prog_bar.style.height = 5 + 'px';
 			bar.style.height = 5 + 'px';
-		}
+		};
+
+		$scope.refresh = function() {
+			SpotifyAPI.refreshToken().then(function(token) {
+				console.log('BEFORE:', $cookies.token);
+				$cookies.token = token;
+				console.log('AFTER:', $cookies.token);
+			});
+		};
 	});
 })();
