@@ -36,41 +36,32 @@
 		$rootScope.$on('$locationChangeSuccess', function (angularEvent, newUrl, oldUrl) {
 			console.log($cookies.token);
 			if (newUrl.includes('code=')) {
-				const code = newUrl.substring(oldUrl.indexOf('code')).split('&')[0].split('=')[1];
-				$http.get('/spotify/callback/' + code).then(function(data) {
-					const access_token = data.data.access_token;
-					const refresh_token = data.data.refresh_token;
-					$cookies.token = access_token;
-					$cookies.refresh_token = refresh_token;
-					$rootScope.has_token = true;
+				$http.get('/learn/train').then(function(trainData) {
+					const net = trainData.net;
+					const code = newUrl.substring(oldUrl.indexOf('code')).split('&')[0].split('=')[1];
+					$http.get('/spotify/callback/' + code).then(function(data) {
+						const access_token = data.data.access_token;
+						const refresh_token = data.data.refresh_token;
+						$cookies.token = access_token;
+						$cookies.refresh_token = refresh_token;
+						$rootScope.has_token = true;
 
-					SpotifyAPI.getTracksWithFeatures().then(function(allTracks) {
-						for (var i = 0; i < allTracks.length; i++) {
-							console.log("inside allTracks");
-							DatabaseService.saveSongToUser($rootScope.current_user.username, allTracks[i]).then(function(d) {
-								$window.localStorage.setItem('user', JSON.stringify(d.data));
-							});
-						};
+						SpotifyAPI.getTracksWithFeatures().then(function(allTracks) {
+							for (var i = 0; i < allTracks.length; i++) {
+								console.log("inside allTracks");
+								song = allTracks[i];
+								// get track moods, add to track, then save
+								$http.get('/learn/data?song=' + encodeURIComponent(JSON.stringify(song))).then(function(result) {
+									console.log(result);
+									DatabaseService.saveSongToUser($rootScope.current_user.username, song).then(function(d) {
+										$window.localStorage.setItem('user', JSON.stringify(d.data));
+									});
+								})
+							};
 
-						$location.url('/browse');						
+							$location.url('/browse');						
+						});
 					});
-					/* Pull data and save in user object
-					SpotifyAPI.getAlbums().then(function(data) {
-						$rootScope.albums = data;
-					});
-
-					SpotifyAPI.getTopArtists().then(function(data) {
-						$rootScope.artists = data;
-					});
-
-					SpotifyAPI.getTopTracks().then(function(data) {
-						$rootScope.top_tracks = data;
-					});
-
-					SpotifyAPI.getUserProfile().then(function(data) {
-						$rootScope.user_data = data;
-					});
-					*/
 				});
 		  	}
 		});
