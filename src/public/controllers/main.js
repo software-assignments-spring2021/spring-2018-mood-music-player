@@ -4,7 +4,6 @@
 
 	module.controller('MainController', function($scope, $http, $cookies, $rootScope, $interval, $window, PlayerAPI, SpotifyAPI, MoodService, DatabaseService) {
 
-
 		var bar = document.querySelector('#progress-bar');
 		var prog_bar = document.querySelector('#progress');
 		var width = 0;
@@ -172,7 +171,7 @@
 				});
 			});
 		};
-
+		
 		/* Function to seek to a part of a song */
 		$scope.seek = function($event) {
 			var click_percentage = 0;

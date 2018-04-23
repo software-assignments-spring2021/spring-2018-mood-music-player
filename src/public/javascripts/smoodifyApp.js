@@ -20,7 +20,6 @@
 				$rootScope.authenticated = true;
 				$rootScope.current_user = JSON.parse($window.localStorage.getItem('user'));
 				console.log($rootScope.current_user);
-				console.log($cookies.loaded);
 				if (path === '/' && $rootScope.current_user.saved_songs.length > 0) {
 					$location.url('/browse');
 				}
@@ -70,6 +69,7 @@
 							}
 							DatabaseService.saveSongToUser($rootScope.current_user.username, song).then(function(d) {
 								$window.localStorage.setItem('user', JSON.stringify(d.data));
+								$rootScope.current_user = JSON.parse($window.localStorage.getItem('user'));
 							});
 						};
 
@@ -119,18 +119,6 @@
 				templateUrl: '../partials/landing.html',
 				controller: 'AuthController'
 			})
-			// the login display
-			.when('/login', {
-				css: ['../stylesheets/login.css'],
-				templateUrl: '../partials/login.html',
-				controller: 'AuthController'
-			})
-			// the signup display
-			.when('/register', {
-				css: ['../stylesheets/login.css'],
-				templateUrl: '../partials/register.html',
-				controller: 'AuthController',
-			})
 			.when('/browse', {
 				css: ['../stylesheets/browse.css', '../stylesheets/base.css'],
 				templateUrl: '../partials/browse.html',
@@ -141,14 +129,9 @@
 				templateUrl: '../partials/saved_songs.html',
 				controller: 'PlayerController'
 			})
-			.when('/saved_albums', {
-				css: ['../stylesheets/base.css', '../stylesheets/saved_albums.css'],
-				templateUrl: '../partials/saved_albums.html',
-				controller: 'PlayerController'
-			})
-			.when('/saved_playlists', {
-				css: ['../stylesheets/base.css', '../stylesheets/saved_playlists.css'],
-				templateUrl: '../partials/saved_playlists.html',
+			.when('/mood_playlists', {
+				css: ['../stylesheets/base.css', '../stylesheets/mood_playlists.css'],
+				templateUrl: '../partials/mood_playlists.html',
 				controller: 'PlayerController'
 			})
 			.when('/top_artists', {
