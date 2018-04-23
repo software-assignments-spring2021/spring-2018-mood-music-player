@@ -192,16 +192,11 @@
 			getTracksWithFeatures: function() {
 				var allDeferred = $q.defer();
 				this.getTracks().then(function(songs) {
-					// var allFeatures = [];
 					var promises = [];
 					getIds(songs).forEach((ids) => {
 						promises.push(getAudioFeaturesMany(ids));
-						// getAudioFeaturesMany(ids).then(function(ret) {
-						// 	Array.prototype.push.apply(allFeatures, ret);
-						// });
 					});
 
-					// console.log(promises);
 					$q.all(promises).then(function(d) {
 						const features = {};
 						for (let i = 0; i < d.length; i++) {
@@ -314,36 +309,6 @@
 			getUserProfile: function (){
 				var ret = $q.defer();
 				$http.get(baseUrl + '/me', {
-					headers: {
-						'Authorization': 'Bearer ' + $cookies.token
-					}
-				}).success(function(data) {
-					ret.resolve(data);
-				});
-
-				return ret.promise;
-			},
-
-			getTrackIds: function(songs) {
-				getIds(songs);
-			},
-
-			getAudioFeaturesOne: function(id) {
-				var ret = $q.defer();
-				$http.get(baseUrl + '/audio-features/' + id, {
-					headers: {
-						'Authorization': 'Bearer ' + $cookies.token
-					}
-				}).success(function(data) {
-					ret.resolve(data);
-				});
-
-				return ret.promise;
-			},
-
-			getAudioAnalysisOne: function(id) {
-				var ret = $q.defer();
-				$http.get(baseUrl + '/audio-analysis/' + id, {
 					headers: {
 						'Authorization': 'Bearer ' + $cookies.token
 					}
