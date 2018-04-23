@@ -130,6 +130,18 @@
 			return ret.promise;
 		}
 
+		var getIds = function(songs) {
+			const ids = [];
+			const rem = songs.length % 100;
+			let num = Math.floor(songs.length / 100);
+			if (rem > 0) {
+				num += 1;
+			}
+			for (let i = 0; i < num; i++) {
+				ids.push(songs.slice(i*100, (i+1)*100 < songs.length ? (i+1)*100 : songs.length));
+			}
+		}
+
 		return {
 			refreshToken: function() {
 				var ret = $q.defer();
@@ -245,6 +257,27 @@
 
 				return ret.promise;
 			},
+
+			getAudioFeatures: function(songs) {
+				var allDeferred = $q.defer();
+				numTracksArray().then(function(arr) {
+					var promises = [];
+					arr.map(function(i) {
+						promises.push(getTracksOffset(i));
+					});
+
+					$q.all(promises).then(function(d) {
+						var allTracks = [];
+						d.forEach((r) => {
+							Array.prototype.push.apply(allTracks, r);
+						});
+						allDeferred.resolve(allTracks);
+					});
+				});
+				
+				return allDeferred.promise;
+			},	
+
 
 			getAudioFeaturesMany: function(ids){
 				$http.get(apiBaseUrl + 'audio-features/?ids=' + ids, {
