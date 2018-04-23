@@ -247,6 +247,10 @@
 					ret.resolve(r);
 				});
 				return ret.promise;
+			},
+
+			addToQueue: function(song) {
+				_queue_.push(song.spotify_uri);
 			}
 		};
 	});
