@@ -9,6 +9,7 @@
 			'user-read-email',
 			'user-read-private',
 			'playlist-read-private',
+			'playlist-read-collaborative',
 			'user-top-read',
 			'user-library-read',
 			'playlist-modify-private',

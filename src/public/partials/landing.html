@@ -1,139 +1,158 @@
-<!-- <ul class="navbar" ng-hide="authenticated">
-	<li id="account-btn">
-		<a href="/account"><i class="fas fa-user"></i> Account</a>
-	</li>
-	<li class="right-li" id="second-right">
-		<a href="/" ng-click="signout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
-	</li>
-</ul> -->
-
-<!-- <div class="clearfix">
-	<form ng-Submit="post()" ng-show="authenticated">
-		<input type="text" required class="form-control" maxlength="200" rows="3" placeholder="Title" ng-model="newSong.title"></input>
-		<input type="text" required class="form-control" maxlength="200" rows="3" placeholder="Artist" ng-model="newSong.artist"></input>
-		<input class="btn submit-btn pull-right" type="submit" value="Add song" />
-	</form>
-</div> -->
-
 <div class="unauth-view" ng-hide="authenticated">
 	<div id="gradient">
 		<a href="/" id="logo"> <img src="../images/logo.png" id="logo-img"> smoodify </a>
 
 		<div class="buttons">
-			<a href="/register"><button class="button button-block" id="register-button">Get Started</button></a>
+			<a ng-click="switchRegister()"><button class="button button-block" id="register-button">Get Started</button></a>
 			<div id="member">
 				<p>already a member?</p>
 			</div>
-			<a href="/login"><button class="button button-block" id="login-button">Log In</button></a>
+			<a ng-click="switchLogin()"><button class="button button-block" id="login-button">Log In</button></a>
 		</div>
 
 		<div id="line"></div>
 
 		<div id="right-container">
-			<div class="big-blurb">
-				<span class="bold">smoodify</span> is a music streaming application that <span class="bold">dynamically</span> understands your <span class="bold">mood</span> and suggests tunes based on it
+			<div id="intro-text">
+				<div class="big-blurb">
+					<span class="bold">smoodify</span> is a music streaming application that <span class="bold">dynamically</span> understands your <span class="bold">mood</span> and suggests tunes based on it
+				</div>
+
+				<div id="cases-blurb">
+					Feeling down? smoodify will be a shoulder to lean on. <br>
+					Down to clown? smoodify will vibe with you. <br>
+					At the gym and need a push? smoodify will be there to get you hyped up. <br><br>
+				</div>
+
+				<div id="sign-up-blurb">
+					<span class="bold">Sign up</span> to find out more!
+				</div>
 			</div>
 
-			<div id="cases-blurb">
-				Feeling down? smoodify will be a shoulder to lean on. <br>
-				Down to clown? smoodify will vibe with you. <br>
-				At the gym and need a push? smoodify will be there to get you hyped up. <br><br>
+			<div id="login-text">
+				<h1>Welcome Back!</h1>
+				<p class="text-warning">{{error_message}}</p>
+				
+				<form id="login" class="form-auth" ng-submit="login()">
+					<div class="field-wrapper">
+						<label>Username</label>
+						<input type="username" required ng-model="user.username"><br>
+					</div>
+					<div class="field-wrapper">
+						<label>Password</label>
+						<input type="password" required ng-model="user.password"><br>
+					</div>
+					
+					<button class="button button-block">Log In</button>
+				</form>
 			</div>
 
-			<div id="sign-up-blurb">
-				<span class="bold">Sign up</span> to find out more!
+			<div id="register-text">
+				<h1>Welcome Aboard!</h1>
+
+				<p class="text-warning">{{error_message}}</p>
+				
+				<form id="register" class="form-auth" ng-submit="register()">
+					<div class="field-wrapper">
+						<label>Username*</label>
+						<input type="username" required ng-model="user.username"><br>
+					</div>
+					<div class="field-wrapper">
+						<label>Password*</label>
+						<input type="password" required ng-model="user.password"><br>
+					</div>
+
+					<button type="submit" class="button button-block"/>Get Started</button>
+
+				</form>
 			</div>
+
 		</div>
 	</div>
 </div>
 
 
 <div class="auth-view" ng-show="authenticated">
-	<div class="sidebar">
-		<a href="/" id="logo"> <img src="../images/logo.png" id="logo-img"> smoodify </a> 
-		<hr id="first-hr">
-
-		<nav id="links">
-			<a href="/" class="current-page">Home</a>
-			<a href="/saved_songs">Saved Songs</a>
-			<a href="/saved_albums">Saved Albums</a>
-			<a href="/saved_playlists">Saved Playlists</a>
-			<a href="/top_artists">Top Artists</a>
-			<a href="/top_songs">Top Songs</a>
-		</nav>
-		<hr id="second-hr">
-		
-		<hr id="third-hr">
-		<a href="/account" id="account">My Account</a>
+	<div id="loading-gradient">
+		<div id="loading-text">
+			<h1>Please wait while we load your tunes!</h1>
+			<h1><i class="fas fa-spinner"></i></h1>
+		</div>
+		<a href="/account">account</a>
 	</div>
 
-	<div class="content">
-		<div id="main-page">
-			<h1> Welcome! </h1>
-			<div ng-show="moodPlaylists"></div>
-			<div ng-hide="moodPlaylists">
-				<h3>No mood playlists yet, start listening to some music <i class="em em-sparkles"></i></h3>
-			</div>
-		</div>
-	</div>
+    <div class="sidebar">
+        <a href="" id="logo"> <img src="../images/logo.png" id="logo-img"> smoodify </a> 
+        <hr id="first-hr">
 
+        <nav id="links">
+            <a href="" class="current-page">Home</a>
+            <a href="">Saved Songs</a>
+            <a href="">Saved Albums</a>
+            <a href="">Saved Playlists</a>
+            <a href="">Top Artists</a>
+            <a href="">Top Songs</a>
+        </nav>
+        <hr id="second-hr">
+        
+        <hr id="third-hr">
+        <a href="" id="account">My Account</a>
+    </div>
 
+    <div class="content">
+    </div>
 
-	<footer class="music-player-container">
-		<div id='progress'>
-			<div id='progress-bar'>
+    <footer class="music-player-container">
+        <div id="progress">
+            <div id="progress-bar">
 
-			</div>
-		</div>
-		<div class="music-player-bar">
-			<div class="music-player-bar-left">
-				<div class="track-info">
-					<img ng-src="{{currentlyPlaying.imgSrc}}" class="album-wrapper">
-					<div class="title-wrapper">
-						<p ng-bind="currentlyPlaying.songTitle"><i class="fas fa-heart"></i> <i class="fas fa-ban"></i></p> 
-					</div>
-					<div class="artist-wrapper">
-						<p ng-bind="currentlyPlaying.artistName"></p>
-					</div>
-				</div>
-
-				<!-- Switch for changing modes from lyrics to rhythm -->
-				<!-- TODO
-				<input type="checkbox" checked data-toggle="toggle">
-				-->
-			</div>
-			<div class="music-player-bar-center">
-				<div class="music-player-buttons">
-					<button ng-click="getSavedTracks()" class="shuffle-button">
-						<i class="fas fa-random"></i>
-					</button>
-					<button ng-click="previous()" class="skip-back-button">
-						<i class="fas fa-backward"></i>
-					</button>
-					<button ng-click="play()" class="play-button">
-						<i class="far fa-play-circle"></i>
-					</button>
-					<!-- <button class="pause-button">
-						<i class="far fa-pause-circle"></i>
-					</button> -->
-					<button ng-click="skip()" class="skip-forward-button">
-						<i class="fas fa-forward"></i>
-					</button>
-					<button class="replay-button">
-						<i class="fas fa-redo-alt"></i>
-					</button>
-				</div>
-			</div>
-			<div class="music-player-bar-right">
-				<div class="volume-button">
-					<button ng-click="mute()" class="volume-mute">
-						<i class="fas fa-volume-up"></i>
-					</button>
-				</div>
-				<div class="volume-bar-wrapper">
-					<input ng-change="setVolume()" ng-model="vol" type="range" min="0" max="100" class="volume-bar">
-				</div>
-			</div>
-		</div>
-	</footer>
+            </div>
+        </div>
+        <div class="music-player-bar">
+            <div class="music-player-bar-left">
+                <div class="track-info">
+                    <img ng-src="{{currentlyPlaying.imgSrc}}" class="album-wrapper">
+                    <div class="title-wrapper">
+                        <p ng-bind="currentlyPlaying.songTitle"><i class="fas fa-heart"></i> <i class="fas fa-ban"></i></p> 
+                    </div>
+                    <div class="artist-wrapper">
+                        <p ng-bind="currentlyPlaying.artistName"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="music-player-bar-center">
+                <div class="music-player-buttons">
+                    <button ng-click="" class="shuffle-button">
+                        <i class="fas fa-random"></i>
+                    </button>
+                    <button ng-click="" class="skip-back-button">
+                        <i class="fas fa-backward"></i>
+                    </button>
+                    <button ng-click="" class="play-button">
+                        <i class="far fa-play-circle"></i>
+                    </button>
+                    <!-- <button class="pause-button">
+                        <i class="far fa-pause-circle"></i>
+                    </button> -->
+                    <button ng-click="" class="skip-forward-button">
+                        <i class="fas fa-forward"></i>
+                    </button>
+                    <button class="replay-button">
+                        <i class="fas fa-redo-alt"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="music-player-bar-right">
+                <div class="volume-button">
+                    <button ng-click="" class="volume-mute">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                </div>
+                <div class="volume-bar-wrapper">
+                    <input ng-change="" ng-model="vol" type="range" min="0" max="100" class="volume-bar">
+                </div>
+            </div>
+        </div>
+    </footer>
 </div>

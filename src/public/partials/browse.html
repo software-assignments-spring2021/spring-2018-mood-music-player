@@ -1,13 +1,14 @@
-<div class="auth-view">
+<div class="auth-view" ng-show="authenticated">
     <div class="sidebar">
-        <a href="/" id="logo"> <img src="../images/logo.png" id="logo-img"> smoodify </a> 
+        <a href="/browse" id="logo"> <img src="../images/logo.png" id="logo-img"> smoodify </a> 
         <hr id="first-hr">
 
         <nav id="links">
-            <a href="/" class="current-page">Home</a>
+            <a href="/browse" class="current-page">Home</a>
             <a href="/saved_songs">Saved Songs</a>
-            <a href="/saved_albums">Saved Albums</a>
+            <a href="/mood_playlists">Mood Playlists</a>
             <a href="/top_artists">Top Artists</a>
+            <a href="/top_songs">Top Songs</a>
         </nav>
         <hr id="second-hr">
         
@@ -28,20 +29,20 @@
 
 
     <footer class="music-player-container">
-        <div id='progress'>
-            <div id='progress-bar'>
+        <div id="progress">
+            <div id="progress-bar">
 
             </div>
         </div>
         <div class="music-player-bar">
             <div class="music-player-bar-left">
                 <div class="track-info">
-                    <img ng-src="{{imgSrc}}" class="album-wrapper">
+                    <img ng-src="{{currentlyPlaying.imgSrc}}" class="album-wrapper">
                     <div class="title-wrapper">
-                        <p ng-bind="songTitle"><i class="fas fa-heart"></i> <i class="fas fa-ban"></i></p> 
+                        <p ng-bind="currentlyPlaying.songTitle"><i class="fas fa-heart"></i> <i class="fas fa-ban"></i></p> 
                     </div>
                     <div class="artist-wrapper">
-                        <p ng-bind="artistName"></p>
+                        <p ng-bind="currentlyPlaying.artistName"></p>
                     </div>
                 </div>
 

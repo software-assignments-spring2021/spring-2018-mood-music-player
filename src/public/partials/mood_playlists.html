@@ -1,13 +1,12 @@
 <div class="auth-view" ng-show="authenticated">
 	<div class="sidebar">
-		<a href="/" id="logo"> <img src="../images/logo.png" id="logo-img"> smoodify </a> 
+		<a href="/browse" id="logo"> <img src="../images/logo.png" id="logo-img"> smoodify </a> 
 		<hr id="first-hr">
 
 		<nav id="links">
-			<a href="/">Home</a>
+			<a href="/browse">Home</a>
 			<a href="/saved_songs">Saved Songs</a>
-			<a href="/saved_albums">Saved Albums</a>
-			<a href="/saved_playlists" class="current-page">Saved Playlists</a>
+			<a href="/mood_playlists" class="current-page">Mood Playlists</a>
 			<a href="/top_artists">Top Artists</a>
 			<a href="/top_songs">Top Songs</a>
 		</nav>
@@ -51,11 +50,6 @@
 						<p ng-bind="artistName"></p>
 					</div>
 				</div>
-
-				<!-- Switch for changing modes from lyrics to rhythm -->
-				<!-- TODO
-				<input type="checkbox" checked data-toggle="toggle">
-				-->
 			</div>
 			<div class="music-player-bar-center">
 				<div class="music-player-buttons">
