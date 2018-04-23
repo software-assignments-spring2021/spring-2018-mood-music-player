@@ -212,7 +212,7 @@
 				});
 			});
 		};
-
+		
 		/* Function to seek to a part of a song */
 		$scope.seek = function($event) {
 			var click_percentage = 0;
