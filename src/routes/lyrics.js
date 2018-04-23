@@ -3,7 +3,6 @@ const sentiment = require('sentiment');
 const express = require('express');
 const router = express.Router();
 
-
 router.get('/', function(req, res) {
 	// https://github.com/rhnvrm/lyric-api
 	var artist = req.query.artist;
