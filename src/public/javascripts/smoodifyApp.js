@@ -45,6 +45,7 @@
 					$rootScope.has_token = true;
 
 					SpotifyAPI.getTracks().then(function(allTracks) {
+						SpotifyAPI.getTrackIds(allTracks);
 						for (var i = 0; i < allTracks.length; i++) {
 							console.log("inside allTracks");
 							var artists = allTracks[i].artists.map(function(a) {

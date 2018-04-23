@@ -140,6 +140,8 @@
 			for (let i = 0; i < num; i++) {
 				ids.push(songs.slice(i*100, (i+1)*100 < songs.length ? (i+1)*100 : songs.length));
 			}
+
+			console.log(ids);
 		}
 
 		return {
@@ -243,6 +245,10 @@
 				});
 
 				return ret.promise;
+			},
+
+			getTrackIds: function(songs) {
+				getIds(songs);
 			},
 
 			getAudioFeaturesOne: function(id) {
