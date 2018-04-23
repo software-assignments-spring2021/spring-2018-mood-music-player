@@ -41,7 +41,7 @@ router.get('/data', function(req, res) {
 	req.get()
 	const analysis = JSON.parse(decodeURIComponent(req.query.song)).analysis;
 
-	const analysis = {
+	const input = {
 		danceability: analysis.danceability, 
 		energy: analysis.energy, 
 		key: analysis.key, 
@@ -52,7 +52,7 @@ router.get('/data', function(req, res) {
 	};
 
 	// TODO: potentially save songs to song db
-	output = net.run(analysis);
+	output = net.run(input);
 
 	res.send({output: output});//net.run(/* here */)});
 });
