@@ -20,7 +20,7 @@
 
 	<!-- Song List -->
 	<div class="content" id="saved-music-page">
-		<table cellspacing="0" id="song-list">
+		<table id="song-list">
 			<tr ng-repeat="song in current_user.saved_songs" class="song-in-list">
 				<!-- Play button keeps disappearing in big screens! -->
 				<td ng-click="playSong(song.spotify_uri)" class="play-song fas fa-play"></td>
