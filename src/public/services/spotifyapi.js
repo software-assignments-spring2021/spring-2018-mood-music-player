@@ -9,7 +9,7 @@
 			var minutes = Math.floor(ms / 60000);
   			var seconds = ((ms % 60000) / 1000).toFixed(0);
   			return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
-		}
+		};
 
 		var getTracksOffset = function(offset) {
 			var ret = $q.defer();
@@ -25,7 +25,7 @@
 			});
 
 			return ret.promise;
-		}
+		};
 
 		var numTracksArray = function() {
 			var ret = $q.defer();
@@ -41,7 +41,7 @@
 				ret.resolve(arr);
 			});
 			return ret.promise;
-		}
+		};
 
 		var getAlbumOffset = function(offset) {
 			var ret = $q.defer();
@@ -54,7 +54,7 @@
 			});
 
 			return ret.promise;
-		}
+		};
 
 		var numAlbumsArray = function() {
 			var ret = $q.defer();
@@ -70,7 +70,7 @@
 				ret.resolve(arr);
 			});
 			return ret.promise;
-		}
+		};
 
 		var getTopArtistsOffset = function(offset) {
 			var ret = $q.defer();
@@ -83,7 +83,7 @@
 			});
 
 			return ret.promise;
-		}
+		};
 
 		var numTopArtistsArray = function() {
 			var ret = $q.defer();
@@ -99,7 +99,7 @@
 				ret.resolve(arr);
 			});
 			return ret.promise;
-		}
+		};
 
 		var getTopTracksOffset = function(offset) {
 			var ret = $q.defer();
@@ -112,7 +112,7 @@
 			});
 
 			return ret.promise;
-		}
+		};
 
 		var numTopTrackArray = function() {
 			var ret = $q.defer();
@@ -128,9 +128,10 @@
 				ret.resolve(arr);
 			});
 			return ret.promise;
-		}
+		};
 
 		var getIds = function(songs) {
+			songs = songs.map(song => song.id);
 			const ids = [];
 			const rem = songs.length % 100;
 			let num = Math.floor(songs.length / 100);
@@ -141,8 +142,22 @@
 				ids.push(songs.slice(i*100, (i+1)*100 < songs.length ? (i+1)*100 : songs.length));
 			}
 
-			console.log(ids);
-		}
+			return ids;
+		};
+
+
+		var getAudioFeaturesMany = function(ids){
+			var ret = $q.defer();
+			$http.get(baseUrl + '/audio-features/?ids=' + ids.join(), {
+				headers: {
+					'Authorization': 'Bearer ' + $cookies.token
+				}
+			}).success(function(data) {
+				ret.resolve(data);
+			});
+			return ret.promise;
+		};
+
 
 		return {
 			refreshToken: function() {
@@ -171,6 +186,68 @@
 					});
 				});
 				
+				return allDeferred.promise;
+			},
+
+			getTracksWithFeatures: function() {
+				var allDeferred = $q.defer();
+				this.getTracks().then(function(songs) {
+					// var allFeatures = [];
+					var promises = [];
+					getIds(songs).forEach((ids) => {
+						promises.push(getAudioFeaturesMany(ids));
+						// getAudioFeaturesMany(ids).then(function(ret) {
+						// 	Array.prototype.push.apply(allFeatures, ret);
+						// });
+					});
+
+					// console.log(promises);
+					$q.all(promises).then(function(d) {
+						const features = {};
+						for (let i = 0; i < d.length; i++) {
+							for (let j = 0; j < d[i].audio_features.length; j++) {
+								let song = d[i].audio_features[j];
+								features[song.id] = {
+									danceability: song.danceability,
+									energy: song.energy,
+									key: song.key,
+									loudness: song.loudness,
+									mode: song.mode,
+									valence: song.valence,
+									tempo: song.tempo
+								};
+							}
+						}
+
+						const allSongs = songs.map((s) => {
+							var artists = s.artists.map(function(a) {
+								return {
+									name: a.name,
+									spotify_id: a.id,
+									spotify_uri: a.uri
+								}
+							});
+							var album = {
+								name: s.album.name,
+								images: s.album.images,
+								spotify_id: s.album.id,
+								spotify_uri: s.album.uri
+							};
+							var song = {
+								name: s.name,
+								artist: artists,
+								album: album,
+								id: s.id,
+								uri: s.uri,
+								duration_ms: s.duration_ms,
+								analysis: features[s.id]
+							};
+							return song;
+						});
+						allDeferred.resolve(allSongs);
+					});
+
+				});
 				return allDeferred.promise;
 			},
 
@@ -264,39 +341,6 @@
 				return ret.promise;
 			},
 
-			getAudioFeatures: function(songs) {
-				var allDeferred = $q.defer();
-				numTracksArray().then(function(arr) {
-					var promises = [];
-					arr.map(function(i) {
-						promises.push(getTracksOffset(i));
-					});
-
-					$q.all(promises).then(function(d) {
-						var allTracks = [];
-						d.forEach((r) => {
-							Array.prototype.push.apply(allTracks, r);
-						});
-						allDeferred.resolve(allTracks);
-					});
-				});
-				
-				return allDeferred.promise;
-			},	
-
-
-			getAudioFeaturesMany: function(ids){
-				$http.get(apiBaseUrl + 'audio-features/?ids=' + ids, {
-					headers: {
-						'Authorization': 'Bearer ' + $cookies.token
-					}
-				}).success(function(data) {
-					allFeatures.push.apply(allFeatures, data.audio_features);
-				}).error(function(/* data */){
-					console.log(i, 'broke');
-				}); 
-			},
-
 			getAudioAnalysisOne: function(id) {
 				var ret = $q.defer();
 				$http.get(baseUrl + '/audio-analysis/' + id, {
@@ -308,7 +352,7 @@
 				});
 
 				return ret.promise;
-			},
+			}
 		};
 	});
 })();

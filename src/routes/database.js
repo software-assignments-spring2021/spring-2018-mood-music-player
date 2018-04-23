@@ -13,7 +13,8 @@ router.post('/save/song', function(req, res) {
 		album: data.album,
 		spotify_id: data.id,
 		spotify_uri: data.uri,
-		duration_ms: data.duration_ms
+		duration_ms: data.duration_ms,
+		analysis: data.analysis
 	});
 	song.save(function(err, s) {
 		if (err) {
