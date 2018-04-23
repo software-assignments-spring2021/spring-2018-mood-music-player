@@ -10,11 +10,13 @@
 			});
 		}
 
+		
 		var bar = document.querySelector('#progress-bar');
 		var prog_bar = document.querySelector('#progress');
 		var width = 0;
 		var progress_ms = 0;
 		var duration_ms = 0;
+		var count = 0;
 
 		/* Make the progress bar progress */
 		$interval(function() {
@@ -44,29 +46,61 @@
 		$scope.play = function() {
 			var play_button = document.querySelector('.play-button');
 			PlayerAPI.getPlayerState().then(function(data) {
-				if (data.is_playing === true) {
-					play_button.innerHTML = '<i class="far fa-play-circle"></i>'
-					PlayerAPI.pause();
-					$rootScope.is_playing = false;
-				} else {
-					play_button.innerHTML = '<i class="far fa-pause-circle"></i>'
-					PlayerAPI.play().then(function(data) {
-						PlayerAPI.getCurrentlyPlaying().then(function(data) {
-							console.log(data);
-							$rootScope.currentlyPlaying = {
-								'imgSrc': data.item.album.images[0].url,
-								'songTitle': data.item.name,
-								'artistName': data.item.artists[0].name,
-								'albumName': data.item.album.name
-							}
-							progress_ms = data.progress_ms;
-							duration_ms = data.item.duration_ms;
-							progress_percent = Math.floor((data.progress_ms / data.item.duration_ms) * 100);
-							bar.style.width = progress_percent.toString() + '%';
+				if (count == 0) {
+					PlayerAPI.setProgress(0).then(function() {
+						if (data.is_playing === true) {
+							play_button.innerHTML = '<i class="far fa-play-circle"></i>'
+							PlayerAPI.pause();
+							$rootScope.is_playing = false;
+						} else {
+							play_button.innerHTML = '<i class="far fa-pause-circle"></i>'
+							PlayerAPI.play().then(function(data) {
+								PlayerAPI.getCurrentlyPlaying().then(function(data) {
+									console.log(data);
+									$rootScope.currentlyPlaying = {
+										'imgSrc': data.item.album.images[0].url,
+										'songTitle': data.item.name,
+										'artistName': data.item.artists[0].name,
+										'albumName': data.item.album.name
+									}
+									progress_ms = data.progress_ms;
+									duration_ms = data.item.duration_ms;
+									progress_percent = Math.floor((data.progress_ms / data.item.duration_ms) * 100);
+									bar.style.width = progress_percent.toString() + '%';
+		
+								});
+							});
+							$rootScope.is_playing = true;
+						}
+					})
 
+					count++;
+					
+				} else {
+					if (data.is_playing === true) {
+						play_button.innerHTML = '<i class="far fa-play-circle"></i>'
+						PlayerAPI.pause();
+						$rootScope.is_playing = false;
+					} else {
+						play_button.innerHTML = '<i class="far fa-pause-circle"></i>'
+						PlayerAPI.play().then(function(data) {
+							PlayerAPI.getCurrentlyPlaying().then(function(data) {
+								console.log(data);
+								$rootScope.currentlyPlaying = {
+									'imgSrc': data.item.album.images[0].url,
+									'songTitle': data.item.name,
+									'artistName': data.item.artists[0].name,
+									'albumName': data.item.album.name
+								}
+								progress_ms = data.progress_ms;
+								duration_ms = data.item.duration_ms;
+								progress_percent = Math.floor((data.progress_ms / data.item.duration_ms) * 100);
+								bar.style.width = progress_percent.toString() + '%';
+	
+							});
 						});
-					});
-					$rootScope.is_playing = true;
+						$rootScope.is_playing = true;
+					}
 				}
 			});
 		};
@@ -162,6 +196,7 @@
 			});
 		};
 
+
 		$scope.playAlbum = function(context_uri, total_tracks) {
 			PlayerAPI.playContext(context_uri, total_tracks).then(function() {
 				PlayerAPI.delay().then(function() {
@@ -181,7 +216,7 @@
 		$scope.seek = function($event) {
 			var click_percentage = 0;
 			click_percentage = Math.floor(duration_ms * ($event.clientX / $window.screen.width));
-			width = $event.clientX / $window.screen.width * 100;
+			width = ($event.clientX / $window.screen.width) * 100;
 			bar.style.width = width + '%';
 			PlayerAPI.setProgress(click_percentage);
 		};
