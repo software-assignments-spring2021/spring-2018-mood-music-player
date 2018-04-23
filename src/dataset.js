@@ -95,7 +95,8 @@ const samples = [
   { danceability: 0.63, energy: 0.884, key: 1, loudness: -5.674, mode: 1, valence: 0.289, tempo: 110.07 },
   { danceability: 0.695, energy: 0.827, key: 3, loudness: -4.202, mode: 1, valence: 0.762, tempo: 121.05 },
   { danceability: 0.442, energy: 0.456, key: 7, loudness: -9.639, mode: 1, valence: 0.158, tempo: 147.977 },
-  { danceability: 0.635, energy: 0.853, key: 0, loudness: -3.926, mode: 1, valence: 0.372, tempo: 112.964 },
+  { danceability: 0.635, energy: 0.853, key: 0, loudness: -3.926, mode: 1, valence: 0.372, tempo: 112.964 }
+  /*
   { danceability: 0.389, energy: 0.0851, key: 5, loudness: -15.477, mode: 1, valence: 0.364, tempo: 184.298 },
   { danceability: 0.549, energy: 0.371, key: 2, loudness: -9.56, mode: 1, valence: 0.13, tempo: 87.024 },
   { danceability: 0.783, energy: 0.503, key: 2, loudness: -9.119, mode: 0, valence: 0.435, tempo: 120.053 },
@@ -157,6 +158,7 @@ const samples = [
   { danceability: 0.47, energy: 0.474, key: 5, loudness: -9.406, mode: 1, valence: 0.241, tempo: 170.173 },
   { danceability: 0.459, energy: 0.884, key: 10, loudness: -5.005, mode: 0, valence: 0.615, tempo: 154.868 },
   { danceability: 0.386, energy: 0.607, key: 10, loudness: -7.7, mode: 1, valence: 0.532, tempo: 147.207 }
+  */
 ];
 
 const labels = [
@@ -250,4 +252,4 @@ const orderedData = samples.map((sample,index) => {
 
 const shuffledData = shuffle(orderedData);
 
-exports.DATA = shuffledData;
+module.exports = shuffledData;

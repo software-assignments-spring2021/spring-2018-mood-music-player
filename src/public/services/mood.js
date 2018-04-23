@@ -23,15 +23,8 @@
 			},
 
 			getNetMood: function(song) {
-				// TODO: import net? can we call net from there?
-				// TODO: figure out if we need one neural network or two.
+				var ret = $q.defer();
 				$http.get('/learn/data?song=' + encodeURIComponent(JSON.stringify(song))).then(function(res) {
-
-					// const output = net.run(song.analysis);
-					// let output2 = net2.run(song.analysis);
-					// TODO: add these things to our song data in database. returning to be saved in db? 
-					// TODO: add mongo functions. Assuming mongo functions are called from outside?
-
 					const moods = [
 						{mood: 'Somber', energy: 0, valence: 0, distance: 1},
 						{mood: 'Ominous', energy: 0, valence: 0.25, distance: 1},
@@ -61,7 +54,7 @@
 					];
 
 					for (let i = 0; i < moods.length; i++) {
-						moods[i].distance = Math.sqrt(Math.pow(moods[i].energy - res.body.output.energy_level, 2) + Math.pow(moods[i].valence - res.body.output.valence_level, 2));
+						moods[i].distance = Math.sqrt(Math.pow(moods[i].energy - res.data.output.energy_level, 2) + Math.pow(moods[i].valence - res.data.output.valence_level, 2));
 					}
 
 					moods.sort(function(a, b) {
@@ -96,10 +89,9 @@
 						}
 						return c;
 					});
-
-					return moods;
-				
+					ret.resolve(moods);
 				});	
+				return ret.promise;
 			}
 		};
 	});

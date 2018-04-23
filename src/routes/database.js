@@ -14,7 +14,8 @@ router.post('/save/song', function(req, res) {
 		spotify_id: data.id,
 		spotify_uri: data.uri,
 		duration_ms: data.duration_ms,
-		analysis: data.analysis
+		analysis: data.analysis,
+		mood: data.mood
 	});
 	song.save(function(err, s) {
 		if (err) {

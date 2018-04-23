@@ -1,5 +1,5 @@
 (function() {
-	var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 'ngCookies']).run(function($rootScope, $http, $cookies, $window, $location, SpotifyAPI, DatabaseService) {
+	var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 'ngCookies']).run(function($rootScope, $http, $cookies, $window, $location, SpotifyAPI, DatabaseService, MoodService) {
 		$rootScope.$on('$locationChangeStart', function (/* event */) {
 
 			let user = '';
@@ -37,7 +37,7 @@
 			console.log($cookies.token);
 			if (newUrl.includes('code=')) {
 				$http.get('/learn/train').then(function(trainData) {
-					const net = trainData.net;
+					const net = trainData.data.output;
 					const code = newUrl.substring(oldUrl.indexOf('code')).split('&')[0].split('=')[1];
 					$http.get('/spotify/callback/' + code).then(function(data) {
 						const access_token = data.data.access_token;
@@ -51,12 +51,9 @@
 								console.log("inside allTracks");
 								song = allTracks[i];
 								// get track moods, add to track, then save
-								$http.get('/learn/data?song=' + encodeURIComponent(JSON.stringify(song))).then(function(result) {
-									console.log(result);
-									DatabaseService.saveSongToUser($rootScope.current_user.username, song).then(function(d) {
-										$window.localStorage.setItem('user', JSON.stringify(d.data));
-									});
-								})
+								DatabaseService.saveSongToUser($rootScope.current_user.username, song).then(function(d) {
+									$window.localStorage.setItem('user', JSON.stringify(d.data));
+								});
 							};
 
 							$location.url('/browse');						

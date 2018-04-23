@@ -1,5 +1,4 @@
 (function() {
-    
 	var module = angular.module('smoodifyApp');
 
 	module.factory('SpotifyAPI', function($q, $http, $cookies) {
@@ -192,9 +191,13 @@
 			getTracksWithFeatures: function() {
 				var allDeferred = $q.defer();
 				this.getTracks().then(function(songs) {
+					// var allFeatures = [];
 					var promises = [];
 					getIds(songs).forEach((ids) => {
 						promises.push(getAudioFeaturesMany(ids));
+						// getAudioFeaturesMany(ids).then(function(ret) {
+						// 	Array.prototype.push.apply(allFeatures, ret);
+						// });
 					});
 
 					$q.all(promises).then(function(d) {

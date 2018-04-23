@@ -3,6 +3,8 @@ const express = require('express');
 const router = express.Router();
 const DATA = require('../dataset.js');
 const request = require('request');
+const brain = require('brain.js');
+let globalNet;
 
 const getAccuracy = function(net, testData) {
 	let hits = 0;
@@ -17,7 +19,7 @@ const getAccuracy = function(net, testData) {
 }
 
 router.get('/train', function(req, res) {
-	const SPLIT = .8 * DATA.length();
+	const SPLIT = .8 * DATA.length;
 	const trainData = DATA.slice(0, SPLIT);
 	const testData = DATA.slice(SPLIT + 1);
 
@@ -33,13 +35,14 @@ router.get('/train', function(req, res) {
 
 	console.log('accuracy: ', accuracy);
 
-	res.send({output: net});
+	globalNet = net;
+	res.send({output: net.toJSON()});
 });
 
 router.get('/data', function(req, res) {
-
-	req.get()
+	// let net = JSON.parse(decodeURIComponent(req.query.net));
 	const analysis = JSON.parse(decodeURIComponent(req.query.song)).analysis;
+	console.log(analysis);
 
 	const input = {
 		danceability: analysis.danceability, 
@@ -52,7 +55,7 @@ router.get('/data', function(req, res) {
 	};
 
 	// TODO: potentially save songs to song db
-	output = net.run(input);
+	output = globalNet.run(input);
 
 	res.send({output: output});//net.run(/* here */)});
 });
