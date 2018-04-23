@@ -17,8 +17,6 @@
 				});
 
 				/* Initialize the first song to the beginning of the song */
-				/* FIX: only initializes if you were playing a song on another device */
-				this.setProgress(0);
 
 				player.connect().then(success => {
 					if (success) {
