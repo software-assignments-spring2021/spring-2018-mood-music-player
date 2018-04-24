@@ -52,6 +52,8 @@ router.get('/train', function(req, res) {
 
 	globalEnergyNet = energyNet;
 	globalValenceNet = valenceNet;
+
+	res.status(200).send("done");
 });
 
 router.get('/data', function(req, res) {
@@ -70,8 +72,8 @@ router.get('/data', function(req, res) {
 	};
 
 	// TODO: potentially save songs to song db
-	outputEnergy = energyNet.run(input);
-	outputValence = valenceNet.run(input);
+	outputEnergy = globalEnergyNet.run(input);
+	outputValence = globalValenceNet.run(input);
 
 	const output = {energy_level: outputEnergy, valence_level: outputValence};
 
