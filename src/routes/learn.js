@@ -72,8 +72,8 @@ router.get('/data', function(req, res) {
 	};
 
 	// TODO: potentially save songs to song db
-	outputEnergy = globalEnergyNet.run(input);
-	outputValence = globalValenceNet.run(input);
+	outputEnergy = globalEnergyNet.run(input).energy_level;
+	outputValence = globalValenceNet.run(input).valence_level;
 
 	const output = {energy_level: outputEnergy, valence_level: outputValence};
 
