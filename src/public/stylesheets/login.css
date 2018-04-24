@@ -161,7 +161,7 @@
     left: 45%;
     top: 50%;
     display: block;
-    position: relative;
+    position: fixed;
   }
 
   #right-container {
