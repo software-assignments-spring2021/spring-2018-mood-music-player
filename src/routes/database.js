@@ -15,7 +15,7 @@ router.post('/save/song', function(req, res) {
 		spotify_uri: data.uri,
 		duration_ms: data.duration_ms,
 		analysis: data.analysis,
-		mood: data.mood
+		mood: data.moods
 	});
 	song.save(function(err, s) {
 		if (err) {
@@ -32,8 +32,7 @@ router.post('/save/song', function(req, res) {
 					console.log('user not found');
 					res.send({error: 'user not found'});
 				} else {
-					// console.log(song);
-					console.log(user);
+					console.log(user.saved_songs.length + ' songs saved');
 					res.status(200).send(user);
 				}
 			});

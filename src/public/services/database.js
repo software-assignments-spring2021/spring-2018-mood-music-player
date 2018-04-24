@@ -7,13 +7,13 @@
 		return {
 			saveSongToUser: function(user, song) {
 				var ret = $q.defer();
-				MoodService.getNetMood(song).then(function(mood) {
-					song.mood = mood;
+				// MoodService.getNetMood(song).then(function(mood) {
+					// song.mood = mood;
 					const query = '?user=' + encodeURIComponent(user) + '&song=' + encodeURIComponent(JSON.stringify(song));
 					$http.post('/db/save/song/' + query).then(function(res) {
 						ret.resolve(res);
 					});
-				});
+				// });
 
 				return ret.promise;
 			},			

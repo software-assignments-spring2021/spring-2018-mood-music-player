@@ -92,6 +92,15 @@
 					ret.resolve(moods);
 				});	
 				return ret.promise;
+			},
+
+			getSongWithMood: function(song) {
+				var ret = $q.defer();
+				this.getNetMood(song).then(function(moods) {
+					song.moods = moods;
+					ret.resolve(song);
+				});
+				return ret.promise;
 			}
 		};
 	});

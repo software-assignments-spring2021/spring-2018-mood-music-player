@@ -1,7 +1,7 @@
 (function() {
 	var module = angular.module('smoodifyApp');
 
-	module.factory('SpotifyAPI', function($q, $http, $cookies) {
+	module.factory('SpotifyAPI', function($q, $http, $cookies, MoodService) {
 
 		var baseUrl = 'https://api.spotify.com/v1';
 		var msToMS = function(ms) {
@@ -191,13 +191,9 @@
 			getTracksWithFeatures: function() {
 				var allDeferred = $q.defer();
 				this.getTracks().then(function(songs) {
-					// var allFeatures = [];
 					var promises = [];
 					getIds(songs).forEach((ids) => {
 						promises.push(getAudioFeaturesMany(ids));
-						// getAudioFeaturesMany(ids).then(function(ret) {
-						// 	Array.prototype.push.apply(allFeatures, ret);
-						// });
 					});
 
 					$q.all(promises).then(function(d) {
@@ -242,7 +238,16 @@
 							};
 							return song;
 						});
-						allDeferred.resolve(allSongs);
+
+						var moodPromises = [];
+						allSongs.forEach((s) => {
+							moodPromises.push(MoodService.getSongWithMood(s));
+						});
+
+						$q.all(moodPromises).then(function(data) {
+							console.log(data);
+							allDeferred.resolve(data);
+						});
 					});
 
 				});

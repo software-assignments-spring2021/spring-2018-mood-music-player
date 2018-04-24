@@ -42,7 +42,7 @@ router.get('/train', function(req, res) {
 router.get('/data', function(req, res) {
 	// let net = JSON.parse(decodeURIComponent(req.query.net));
 	const analysis = JSON.parse(decodeURIComponent(req.query.song)).analysis;
-	console.log(analysis);
+	// console.log(analysis);
 
 	const input = {
 		danceability: analysis.danceability, 
@@ -57,6 +57,7 @@ router.get('/data', function(req, res) {
 	// TODO: potentially save songs to song db
 	output = globalNet.run(input);
 
+	// console.log(output);
 	res.send({output: output});//net.run(/* here */)});
 });
 

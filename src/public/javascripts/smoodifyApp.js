@@ -52,6 +52,7 @@
 								song = allTracks[i];
 								// get track moods, add to track, then save
 								DatabaseService.saveSongToUser($rootScope.current_user.username, song).then(function(d) {
+									// console.log(d);
 									$window.localStorage.setItem('user', JSON.stringify(d.data));
 								});
 							};
