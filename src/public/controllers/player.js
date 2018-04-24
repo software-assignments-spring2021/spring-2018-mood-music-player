@@ -56,6 +56,9 @@
 					return;
 				}
 				if (count == 0) {
+					if ($rootScope.skips === undefined) {
+						$rootScope.skips = 0;
+					}
 					$rootScope.player.seek(0).then(function() {
 						if (state.paused === false) {
 							play_button.innerHTML = '<i class="far fa-play-circle"></i>'
@@ -152,6 +155,12 @@
 		/* Skip song. Trigger this function when skip button is pressed */
 		$scope.skip = function() {
 			$rootScope.player.nextTrack().then(function() {
+				let previousWidth = bar.style.width;
+				previousWidth = parseInt(previousWidth.slice(0, previousWidth.length - 1));
+				if (previousWidth < 25) {
+					$rootScope.skips += 1
+				}
+				console.log(previousWidth, $rootScope.skips);
 				width = 0;
 				bar.style.width = width + '%';
 				PlayerAPI.delay().then(function() {
@@ -218,8 +227,11 @@
 			});
 		};
 
-		$scope.playSong = function(song_uri) {
-			PlayerAPI.playClickedSong(song_uri).then(function() {
+		$scope.playSong = function(song) {
+			$rootScope.currentMood = song.mood;
+			$rootScope.skips = 0;
+			console.log($rootScope.currentMood);
+			PlayerAPI.playClickedSong(song.spotify_uri).then(function() {
 				PlayerAPI.delay().then(function() {
 					$rootScope.player.getCurrentState().then(state => {
 
