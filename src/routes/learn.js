@@ -75,9 +75,9 @@ router.get('/data', function(req, res) {
 	outputEnergy = globalEnergyNet.run(input);
 	outputValence = globalValenceNet.run(input);
 
-	const output = {energy_level: outputEnergy, valence_level: outputValence};
+	const output = {energy_level: outputEnergy.energy_level, valence_level: outputValence.valence_level};
 
-	// console.log(output);
+	console.log(output);
 	res.send({output: output});//net.run(/* here */)});
 });
 
