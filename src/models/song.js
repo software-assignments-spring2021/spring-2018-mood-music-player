@@ -17,7 +17,13 @@ const Song = new mongoose.Schema({
 		spotify_id: {type: String, required: true},
 		spotify_uri: {type: String, required: true},
 	},
-	mood: [{ type: String }],
+	// This will be sorted with primary mood first.
+	mood: [{ 
+		mood: {type: String, required: true},
+		energy: {type: String, required: true},
+		valence: {type: String, required: true},
+		distance: {type: Number, required: true}
+	}],
 	spotify_id: {type: String, required: true},
 	spotify_uri: {type: String, required: true},
 	duration_ms: {type: Number},
@@ -28,8 +34,8 @@ const Song = new mongoose.Schema({
 		loudness: {type: Number},
 		mode: {type: Number},	// major is represented by 1, minor is 0
 		valence: {type: Number},
-		tempo: {type: Number},
-		sentiment: {type: Number}
+		tempo: {type: Number}
+		// sentiment: {type: Number}
 	}
 });
 

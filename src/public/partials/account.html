@@ -1,13 +1,12 @@
 <div class="auth-view" ng-show="authenticated">
 	<div class="sidebar">
-		<a href="/" id="logo"> <img src="../images/logo.png" id="logo-img"> smoodify </a> 
+		<a href="/browse" id="logo"> <img src="../images/logo.png" id="logo-img"> smoodify </a> 
 		<hr id="first-hr">
 
 		<nav id="links">
-			<a href="/">Home</a>
+			<a href="/browse">Home</a>
 			<a href="/saved_songs">Saved Songs</a>
-			<a href="/saved_albums">Saved Albums</a>
-			<a href="/saved_playlists">Saved Playlists</a>
+			<a href="/mood_playlists">Mood Playlists</a>
 			<a href="/top_artists">Top Artists</a>
 			<a href="/top_songs">Top Songs</a>
 		</nav>
@@ -22,10 +21,8 @@
 			<img id="profile-picture" src="../images/logo.png">
 			
 			<nav id="account-links">
-				<a href="/spotify_login" ng-hide="has_token"><button class="button button-block">Connect to Spotify</button></a>
-				<button class="button button-block" ng-show="has_token">Already Connected to Spotify</button></a>
 				<a ng-click="refresh()"><button class="button button-block">Refresh Token</button></a>
-
+				<a ng-click="updateSongs()"><button class="button button-block">Update Songs</button></a>
 				<a href="/" ng-click="signout()"><button class="button button-block">Logout</button></a>
 			</nav>
 		</div>

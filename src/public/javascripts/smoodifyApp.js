@@ -1,7 +1,7 @@
 (function() {
-	var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 'ngCookies']).run(function($rootScope, $http, $cookies, $window, $location, SpotifyAPI, DatabaseService) {
+	var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 'ngCookies']).run(function($rootScope, $http, $cookies, $window, $location, SpotifyAPI, DatabaseService, MoodService) {
 		$rootScope.$on('$locationChangeStart', function (/* event */) {
-			// var for user stored in session cookie
+
 			let user = '';
 			if (typeof $cookies['user'] == 'string' && $cookies['user'] != '') {
 				user = $cookies['user'];
@@ -12,16 +12,18 @@
 				$rootScope.authenticated = false;
 				$rootScope.current_user = '';
 				console.log('not auth\'d');
-				if (path !== '/' && path !== '/login' && path !== '/regsiter') {
-					window.location = '/';
+				if (path !== '/') {
+					$location.url('/');
 				}
 			} else {
 				console.log('yes auth\'d');
 				$rootScope.authenticated = true;
 				$rootScope.current_user = JSON.parse($window.localStorage.getItem('user'));
 				console.log($rootScope.current_user);
+				if (path === '/' && $rootScope.current_user.saved_songs.length > 0) {
+					$location.url('/browse');
+				}
 			}
-			// logged in session exists, set current user as authenticated
 			
 			if ($cookies.token === undefined) {
 				$cookies.token = '';
@@ -33,67 +35,30 @@
 		$rootScope.$on('$locationChangeSuccess', function (angularEvent, newUrl, oldUrl) {
 			console.log($cookies.token);
 			if (newUrl.includes('code=')) {
-				const code = newUrl.substring(oldUrl.indexOf('code')).split('&')[0].split('=')[1];
-				$http.get('/spotify/callback/' + code).then(function(data) {
-					const access_token = data.data.access_token;
-					const refresh_token = data.data.refresh_token;
-					$cookies.token = access_token;
-					$cookies.refresh_token = refresh_token;
-					$rootScope.has_token = true;
+				$http.get('/learn/train').then(function(trainData) {
+					const net = trainData.data.output;
+					const code = newUrl.substring(oldUrl.indexOf('code')).split('&')[0].split('=')[1];
+					$http.get('/spotify/callback/' + code).then(function(data) {
+						const access_token = data.data.access_token;
+						const refresh_token = data.data.refresh_token;
+						$cookies.token = access_token;
+						$cookies.refresh_token = refresh_token;
+						$rootScope.has_token = true;
 
-					SpotifyAPI.getTracks().then(function(allTracks) {
-						for (var i = 0; i < allTracks.length; i++) {
-							console.log("inside allTracks");
-							var artists = allTracks[i].artists.map(function(a) {
-								return {
-									name: a.name,
-									spotify_id: a.id,
-									spotify_uri: a.uri
-								}
-							});		// artists array
-							var album = {
-								name: allTracks[i].album.name,
-								images: allTracks[i].album.images,
-								spotify_id: allTracks[i].album.id,
-								spotify_uri: allTracks[i].album.uri
-							} // album object
-							var song = {
-								name: allTracks[i].name,
-								artist: artists,
-								album: album,
-								id: allTracks[i].id,
-								uri: allTracks[i].uri,
-								duration_ms: allTracks[i].duration_ms
-							}
-							DatabaseService.saveSongToUser($rootScope.current_user.username, song).then(function(d) {
-								$window.localStorage.setItem('user', JSON.stringify(d.data));
-							});
-						};
-						
-						$rootScope.songs = allTracks;
-					});
-					/* Pull data and save in user object
-					SpotifyAPI.getTracks().then(function(data) {
-						$rootScope.songs = data;
-					});
+						SpotifyAPI.getTracksWithFeatures().then(function(allTracks) {
+							for (var i = 0; i < allTracks.length; i++) {
+								console.log("inside allTracks");
+								song = allTracks[i];
+								// get track moods, add to track, then save
+								DatabaseService.saveSongToUser($rootScope.current_user.username, song).then(function(d) {
+									// console.log(d);
+									$window.localStorage.setItem('user', JSON.stringify(d.data));
+								});
+							};
 
-					SpotifyAPI.getAlbums().then(function(data) {
-						$rootScope.albums = data;
+							$location.url('/browse');						
+						});
 					});
-
-					SpotifyAPI.getTopArtists().then(function(data) {
-						$rootScope.artists = data;
-					});
-
-					SpotifyAPI.getTopTracks().then(function(data) {
-						$rootScope.top_tracks = data;
-					});
-
-					SpotifyAPI.getUserProfile().then(function(data) {
-						$rootScope.user_data = data;
-					});
-					*/
-					// window.location = '/';
 				});
 		  	}
 		});
@@ -105,56 +70,34 @@
 				$rootScope.authenticated = false;
 				$rootScope.current_user = '';
 				$window.localStorage.removeItem('user');
-				console.log($window.localStorage.getItem('user'));
-				$cookies['user'] = ''; //, { path:'/', domain:'localhost'} this object may be necessary in some situations
+				$cookies['user'] = '';
+				$rootScope.player.disconnect();
 				console.log('removed cookie');
 			}
 		};
 	});
-		
+
 	app.config(function($routeProvider, $locationProvider){
 		$routeProvider
 			// the landing display
 			.when('/', {
-				css: ['../stylesheets/login.css', '../stylesheets/base.css', '../stylesheets/main_page.css'],
+				css: ['../stylesheets/login.css', '../stylesheets/base.css'],
 				templateUrl: '../partials/landing.html',
-				controller: 'MainController'
-			})
-			// the login display
-			.when('/login', {
-				css: {
-					href: '../stylesheets/login.css',
-					preload: true
-				},
-				templateUrl: '../partials/login.html',
 				controller: 'AuthController'
 			})
-			// the signup display
-			.when('/register', {
-				css: {
-					href: '../stylesheets/login.css',
-					preload: true
-				},
-				templateUrl: '../partials/register.html',
-				controller: 'AuthController',
-			})
 			.when('/browse', {
-				templateUrl: '../partials/main.html',
-				controller: 'AuthController',
+				css: ['../stylesheets/browse.css', '../stylesheets/base.css'],
+				templateUrl: '../partials/browse.html',
+				controller: 'MainController',
 			})
 			.when('/saved_songs', {
 				css: ['../stylesheets/base.css', '../stylesheets/saved_songs.css'],
 				templateUrl: '../partials/saved_songs.html',
 				controller: 'PlayerController'
 			})
-			.when('/saved_albums', {
-				css: ['../stylesheets/base.css', '../stylesheets/saved_albums.css'],
-				templateUrl: '../partials/saved_albums.html',
-				controller: 'PlayerController'
-			})
-			.when('/saved_playlists', {
-				css: ['../stylesheets/base.css', '../stylesheets/saved_playlists.css'],
-				templateUrl: '../partials/saved_playlists.html',
+			.when('/mood_playlists', {
+				css: ['../stylesheets/base.css', '../stylesheets/mood_playlists.css'],
+				templateUrl: '../partials/mood_playlists.html',
 				controller: 'PlayerController'
 			})
 			.when('/top_artists', {
@@ -168,13 +111,13 @@
 				controller: 'PlayerController'
 			})
 			.when('/spotify_login', {
-				templateUrl: '../partials/main.html',
+				templateUrl: '../partials/browse.html',
 				controller: 'SpotifyController'
 			})
 			.when('/account', {
 				css: ['../stylesheets/login.css', '../stylesheets/base.css', '../stylesheets/account.css'],
 				templateUrl: '../partials/account.html',
-				controller: 'MainController'
+				controller: 'PlayerController'
 			});
 		$locationProvider.html5Mode({requireBase: false});
 	});

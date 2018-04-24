@@ -21,7 +21,7 @@
     "angular-css": "^1.0.8",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.18.2",
-    "brain.js": "^1.1.2",
+    "brain.js": "^1.2.0",
     "chai": "^4.1.2",
     "chai-http": "^4.0.0",
     "cookie-parser": "^1.4.3",
@@ -39,6 +39,7 @@
     "passport-local-mongoose": "^5.0.0",
     "request": "^2.85.0",
     "sentiment": "^4.2.0",
+    "spinkit": "^1.2.5",
     "spotify-player": "^1.0.0-alpha.1"
   }
 }
