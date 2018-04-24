@@ -36,7 +36,7 @@
 			console.log($cookies.token);
 			if (newUrl.includes('code=')) {
 				$http.get('/learn/train').then(function(trainData) {
-					const net = trainData.data.output;
+					console.log(trainData.data.output);
 					const code = newUrl.substring(oldUrl.indexOf('code')).split('&')[0].split('=')[1];
 					$http.get('/spotify/callback/' + code).then(function(data) {
 						const access_token = data.data.access_token;
