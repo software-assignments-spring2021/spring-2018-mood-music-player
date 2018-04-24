@@ -9,7 +9,7 @@
 
 #song-list td:not(:first-child) {
   vertical-align: top;
-  padding: 15px 15px 10px 15px;
+  padding: 15px 15px 10px 0px;
 }
 
 #song-list td:nth-child(1) { 
