@@ -221,7 +221,7 @@
 		$scope.playSong = function(song_uri) {
 			PlayerAPI.playClickedSong(song_uri).then(function() {
 				PlayerAPI.delay().then(function() {
-					$rootScope.getCurrentState().then(state => {
+					$rootScope.player.getCurrentState().then(state => {
 
 						let {
 							current_track,
