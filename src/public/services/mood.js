@@ -101,6 +101,14 @@
 					ret.resolve(song);
 				});
 				return ret.promise;
+			},
+
+			getNextMood: function(song) {
+				const songMoods = song.mood;
+				const currentMood = songMoods[0];
+				let nextMood;
+
+				return nextMood;
 			}
 		};
 	});
