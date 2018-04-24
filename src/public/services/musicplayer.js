@@ -143,7 +143,7 @@
 			playNext: function() {
 				var ret = $q.defer();
 				var data = {
-
+					uris: _queue_
 				};
 				$http.post(baseUrl + '/me/player/next', JSON.stringify(data), {
 					headers: {
