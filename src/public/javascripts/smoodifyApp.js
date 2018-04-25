@@ -75,6 +75,7 @@
 				$cookies['user'] = '';
 				if ($rootScope.player) {
 					$rootScope.player.disconnect();
+					$rootScope.player = undefined;
 				}
 				console.log('removed cookie');
 			}
