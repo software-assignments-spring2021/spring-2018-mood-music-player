@@ -1,12 +1,14 @@
 // TODO: require whatever
 const express = require('express');
 const router = express.Router();
-const energyData = require('../energydataset.js');
-const valenceData = require('../valencedataset.js');
+// const energyData = require('../energydataset.js');
+// const valenceData = require('../valencedataset.js');
+const DATA = require('../dataset.js');
 const request = require('request');
 const brain = require('brain.js');
-let globalEnergyNet;
-let globalValenceNet;
+// let globalEnergyNet;
+// let globalValenceNet;
+let globalNet;
 
 const getAccuracy = function(net, testData) {
 	let hits = 0;
@@ -21,37 +23,51 @@ const getAccuracy = function(net, testData) {
 }
 
 router.get('/train', function(req, res) {
-	const energySPLIT = .8 * energyData.length;
-	const energyTrainData = energyData.slice(0, energySPLIT);
-	const energyTestData = energyData.slice(energySPLIT + 1);
+	// const energySPLIT = .8 * energyData.length;
+	// const energyTrainData = energyData.slice(0, energySPLIT);
+	// const energyTestData = energyData.slice(energySPLIT + 1);
 
-	const valenceSPLIT = .8 * valenceData.length;
-	const valenceTrainData = valenceData.slice(0, valenceSPLIT);
-	const valenceTestData = valenceData.slice(valenceSPLIT + 1);
+	// const valenceSPLIT = .8 * valenceData.length;
+	// const valenceTrainData = valenceData.slice(0, valenceSPLIT);
+	// const valenceTestData = valenceData.slice(valenceSPLIT + 1);
 
-	const energyNet = new brain.NeuralNetwork({
+	const SPLIT = .8 * DATA.length;
+	const trainData = DATA.slice(0, SPLIT);
+	const testData = DATA.slice(SPLIT + 1);
+
+	// const energyNet = new brain.NeuralNetwork({
+	// 	activation: 'sigmoid', // activation function
+	// 	iterations: 20000,
+	// 	learningRate: 0.3 // global learning rate, useful when training using streams
+	// });
+
+	// const valenceNet = new brain.NeuralNetwork({
+	// 	activation: 'sigmoid', // activation function
+	// 	iterations: 20000,
+	// 	learningRate: 0.3 // global learning rate, useful when training using streams
+	// });
+
+	const net = new brain.NeuralNetwork({
 		activation: 'sigmoid', // activation function
 		iterations: 20000,
 		learningRate: 0.3 // global learning rate, useful when training using streams
 	});
 
-	const valenceNet = new brain.NeuralNetwork({
-		activation: 'sigmoid', // activation function
-		iterations: 20000,
-		learningRate: 0.3 // global learning rate, useful when training using streams
-	});
+	// energyNet.train(energyTrainData);
+	// valenceNet.train(valenceTrainData);
+	net.train(trainData);
 
-	energyNet.train(energyTrainData);
-	valenceNet.train(valenceTrainData);
+	// const energyAccuracy = getAccuracy(energyNet, energyTestData);
+	// const valenceAccuracy = getAccuracy(valenceNet, valenceTestData);
+	const accuracy = getAccuracy(net, testData)
 
-	const energyAccuracy = getAccuracy(energyNet, energyTestData);
-	const valenceAccuracy = getAccuracy(valenceNet, valenceTestData);
+	// console.log('energy accuracy: ', energyAccuracy);
+	// console.log('valence accuracy: ', valenceAccuracy);
+	console.log('accuracy: ', accuracy)
 
-	console.log('energy accuracy: ', energyAccuracy);
-	console.log('valence accuracy: ', valenceAccuracy);
-
-	globalEnergyNet = energyNet;
-	globalValenceNet = valenceNet;
+	// globalEnergyNet = energyNet;
+	// globalValenceNet = valenceNet;
+	globalNet = net;
 
 	res.status(200).send("done");
 });
@@ -71,12 +87,11 @@ router.get('/data', function(req, res) {
 		tempo: analysis.tempo
 	};
 
-	// TODO: potentially save songs to song db
-	outputEnergy = globalEnergyNet.run(input).energy_level;
-	outputValence = globalValenceNet.run(input).valence_level;
+	// outputEnergy = globalEnergyNet.run(input).energy_level;
+	// outputValence = globalValenceNet.run(input).valence_level;
+	// const output = {energy_level: outputEnergy, valence_level: outputValence};
 
-	const output = {energy_level: outputEnergy.energy_level, valence_level: outputValence.valence_level};
-
+	output = globalNet.run(input);
 	console.log(output);
 	res.send({output: output});//net.run(/* here */)});
 });

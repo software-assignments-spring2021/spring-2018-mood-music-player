@@ -239,6 +239,13 @@
 							return song;
 						});
 
+						allSongs.map((s) => {
+							return MoodService.getSongWithAlgoMood(s);
+						});
+
+						allDeferred.resolve(allSongs);
+
+						/*
 						var moodPromises = [];
 						allSongs.forEach((s) => {
 							moodPromises.push(MoodService.getSongWithMood(s));
@@ -248,6 +255,7 @@
 							console.log(data);
 							allDeferred.resolve(data);
 						});
+						*/
 					});
 
 				});
