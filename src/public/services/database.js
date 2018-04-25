@@ -2,7 +2,7 @@
     
 	var module = angular.module('smoodifyApp');
 
-	module.factory('DatabaseService', function($q, $http, $cookies, MoodService) {
+	module.factory('DatabaseService', function($q, $http, $cookies, $rootScope, MoodService) {
 
 		return {
 			saveSongToUser: function(user, song) {
@@ -16,7 +16,24 @@
 				// });
 
 				return ret.promise;
-			},			
+			},	
+
+			getSongsByMood: function() {
+				const globalMoods = {
+					Somber: [], Ominous: [], Sentimental: [], Nostalgic: [], Peaceful: [], 
+					Depressing: [], Melancholy: [], Mellow: [], Tender: [], Easygoing: [], 
+					Brooding: [], Yearning: [], Sensual: [], Optimistic: [], Content: [], 
+					Despair: [], Anxious: [], Chill: [], Stirring: [], Excited: [], 
+					Aggressive: [], Angsty: [], Energizing: [], Upbeat: [], Empowering: []
+				}
+
+				const allSongs = $rootScope.current_user.saved_songs;
+				allSongs.forEach((s) => {
+					globalMoods[s.mood[0].mood].push(s);
+				});
+
+				return globalMoods;
+			},		
 				
 
 			getUser: function(username) {

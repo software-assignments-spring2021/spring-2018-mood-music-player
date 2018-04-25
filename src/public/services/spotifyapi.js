@@ -252,7 +252,7 @@
 						});
 
 						$q.all(moodPromises).then(function(data) {
-							console.log(data);
+							// console.log(data);
 							allDeferred.resolve(data);
 						});
 						*/

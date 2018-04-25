@@ -25,6 +25,9 @@
 			getNetMood: function(song) {
 				var ret = $q.defer();
 				$http.get('/learn/data?song=' + encodeURIComponent(JSON.stringify(song))).then(function(res) {
+					let energy_level = .5;
+					let valence_level = .5;
+
 					const moods = [
 						{mood: 'Somber', energy: 0, valence: 0, distance: 1},
 						{mood: 'Ominous', energy: 0, valence: 0.25, distance: 1},
@@ -52,7 +55,18 @@
 						{mood: 'Upbeat', energy: 1, valence: 0.75, distance: 1},
 						{mood: 'Empowering', energy: 1, valence: 1, distance: 1},
 					];
-					console.log(moods[0]);
+
+					for (i in res.data.output) {
+						if (res.data.output.i === 1) {
+							for (let j = 0; j < moods.length; j++) {
+								if (i === moods[j].mood) {
+									energy_level = moods[j].energy;
+									valence_level = moods[j].valence;
+								}
+							}
+						} break;
+					}
+
 					for (let i = 0; i < moods.length; i++) {
 						moods[i].distance = Math.sqrt(Math.pow(moods[i].energy - res.data.output.energy_level, 2) + Math.pow(moods[i].valence - res.data.output.valence_level, 2));
 					}
@@ -60,9 +74,7 @@
 					moods.sort(function(a, b) {
 						const c = a.distance - b.distance;
 						if (c === 0) {
-							if (a.mood === "Sensual") { return -1; }
-							else if (b.mood === "Sensual") { return 1; }
-							else if (a.mood === "Tender") { return -1; } 
+							if (a.mood === "Tender") { return -1; } 
 							else if (b.mood === "Tender") { return 1; } 
 							else if (a.mood === "Stirring") { return -1; }
 							else if (b.mood === "Stirring") { return 1; }
@@ -70,6 +82,8 @@
 							else if (b.mood === "Melancholy") { return 1; }
 							else if (a.mood === "Anxious") { return -1; }
 							else if (b.mood === "Anxious") { return 1; }
+							else if (a.mood === "Sensual") { return -1; }
+							else if (b.mood === "Sensual") { return 1; }
 							else if (a.mood === "Peaceful") { return -1; }
 							else if (b.mood === "Peaceful") { return 1; }
 							else if (a.mood === "Content") { return -1; }
@@ -102,6 +116,11 @@
 					ret.resolve(song);
 				});
 				return ret.promise;
+			},
+
+			getNextMood: function(song) {
+				const songMoods = song.mood;
+				return songMoods[1];
 			},
 
 			getAlgoMood: function(song) {
@@ -141,9 +160,7 @@
 				moods.sort(function(a, b) {
 					const c = a.distance - b.distance;
 					if (c === 0) {
-						if (a.mood === "Sensual") { return -1; }
-						else if (b.mood === "Sensual") { return 1; }
-						else if (a.mood === "Tender") { return -1; } 
+						if (a.mood === "Tender") { return -1; } 
 						else if (b.mood === "Tender") { return 1; } 
 						else if (a.mood === "Stirring") { return -1; }
 						else if (b.mood === "Stirring") { return 1; }
@@ -151,6 +168,8 @@
 						else if (b.mood === "Melancholy") { return 1; }
 						else if (a.mood === "Anxious") { return -1; }
 						else if (b.mood === "Anxious") { return 1; }
+						else if (a.mood === "Sensual") { return -1; }
+						else if (b.mood === "Sensual") { return 1; }
 						else if (a.mood === "Peaceful") { return -1; }
 						else if (b.mood === "Peaceful") { return 1; }
 						else if (a.mood === "Content") { return -1; }
@@ -175,7 +194,6 @@
 
 			getSongWithAlgoMood: function(song) {
 				song.moods = this.getAlgoMood(song);
-				// console.log(song);
 				return song;
 			}
 		};
