@@ -164,6 +164,19 @@
 
 		/* Skip song. Trigger this function when skip button is pressed */
 		$scope.skip = function() {
+			if (!$rootScope.lastSong) {
+				$rootScope.player.getCurrentState().then(s => {
+					const id = s.track_window.current_track.id;
+					$rootScope.current_user.saved_songs.forEach((song) => {
+						if (song.spotify_id === id) {
+							$rootScope.lastSong = song;
+						}
+					});
+					$rootScope.moodIndex = 0;
+					$rootScope.currentMood = $rootScope.lastSong.mood[$rootScope.moodIndex].mood;
+					$rootScope.skips = 0;
+				});
+			}
 			console.log($rootScope.currentMood);
 			$rootScope.player.nextTrack().then(function() {
 				var play_button = document.querySelector('.play-button');
