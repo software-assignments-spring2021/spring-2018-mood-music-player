@@ -25,6 +25,9 @@
 			getNetMood: function(song) {
 				var ret = $q.defer();
 				$http.get('/learn/data?song=' + encodeURIComponent(JSON.stringify(song))).then(function(res) {
+					let energy_level = .5;
+					let valence_level = .5;
+
 					const moods = [
 						{mood: 'Somber', energy: 0, valence: 0, distance: 1},
 						{mood: 'Ominous', energy: 0, valence: 0.25, distance: 1},
@@ -52,6 +55,17 @@
 						{mood: 'Upbeat', energy: 1, valence: 0.75, distance: 1},
 						{mood: 'Empowering', energy: 1, valence: 1, distance: 1},
 					];
+
+					for (i in res.data.output) {
+						if (res.data.output.i === 1) {
+							for (let j = 0; j < moods.length; j++) {
+								if (i === moods[j].mood) {
+									energy_level = moods[j].energy;
+									valence_level = moods[j].valence;
+								}
+							}
+						} break;
+					}
 
 					for (let i = 0; i < moods.length; i++) {
 						moods[i].distance = Math.sqrt(Math.pow(moods[i].energy - res.data.output.energy_level, 2) + Math.pow(moods[i].valence - res.data.output.valence_level, 2));
@@ -105,10 +119,7 @@
 
 			getNextMood: function(song) {
 				const songMoods = song.mood;
-				const currentMood = songMoods[0];
-				let nextMood;
-
-				return nextMood;
+				return songMoods[1];
 			}
 		};
 	});
