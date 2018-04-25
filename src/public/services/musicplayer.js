@@ -17,7 +17,7 @@
 				});
 
 				/* Initialize the first song to the beginning of the song */
-
+				/* This connect function isn't firing when you first login with an old account */
 				player.connect().then(success => {
 					if (success) {
 						player.addListener('ready', ({ device_id }) => {
