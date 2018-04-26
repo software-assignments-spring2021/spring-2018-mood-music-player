@@ -3,11 +3,15 @@
 	var module = angular.module('smoodifyApp');
 
 	module.controller('MainController', function($scope, $http, $cookies, $rootScope, $interval, $window, PlayerAPI, SpotifyAPI, MoodService, DatabaseService) {
-
 		if ($rootScope.player === undefined) {
-			PlayerAPI.initialize().then(function(player) {
-				$rootScope.player = player;
-			});
+			console.log('before ' + $cookies.token);
+			SpotifyAPI.refreshToken().then(function(token) {
+				$cookies.token = token;
+				console.log('after ' + $cookies.token);
+				PlayerAPI.initialize().then(function(player) {
+					$rootScope.player = player;				
+				});
+			})
 		}
 
 		var bar = document.querySelector('#progress-bar');

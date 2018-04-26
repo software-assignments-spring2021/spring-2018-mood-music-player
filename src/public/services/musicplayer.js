@@ -250,22 +250,6 @@
 
 			addToQueue: function(song) {
 				_queue_.push(song.spotify_uri);
-			},
-
-			swap: function() {
-				var ret = $q.defer();
-				var data = {
-					code: $cookies.token,
-				};
-				$http.post(baseUrl + '/swap', {
-					headers: {
-						'Accept': 'application/json',
-						'Content-Type': 'application/json'
-					}
-				}).success(function(r) {
-					ret.resolve(r);
-				});
-				return ret.promise;
 			}
 
 			
