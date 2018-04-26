@@ -10,6 +10,15 @@
 			});
 		}
 
+		/* pause and disconnect the player when closing tab */
+		/* everything is firing except $rootScope.player.pause() */
+		$window.onbeforeunload = function(e) {
+			$rootScope.player.pause().then(function() {
+				$rootScope.disconnect();
+			})
+			return ;
+		}
+
 		
 		var bar = document.querySelector('#progress-bar');
 		var prog_bar = document.querySelector('#progress');
