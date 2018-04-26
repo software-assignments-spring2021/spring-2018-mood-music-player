@@ -11,7 +11,13 @@
             <a href="/top_songs">Top Songs</a> -->
         </nav>
         <hr id="second-hr">
-        
+        <nav id="mood">
+            <p>Current Mood:</p>
+            <p id="current-mood">
+                <!-- <span ng-show="currentMood">{{currentMood}}</span> -->
+                <span ng-hide="currentMood">None yet!</span>
+            </p>
+        </nav>
         <hr id="third-hr">
         <a href="/account" id="account">My Account</a>
     </div>
@@ -39,7 +45,7 @@
                 <div class="track-info">
                     <img ng-src="{{currentlyPlaying.imgSrc}}" class="album-wrapper">
                     <div class="title-wrapper">
-                        <p ng-bind="currentlyPlaying.songTitle"><i class="fas fa-heart"></i> <i class="fas fa-ban"></i></p> 
+                        <p ng-bind="currentlyPlaying.songTitle"></p> 
                     </div>
                     <div class="artist-wrapper">
                         <p ng-bind="currentlyPlaying.artistName"></p>

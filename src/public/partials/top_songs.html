@@ -11,7 +11,13 @@
 			<a href="/top_songs" class="current-page">Top Songs</a> -->
 		</nav>
 		<hr id="second-hr">
-		
+		<nav id="mood">
+            <p>Current Mood:</p>
+            <p id="current-mood">
+            	<span ng-show="currentMood">{{currentMood}}</span>
+            	<span ng-hide="currentMood">None yet!</span>
+            </p>
+        </nav>
 		<hr id="third-hr">
 		<a href="/account" id="account">My Account</a>
 	</div>
