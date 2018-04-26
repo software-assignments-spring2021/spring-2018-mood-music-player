@@ -247,7 +247,7 @@
 				return _queue_
 			},
 
-			nextTracks: function() {
+			nextTracks: function(n) {
 				let nextTracks = [];
 				_queue_.forEach((song) => {
 					let newTrack = {
@@ -270,7 +270,19 @@
 					}
 					nextTracks.push(newTrack);
 				});
-				return nextTracks;
+				if (n) {
+					return nextTracks.splice(0, n);
+				} else {
+					return nextTracks;
+				}
+			},
+
+			dequeue: function(song) {
+				const ids = _queue_.map((s) => s.spotify_id);
+				const index = ids.indexOf(song.id);
+				if (index !== -1) {
+					_queue_.splice(index, 1);
+				}
 			}
 
 		};
