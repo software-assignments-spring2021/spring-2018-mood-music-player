@@ -282,6 +282,7 @@
 				console.log('BEFORE:', $cookies.token);
 				$cookies.token = token;
 				console.log('AFTER:', $cookies.token);
+				$rootScope.player
 			});
 		};
 	});

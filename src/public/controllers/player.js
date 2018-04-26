@@ -6,7 +6,7 @@
 		/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
 		if ($rootScope.player === undefined) {
 			PlayerAPI.initialize().then(function(player) {
-				$rootScope.player = player;
+				$rootScope.player = player;				
 			});
 		}
 
@@ -56,6 +56,17 @@
 				}
 			}
 		}, 10);
+
+
+		$interval(function() {
+			SpotifyAPI.refreshToken().then(function(token) {
+				console.log('BEFORE:', $cookies.token);
+				$cookies.token = token;
+				console.log('AFTER:', $cookies.token);
+			});
+		}, 1800000);
+
+
 
 		/* Play a song. Trigger this function when play button is pressed */
 		$scope.play = function() {
