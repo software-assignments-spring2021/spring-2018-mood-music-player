@@ -6,12 +6,18 @@
 		<nav id="links">
 			<a href="/browse">Home</a>
 			<a href="/saved_songs">Saved Songs</a>
-			<a href="/mood_playlists" class="current-page">Mood Playlists</a>
+		<!--<a href="/mood_playlists" class="current-page">Mood Playlists</a>
 			<a href="/top_artists">Top Artists</a>
-			<a href="/top_songs">Top Songs</a>
+			<a href="/top_songs">Top Songs</a> -->
 		</nav>
 		<hr id="second-hr">
-		
+		<nav id="mood">
+            <p>Current Mood:</p>
+            <p id="current-mood">
+            	<span ng-show="currentMood">{{currentMood}}</span>
+            	<span ng-hide="currentMood">None yet!</span>
+            </p>
+        </nav>
 		<hr id="third-hr">
 		<a href="/account" id="account">My Account</a>
 	</div>
