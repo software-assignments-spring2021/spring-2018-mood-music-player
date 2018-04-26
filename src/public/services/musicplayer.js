@@ -17,13 +17,16 @@
 					volume: 0.5
 				});
 
+				this.pause();
+
+
 				player.connect().then(success => {
 					if (success) {
 						player.addListener('ready', ({ device_id }) => {
 							$cookies.device = device_id;
 							console.log('Ready with Device ID', device_id);
 							/* Code to play from our device */
-							this.switchToDevice();
+							this.switchToDevice()
 						});
 						ret.resolve(player);
 					}
@@ -34,7 +37,7 @@
 			switchToDevice: function() {
 				var ret = $q.defer();
 				var data = {
-					device_ids: [$cookies.device],
+					device_ids: [$cookies.device]
 				};
 				$http.put(baseUrl + '/me/player', JSON.stringify(data), {
 					headers: {
