@@ -189,12 +189,14 @@
 
 				if ($rootScope.skips === 3) {
 					$rootScope.moodIndex += 1;
-					console.log($rootScope.lastSong);
 					$rootScope.currentMood = $rootScope.lastSong.mood[$rootScope.moodIndex].mood;
 					$rootScope.skips = 0;
-					console.log($rootScope.currentMood);
+					PlayerAPI.clearQueue();
+					PlayerAPI.populateQueue($rootScope.currentMood);
+					let next = PlayerAPI.nextTracks();
+
 				}
-				console.log(previousWidth, $rootScope.skips);
+				console.log($rootScope.lastSong.name, $rootScope.currentMood, $rootScope.skips);
 				width = 0;
 				bar.style.width = width + '%';
 				PlayerAPI.delay().then(function() {
@@ -202,10 +204,9 @@
 
 						let {
 							current_track,
-							next_tracks: [next_track]
+							next_tracks: next
 						} = state.track_window;
 
-						
 						$rootScope.currentlyPlaying = {
 							'imgSrc': current_track.album.images[0].url,
 							'songTitle': current_track.name,
@@ -264,22 +265,24 @@
 		$scope.playSong = function(song) {
 			count += 1
 			$rootScope.currentMood = song.mood[0].mood;
+			PlayerAPI.populateQueue($rootScope.currentMood, song);
+			const next = PlayerAPI.nextTracks(); 
+			console.log(next);
 			$rootScope.skips = 0;
 			$rootScope.moodIndex = 0;
 			console.log($rootScope.currentMood);
 			var play_button = document.querySelector('.play-button');
 			play_button.innerHTML = '<i class="far fa-pause-circle"></i>'
-			PlayerAPI.playClickedSong(song.spotify_uri).then(function() {
+			PlayerAPI.playClickedSong(song).then(function() {
 				width = 0;
 				bar.style.width = width + '%';
 				PlayerAPI.delay().then(function() {
 					$rootScope.player.getCurrentState().then(state => {
-
+						console.log(state.track_window.next_tracks);
 						let {
 							current_track,
-							next_tracks: [next_track]
+							next_tracks: next
 						} = state.track_window;
-
 						$rootScope.currentlyPlaying = {
 							'imgSrc': current_track.album.images[0].url,
 							'songTitle': current_track.name,
