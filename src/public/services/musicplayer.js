@@ -48,7 +48,7 @@
 						'Authorization': 'Bearer ' + $cookies.token
 					}
 				}).success(function(r) {
-					console.log(r);
+					// console.log(r);
 					ret.resolve(r);
 				}).error(function(r) {
 					console.log(r);
@@ -216,6 +216,7 @@
 				var data = {
 					uris: context
 				};
+				console.log('Queue (play clicked): ');
 				console.log(_queue_);
 				$http.put(baseUrl + '/me/player/play', JSON.stringify(data), {
 					headers: {
@@ -236,7 +237,6 @@
 				} else {
 					_queue_ = MoodService.getSongsByMood(mood);
 				}
-				console.log(_queue_);
 			},
 
 			clearQueue: function() {
@@ -278,10 +278,14 @@
 			},
 
 			dequeue: function(song) {
-				const ids = _queue_.map((s) => s.spotify_id);
-				const index = ids.indexOf(song.id);
-				if (index !== -1) {
-					_queue_.splice(index, 1);
+				if (song) {
+					const ids = _queue_.map((s) => s.spotify_id);
+					const index = ids.indexOf(song.id);
+					if (index !== -1) {
+						return _queue_.splice(index, 1)[0];
+					}
+				} else {
+					return _queue_.splice(0, 1)[0];
 				}
 			}
 
