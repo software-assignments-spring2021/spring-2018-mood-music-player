@@ -76,8 +76,10 @@
 				$window.localStorage.removeItem('user');
 				$cookies['user'] = '';
 				if ($rootScope.player) {
-					$rootScope.player.disconnect();
-					$rootScope.player = undefined;
+					$rootScope.player.pause().then(function() {
+						$rootScope.player.disconnect();
+						$rootScope.player = undefined;
+					})
 				}
 				console.log('removed cookie');
 			}

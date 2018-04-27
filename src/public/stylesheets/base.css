@@ -180,10 +180,9 @@ footer {
   padding-left: 10px;
 }
 
-.fa-heart:hover, .fa-ban:hover, .shuffle-button:hover, 
-.skip-back-button:hover, .play-button:hover, .skip-forward-button:hover, 
-.replay-button:hover {
-  color: #b781db;
+.fa-heart:hover, .fa-ban:hover, 
+.skip-back-button:hover, .play-button:hover, .skip-forward-button:hover {
+  color: #b781db; 
 }
 
 .music-player-bar-center {

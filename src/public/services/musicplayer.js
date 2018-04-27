@@ -14,21 +14,20 @@
 				/* ReferenceError: Spotify is not defined in MainController */
 				var player = new Spotify.Player({
 					name: 'Smoodify',
-					getOAuthToken: cb => { cb($cookies.token); }
+					getOAuthToken: cb => { cb($cookies.token); },
+					volume: 0.5
 				});
 
-				/* Initialize the first song to the beginning of the song */
-				/* This connect function isn't firing when you first login with an old account */
+				this.pause();
+
+
 				player.connect().then(success => {
 					if (success) {
 						player.addListener('ready', ({ device_id }) => {
 							$cookies.device = device_id;
 							console.log('Ready with Device ID', device_id);
-							/* Code to play from our device */
+							console.log(player);
 							this.switchToDevice();
-							
-							/* Initialize the player volume to our volume bar's starting point */
-							this.setVolume(50);
 						});
 						ret.resolve(player);
 					}
@@ -39,7 +38,7 @@
 			switchToDevice: function() {
 				var ret = $q.defer();
 				var data = {
-					device_ids: [$cookies.device],
+					device_ids: [$cookies.device]
 				};
 				$http.put(baseUrl + '/me/player', JSON.stringify(data), {
 					headers: {
@@ -183,7 +182,7 @@
 				return ret.promise;
 			},
 
-			toggleShuffle: function(shuffle) {
+			/* toggleShuffle: function(shuffle) {
 				var ret = $q.defer();
 				if (shuffle === true) {
 					$http.put(baseUrl + '/me/player/shuffle?state=' + false, {}, {
@@ -207,7 +206,7 @@
 					});
 				}
 				return ret.promise;
-			},
+			}, */
 
 			playClickedSong: function(song) {
 				_queue_.unshift(song)
@@ -289,7 +288,6 @@
 					return _queue_.splice(0, 1)[0];
 				}
 			}
-
 		};
 	});
 })();
