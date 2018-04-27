@@ -5,10 +5,41 @@
 	module.controller('PlayerController', function($scope, $http, $cookies, $rootScope, $location, $interval, $window, $route, PlayerAPI, SpotifyAPI, MoodService, DatabaseService) {
 		/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
 		if ($rootScope.player === undefined) {
-			PlayerAPI.initialize().then(function(player) {
-				$rootScope.player = player;
-			});
+			SpotifyAPI.refreshToken().then(function(token) {
+				$cookies.token = token;
+				PlayerAPI.initialize().then(function(player) {
+					$rootScope.player = player;
+					console.log($rootScope.player);	
+				});
+			})
 		}
+
+		
+		
+		/* pause and disconnect the player when closing tab */
+		/* everything is firing except $rootScope.player.pause() */
+		// $window.onbeforeunload = function(event) {
+
+		// 	//$rootScope.player.disconnect().then(sleep(10000));
+
+		// 	// var xhr = new XMLHttpRequest();
+		// 	// xhr.open('PUT', 'https://api.spotify.com/v1/me/player/pause', false);//<-- false makes request synchronous
+		// 	// xhr.setRequestHeader("Authorization", 'Bearer ' + $cookies.token);
+		// 	// xhr.send();
+		// 	// $rootScope.player.pause().then(function() {
+		// 	// 	setTimeout(function() {
+		// 	// 	}, 10000).then(function() {
+		// 	// 		console.log('worked')
+		// 	// 	})
+		// 	// });
+
+		// 	return 'hi';
+		// }
+
+		// function sleep(delay) {
+		// 	var start = new Date().getTime();
+		// 	while (new Date().getTime() < start + delay);
+		// }
 
 		
 		var bar = document.querySelector('#progress-bar');
@@ -56,6 +87,17 @@
 				}
 			}
 		}, 10);
+
+
+		$interval(function() {
+			SpotifyAPI.refreshToken().then(function(token) {
+				console.log('BEFORE:', $cookies.token);
+				$cookies.token = token;
+				console.log('AFTER:', $cookies.token);
+			});
+		}, 1800000);
+
+
 
 		/* Play a song. Trigger this function when play button is pressed */
 		$scope.play = function() {
