@@ -254,12 +254,12 @@
 			})
 		}
 
-		$scope.shuffle = function() {
+		/* $scope.shuffle = function() {
 			PlayerAPI.getPlayerState().then(function(data){
 				console.log(data.shuffle_state);
 				PlayerAPI.toggleShuffle(data.shuffle_state);
 			});
-		};
+		}; */
 
 		$scope.playSong = function(song) {
 			count += 1
