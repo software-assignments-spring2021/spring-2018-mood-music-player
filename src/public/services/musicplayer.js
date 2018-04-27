@@ -182,7 +182,7 @@
 				return ret.promise;
 			},
 
-			toggleShuffle: function(shuffle) {
+			/* toggleShuffle: function(shuffle) {
 				var ret = $q.defer();
 				if (shuffle === true) {
 					$http.put(baseUrl + '/me/player/shuffle?state=' + false, {}, {
@@ -206,7 +206,7 @@
 					});
 				}
 				return ret.promise;
-			},
+			}, */
 
 			playClickedSong: function(song_uri) {
 				_queue_.unshift(song_uri)
