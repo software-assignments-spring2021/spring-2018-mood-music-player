@@ -233,10 +233,12 @@
 					$scope.playSong().then(function() {
 						if (state.paused == false) {
 							/* if it is not paused */
-							play_button.innerHTML = '<i class="far fa-pause-circle"></i>'
+							play_button.innerHTML = '<i class="far fa-pause-circle"></i>';
+							$rootScope.is_playing = true;
 						} else {
 							/* if it is paused */
-							play_button.innerHTML = '<i class="far fa-play-circle"></i>'
+							play_button.innerHTML = '<i class="far fa-play-circle"></i>';
+							$rootScope.is_playing = false;
 						}
 					});
 				} else {
@@ -273,10 +275,12 @@
 
 								if (state.paused == false) {
 									/* if it is not paused */
-									play_button.innerHTML = '<i class="far fa-pause-circle"></i>'
+									play_button.innerHTML = '<i class="far fa-pause-circle"></i>';
+									$rootScope.is_playing = true;
 								} else {
 									/* if it is paused */
-									play_button.innerHTML = '<i class="far fa-play-circle"></i>'
+									play_button.innerHTML = '<i class="far fa-play-circle"></i>';
+									$rootScope.is_playing = false;
 								}
 
 								duration_ms = state.duration;
