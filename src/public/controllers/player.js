@@ -55,8 +55,8 @@
 		$interval(function() {
 			if ($rootScope.is_playing === true) {
 				if (width >= 25 && width < 100) {
-					$rootScope.player.getCurrentState().then(s => {
-						const id = s.track_window.current_track.id;
+					$rootScope.player.getCurrentState().then(state => {
+						const id = state.track_window.current_track.id;
 						$rootScope.current_user.saved_songs.forEach((song) => {
 							if (song.spotify_id === id) {
 								$rootScope.lastSong = song;
