@@ -5,10 +5,41 @@
 	module.controller('PlayerController', function($scope, $http, $cookies, $rootScope, $location, $interval, $window, $route, PlayerAPI, SpotifyAPI, MoodService, DatabaseService) {
 		/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
 		if ($rootScope.player === undefined) {
-			PlayerAPI.initialize().then(function(player) {
-				$rootScope.player = player;
-			});
+			SpotifyAPI.refreshToken().then(function(token) {
+				$cookies.token = token;
+				PlayerAPI.initialize().then(function(player) {
+					$rootScope.player = player;
+					console.log($rootScope.player);	
+				});
+			})
 		}
+
+		
+		
+		/* pause and disconnect the player when closing tab */
+		/* everything is firing except $rootScope.player.pause() */
+		// $window.onbeforeunload = function(event) {
+
+		// 	//$rootScope.player.disconnect().then(sleep(10000));
+
+		// 	// var xhr = new XMLHttpRequest();
+		// 	// xhr.open('PUT', 'https://api.spotify.com/v1/me/player/pause', false);//<-- false makes request synchronous
+		// 	// xhr.setRequestHeader("Authorization", 'Bearer ' + $cookies.token);
+		// 	// xhr.send();
+		// 	// $rootScope.player.pause().then(function() {
+		// 	// 	setTimeout(function() {
+		// 	// 	}, 10000).then(function() {
+		// 	// 		console.log('worked')
+		// 	// 	})
+		// 	// });
+
+		// 	return 'hi';
+		// }
+
+		// function sleep(delay) {
+		// 	var start = new Date().getTime();
+		// 	while (new Date().getTime() < start + delay);
+		// }
 
 		
 		var bar = document.querySelector('#progress-bar');
@@ -21,7 +52,17 @@
 		/* Make the progress bar progress */
 		$interval(function() {
 			if ($rootScope.is_playing === true) {
-				if (width >= 100) {
+				if (width >= 25 && width < 100) {
+					$rootScope.player.getCurrentState().then(s => {
+						const id = s.track_window.current_track.id;
+						$rootScope.current_user.saved_songs.forEach((song) => {
+							if (song.spotify_id === id) {
+								$rootScope.lastSong = song;
+							}
+						});
+						$rootScope.moodIndex = 0;
+					});
+				} else if (width >= 100) {
 					PlayerAPI.delay().then(function() {
 						$rootScope.player.getCurrentState().then(state => {
 							let {
@@ -47,6 +88,17 @@
 			}
 		}, 10);
 
+
+		$interval(function() {
+			SpotifyAPI.refreshToken().then(function(token) {
+				console.log('BEFORE:', $cookies.token);
+				$cookies.token = token;
+				console.log('AFTER:', $cookies.token);
+			});
+		}, 1800000);
+
+
+
 		/* Play a song. Trigger this function when play button is pressed */
 		$scope.play = function() {
 			var play_button = document.querySelector('.play-button');
@@ -56,6 +108,9 @@
 					return;
 				}
 				if (count == 0) {
+					if ($rootScope.skips === undefined) {
+						$rootScope.skips = 0;
+					}
 					$rootScope.player.seek(0).then(function() {
 						if (state.paused === false) {
 							play_button.innerHTML = '<i class="far fa-play-circle"></i>'
@@ -151,28 +206,67 @@
 
 		/* Skip song. Trigger this function when skip button is pressed */
 		$scope.skip = function() {
-			$rootScope.player.nextTrack().then(function() {
-				width = 0;
-				bar.style.width = width + '%';
-				PlayerAPI.delay().then(function() {
-					$rootScope.player.getCurrentState().then(state => {
+			console.log('Current mood (skip): ' + $rootScope.currentMood);
+			$rootScope.player.getCurrentState().then(state => {
+				console.log('Dequeue (skip)');
+				PlayerAPI.dequeue(state.track_window.current_track);
+				var play_button = document.querySelector('.play-button');
+				play_button.innerHTML = '<i class="far fa-pause-circle"></i>'
+				let previousWidth = bar.style.width;
+				previousWidth = parseInt(previousWidth.slice(0, previousWidth.length - 1));
+				if (previousWidth < 25) {
+					$rootScope.skips += 1
+				}
 
-						let {
-							current_track,
-							next_tracks: [next_track]
-						} = state.track_window;
+				if ($rootScope.skips === 3) {
+					$rootScope.moodIndex += 1;
+					$rootScope.currentMood = $rootScope.lastSong.mood[$rootScope.moodIndex].mood;
+					while (!MoodService.hasMood($rootScope.currentMood)) {
+						$rootScope.moodIndex += 1;
+						$rootScope.currentMood = $rootScope.lastSong.mood[$rootScope.moodIndex].mood;
+						break;
+					}
+					$rootScope.skips = 0;
+					PlayerAPI.clearQueue();
+					PlayerAPI.populateQueue($rootScope.currentMood);
+					$scope.playSong();
+				} else {
+					state.track_window.next_tracks = PlayerAPI.nextTracks();
+					console.log('Last song: ' + $rootScope.lastSong.name);
+					console.log('Current mood: ' + $rootScope.currentMood)
+					console.log('Number of skips: ' + $rootScope.skips);
+					$rootScope.player.nextTrack().then(function() {
+						// $rootScope.player.getCurrentState().then(state => {
+						// 	console.log(state.track_window);
+						// 	state.track_window.next_tracks = PlayerAPI.nextTracks(2);
+						// });
+						width = 0;
+						bar.style.width = width + '%';
+						PlayerAPI.delay().then(function() {
+							$rootScope.player.getCurrentState().then(state => {
+								let {
+									current_track
+								} = state.track_window;
 
-						
-						$rootScope.currentlyPlaying = {
-							'imgSrc': current_track.album.images[0].url,
-							'songTitle': current_track.name,
-							'artistName': current_track.artists[0].name,
-							'albumName': current_track.album.name
-						}
+								state.track_window.next_tracks = PlayerAPI.nextTracks();
+								console.log(state.track_window);
+								$rootScope.current_user.saved_songs.forEach((s) => {
+									if (s.spotify_id === state.track_window.current_track.id) {
+										console.log(s.mood.map((m) => m.mood));
+									}
+								});
+								$rootScope.currentlyPlaying = {
+									'imgSrc': current_track.album.images[0].url,
+									'songTitle': current_track.name,
+									'artistName': current_track.artists[0].name,
+									'albumName': current_track.album.name
+								}
 
-						duration_ms = state.duration;
+								duration_ms = state.duration;
+							});
+						});
 					});
-				});
+				}
 			});
 		};
 
@@ -211,22 +305,41 @@
 			})
 		}
 
-		$scope.shuffle = function() {
+		/* $scope.shuffle = function() {
 			PlayerAPI.getPlayerState().then(function(data){
 				console.log(data.shuffle_state);
 				PlayerAPI.toggleShuffle(data.shuffle_state);
 			});
-		};
+		}; */
 
-		$scope.playSong = function(song_uri) {
-			PlayerAPI.playClickedSong(song_uri).then(function() {
+		$scope.playSong = function(song) {
+			if (song === undefined) {
+				song = PlayerAPI.dequeue();
+				console.log('Dequeue (play song)');
+				
+			} else {
+				$rootScope.lastSong = song;
+				$rootScope.currentMood = song.mood[0].mood;
+				// PlayerAPI.clearQueue();
+				PlayerAPI.populateQueue($rootScope.currentMood, song);
+				$rootScope.skips = 0;
+				$rootScope.moodIndex = 0;
+			}
+
+			count += 1
+			console.log('Current mood (play song): ' + $rootScope.currentMood);
+			var play_button = document.querySelector('.play-button');
+			play_button.innerHTML = '<i class="far fa-pause-circle"></i>'
+			PlayerAPI.playClickedSong(song).then(function() {
+				width = 0;
+				bar.style.width = width + '%';
 				PlayerAPI.delay().then(function() {
-					$rootScope.getCurrentState().then(state => {
-
+					$rootScope.player.getCurrentState().then(state => {
 						let {
-							current_track,
-							next_tracks: [next_track]
+							current_track
 						} = state.track_window;
+						state.track_window.next_tracks = PlayerAPI.nextTracks();
+						console.log(state.track_window);
 
 						$rootScope.currentlyPlaying = {
 							'imgSrc': current_track.album.images[0].url,
@@ -234,6 +347,7 @@
 							'artistName': current_track.artists[0].name,
 							'albumName': current_track.album.name
 						}
+						$rootScope.is_playing = true;
 					});
 				});
 			});
@@ -278,21 +392,17 @@
 
 		$scope.refresh = function() {
 			SpotifyAPI.refreshToken().then(function(token) {
-				console.log('BEFORE:', $cookies.token);
 				$cookies.token = token;
-				console.log('AFTER:', $cookies.token);
+				console.log('Refreshed token');
 			});
 		};
 
 		$scope.updateSongs = function() {
 			SpotifyAPI.getTracks().then(function(allTracks) {
 				const current = $rootScope.current_user.saved_songs.length;
-				console.log(current);
-				console.log(allTracks.length);
 				if (allTracks.length > current) {
 					for (var i = 0; i < allTracks.length - current; i++) {
-						console.log(allTracks[i]);
-						console.log("inside allTracks");
+						console.log('Inside allTracks');
 						var artists = allTracks[i].artists.map(function(a) {
 							return {
 								name: a.name,
@@ -319,7 +429,7 @@
 						});
 					};
 				} else {
-					console.log("up to date");
+					console.log('Up to date');
 					// add popup saying "everything is up to date"
 				}
 			});

@@ -1,5 +1,5 @@
 (function() {
-	var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 'ngCookies']).run(function($rootScope, $http, $cookies, $window, $location, SpotifyAPI, DatabaseService, MoodService) {
+	var app = angular.module('smoodifyApp', ['ngRoute', 'ngResource', 'angularCSS', 'ngCookies']).run(function($rootScope, $http, $cookies, $window, $q, $location, SpotifyAPI, DatabaseService, MoodService) {
 		$rootScope.$on('$locationChangeStart', function (/* event */) {
 
 			let user = '';
@@ -19,10 +19,16 @@
 				console.log('yes auth\'d');
 				$rootScope.authenticated = true;
 				$rootScope.current_user = JSON.parse($window.localStorage.getItem('user'));
+				console.log('Current user: ');
 				console.log($rootScope.current_user);
 				if (path === '/' && $rootScope.current_user.saved_songs.length > 0) {
 					$location.url('/browse');
 				}
+				if (!$rootScope.songsByMood) {
+					$rootScope.songsByMood = DatabaseService.getSongsByMood();
+				}
+				console.log('Songs by mood: ');
+				console.log($rootScope.songsByMood);
 			}
 			
 			if ($cookies.token === undefined) {
@@ -33,10 +39,9 @@
 		});
 		/* Location change success */
 		$rootScope.$on('$locationChangeSuccess', function (angularEvent, newUrl, oldUrl) {
-			console.log($cookies.token);
+			// console.log($cookies.token);
 			if (newUrl.includes('code=')) {
-				$http.get('/learn/train').then(function(trainData) {
-					const net = trainData.data.output;
+				$http.get('/learn/train').then(function() {
 					const code = newUrl.substring(oldUrl.indexOf('code')).split('&')[0].split('=')[1];
 					$http.get('/spotify/callback/' + code).then(function(data) {
 						const access_token = data.data.access_token;
@@ -44,19 +49,18 @@
 						$cookies.token = access_token;
 						$cookies.refresh_token = refresh_token;
 						$rootScope.has_token = true;
-
 						SpotifyAPI.getTracksWithFeatures().then(function(allTracks) {
-							for (var i = 0; i < allTracks.length; i++) {
-								console.log("inside allTracks");
-								song = allTracks[i];
-								// get track moods, add to track, then save
-								DatabaseService.saveSongToUser($rootScope.current_user.username, song).then(function(d) {
-									// console.log(d);
-									$window.localStorage.setItem('user', JSON.stringify(d.data));
-								});
-							};
+							var promises = [];
+							allTracks.forEach((song) => {
+								promises.push(DatabaseService.saveSongToUser($rootScope.current_user.username, song));
+							});
 
-							$location.url('/browse');						
+							$q.all(promises).then(function(d) {
+								$window.localStorage.setItem('user', JSON.stringify(d[d.length - 1].data));
+								$rootScope.current_user = JSON.parse($window.localStorage.getItem('user'))
+								$rootScope.songsByMood = DatabaseService.getSongsByMood();
+								$location.url('/browse');
+							});
 						});
 					});
 				});
@@ -71,7 +75,12 @@
 				$rootScope.current_user = '';
 				$window.localStorage.removeItem('user');
 				$cookies['user'] = '';
-				$rootScope.player.disconnect();
+				if ($rootScope.player) {
+					$rootScope.player.pause().then(function() {
+						$rootScope.player.disconnect();
+						$rootScope.player = undefined;
+					})
+				}
 				console.log('removed cookie');
 			}
 		};

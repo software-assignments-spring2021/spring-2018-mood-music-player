@@ -17,6 +17,7 @@ router.post('/save/song', function(req, res) {
 		analysis: data.analysis,
 		mood: data.moods
 	});
+
 	song.save(function(err, s) {
 		if (err) {
 			console.log(err);
@@ -40,15 +41,6 @@ router.post('/save/song', function(req, res) {
 	});
 });
 
-// get songs from a user's saved songs that share a mood
-router.get('/find/mood', function(req, res) {
-	const user = req.query.user;
-	const mood = req.query.mood;
-	User.findOne({username: user}, function(err, user) {
-
-	});
-});
-
 // find a user
 router.get('/find/user', function(req, res) {
 	const user = req.query.user;
@@ -59,26 +51,6 @@ router.get('/find/user', function(req, res) {
 			res.status(200).send({error: 'user not found'});
 		} else {
 			res.status(200).send({user: user});
-		}
-	});
-});
-
-// update a song's mood for a user
-router.post('/update/song-mood', function(req, res) {
-	const mood = req.query.mood;
-	const song = req.query.song;
-	const user = req.query.user;
-
-	User.findOne({username: user}, function(err, u) {
-		if (err) {
-			console.log(err)
-		} else if (!u) {
-			res.status(200).send({error: 'user not found'});
-		} else {
-			const savedSongs = u.saved_songs;
-			for (let i = 0; i < savedSongs.length; i++) {
-				
-			}
 		}
 	});
 });
