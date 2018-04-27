@@ -25,7 +25,7 @@
 						player.addListener('ready', ({ device_id }) => {
 							$cookies.device = device_id;
 							console.log('Ready with Device ID', device_id);
-							console.log('before switch ' + player);
+							console.log(player);
 							this.switchToDevice();
 						});
 						ret.resolve(player);

@@ -4,10 +4,8 @@
 
 	module.controller('MainController', function($scope, $http, $cookies, $rootScope, $interval, $window, PlayerAPI, SpotifyAPI, MoodService, DatabaseService) {
 		if ($rootScope.player === undefined) {
-			console.log('before ' + $cookies.token);
 			SpotifyAPI.refreshToken().then(function(token) {
 				$cookies.token = token;
-				console.log('after ' + $cookies.token);
 				PlayerAPI.initialize().then(function(player) {
 					$rootScope.player = player;				
 				});
