@@ -219,6 +219,15 @@
 				}
 
 				return songs;
+			},
+
+			hasMood: function(mood) {
+				let songs = $rootScope.songsByMood[mood];
+				if (songs.length > 0) {
+					return true;
+				} else {
+					return false;
+				}
 			}
 		};
 	});

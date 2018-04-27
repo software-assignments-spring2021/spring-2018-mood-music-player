@@ -179,6 +179,11 @@
 				if ($rootScope.skips === 3) {
 					$rootScope.moodIndex += 1;
 					$rootScope.currentMood = $rootScope.lastSong.mood[$rootScope.moodIndex].mood;
+					while (!MoodService.hasMood($rootScope.currentMood)) {
+						$rootScope.moodIndex += 1;
+						$rootScope.currentMood = $rootScope.lastSong.mood[$rootScope.moodIndex].mood;
+						break;
+					}
 					$rootScope.skips = 0;
 					PlayerAPI.clearQueue();
 					PlayerAPI.populateQueue($rootScope.currentMood);

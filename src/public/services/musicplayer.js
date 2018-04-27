@@ -211,6 +211,7 @@
 
 			playClickedSong: function(song) {
 				_queue_.unshift(song)
+				console.log(song)
 				let context = _queue_.map((s) => s.spotify_uri);
 				var ret = $q.defer();
 				var data = {
