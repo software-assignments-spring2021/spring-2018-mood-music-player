@@ -55,8 +55,8 @@
 		$interval(function() {
 			if ($rootScope.is_playing === true) {
 				if (width >= 25 && width < 100) {
-					$rootScope.player.getCurrentState().then(s => {
-						const id = s.track_window.current_track.id;
+					$rootScope.player.getCurrentState().then(state => {
+						const id = state.track_window.current_track.id;
 						$rootScope.current_user.saved_songs.forEach((song) => {
 							if (song.spotify_id === id) {
 								$rootScope.lastSong = song;
@@ -233,10 +233,12 @@
 					$scope.playSong().then(function() {
 						if (state.paused == false) {
 							/* if it is not paused */
-							play_button.innerHTML = '<i class="far fa-pause-circle"></i>'
+							play_button.innerHTML = '<i class="far fa-pause-circle"></i>';
+							$rootScope.is_playing = true;
 						} else {
 							/* if it is paused */
-							play_button.innerHTML = '<i class="far fa-play-circle"></i>'
+							play_button.innerHTML = '<i class="far fa-play-circle"></i>';
+							$rootScope.is_playing = false;
 						}
 					});
 				} else {
@@ -273,10 +275,12 @@
 
 								if (state.paused == false) {
 									/* if it is not paused */
-									play_button.innerHTML = '<i class="far fa-pause-circle"></i>'
+									play_button.innerHTML = '<i class="far fa-pause-circle"></i>';
+									$rootScope.is_playing = true;
 								} else {
 									/* if it is paused */
-									play_button.innerHTML = '<i class="far fa-play-circle"></i>'
+									play_button.innerHTML = '<i class="far fa-play-circle"></i>';
+									$rootScope.is_playing = false;
 								}
 
 								duration_ms = state.duration;
