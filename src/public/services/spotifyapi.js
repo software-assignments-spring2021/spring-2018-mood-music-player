@@ -213,7 +213,7 @@
 							}
 						}
 
-						const allSongs = songs.map((s) => {
+						let allSongs = songs.map((s) => {
 							var artists = s.artists.map(function(a) {
 								return {
 									name: a.name,
@@ -239,23 +239,9 @@
 							return song;
 						});
 
-						allSongs.map((s) => {
+						allDeferred.resolve(allSongs.map((s) => {
 							return MoodService.getSongWithAlgoMood(s);
-						});
-
-						allDeferred.resolve(allSongs);
-
-						/*
-						var moodPromises = [];
-						allSongs.forEach((s) => {
-							moodPromises.push(MoodService.getSongWithMood(s));
-						});
-
-						$q.all(moodPromises).then(function(data) {
-							// console.log(data);
-							allDeferred.resolve(data);
-						});
-						*/
+						}));
 					});
 
 				});
