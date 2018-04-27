@@ -48,6 +48,8 @@
 		var progress_ms = 0;
 		var duration_ms = 0;
 		var count = 0;
+		var play_button = document.querySelector('.play-button');
+		
 
 		/* Make the progress bar progress */
 		$interval(function() {
@@ -101,7 +103,6 @@
 
 		/* Play a song. Trigger this function when play button is pressed */
 		$scope.play = function() {
-			var play_button = document.querySelector('.play-button');
 			$rootScope.player.getCurrentState().then(state => {
 				if (!state) {
 					console.error('User is not playing music.');
@@ -206,12 +207,12 @@
 
 		/* Skip song. Trigger this function when skip button is pressed */
 		$scope.skip = function() {
+			/* Skip song plays the next song even if the current song is paused */ 
+			
 			console.log('Current mood (skip): ' + $rootScope.currentMood);
 			$rootScope.player.getCurrentState().then(state => {
 				console.log('Dequeue (skip)');
 				PlayerAPI.dequeue(state.track_window.current_track);
-				var play_button = document.querySelector('.play-button');
-				play_button.innerHTML = '<i class="far fa-pause-circle"></i>'
 				let previousWidth = bar.style.width;
 				previousWidth = parseInt(previousWidth.slice(0, previousWidth.length - 1));
 				if (previousWidth < 25) {
@@ -229,7 +230,15 @@
 					$rootScope.skips = 0;
 					PlayerAPI.clearQueue();
 					PlayerAPI.populateQueue($rootScope.currentMood);
-					$scope.playSong();
+					$scope.playSong().then(function() {
+						if (state.paused == false) {
+							/* if it is not paused */
+							play_button.innerHTML = '<i class="far fa-pause-circle"></i>'
+						} else {
+							/* if it is paused */
+							play_button.innerHTML = '<i class="far fa-play-circle"></i>'
+						}
+					});
 				} else {
 					state.track_window.next_tracks = PlayerAPI.nextTracks();
 					console.log('Last song: ' + $rootScope.lastSong.name);
@@ -260,6 +269,14 @@
 									'songTitle': current_track.name,
 									'artistName': current_track.artists[0].name,
 									'albumName': current_track.album.name
+								}
+
+								if (state.paused == false) {
+									/* if it is not paused */
+									play_button.innerHTML = '<i class="far fa-pause-circle"></i>'
+								} else {
+									/* if it is paused */
+									play_button.innerHTML = '<i class="far fa-play-circle"></i>'
 								}
 
 								duration_ms = state.duration;
