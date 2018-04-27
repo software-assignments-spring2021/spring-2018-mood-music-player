@@ -25,7 +25,7 @@
   background: rgba(0, 0, 0, 0.7);
 }
 
-#loading-gradient {
+#loading-gradient, #up-to-date-gradient {
   z-index: 10000000;
   height: 100%;
   width: 100%;
@@ -36,7 +36,7 @@
   background: rgba(183, 129, 219, 0.5);
 }
 
-#loading-text {
+#loading-text, #up-to-date-text{
   text-align: center;
   width: calc(100% - 225px);
   position: absolute;

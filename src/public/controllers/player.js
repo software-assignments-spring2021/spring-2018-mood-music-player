@@ -2,7 +2,7 @@
 
 	var module = angular.module('smoodifyApp');
 
-	module.controller('PlayerController', function($scope, $http, $cookies, $rootScope, $location, $interval, $window, $route, PlayerAPI, SpotifyAPI, MoodService, DatabaseService) {
+	module.controller('PlayerController', function($scope, $http, $cookies, $rootScope, $location, $interval, $window, $route, $q, PlayerAPI, SpotifyAPI, MoodService, DatabaseService) {
 		/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
 		if ($rootScope.player === undefined) {
 			SpotifyAPI.refreshToken().then(function(token) {
@@ -398,9 +398,23 @@
 		};
 
 		$scope.updateSongs = function() {
-			SpotifyAPI.getTracks().then(function(allTracks) {
+			SpotifyAPI.getTracksWithFeatures().then(function(allTracks) {
 				const current = $rootScope.current_user.saved_songs.length;
 				if (allTracks.length > current) {
+					document.querySelector('#loading-gradient').style.display = 'inline-block';
+					var promises = [];
+					const newTracks = allTracks.slice(0, allTracks.length - current);
+					newTracks.forEach((song) => {
+						promises.push(DatabaseService.saveSongToUser($rootScope.current_user.username, song));
+					});
+
+					$q.all(promises).then(function(d) {
+						$window.localStorage.setItem('user', JSON.stringify(d[d.length - 1].data));
+						$rootScope.current_user = JSON.parse($window.localStorage.getItem('user'))
+						$rootScope.songsByMood = DatabaseService.getSongsByMood();
+						document.querySelector('#loading-gradient').style.display = 'none';
+					});
+					/*
 					for (var i = 0; i < allTracks.length - current; i++) {
 						console.log('Inside allTracks');
 						var artists = allTracks[i].artists.map(function(a) {
@@ -428,7 +442,12 @@
 							$window.localStorage.setItem('user', JSON.stringify(d.data));
 						});
 					};
+					*/
 				} else {
+					document.querySelector('#up-to-date-gradient').style.display = 'inline-block';
+					PlayerAPI.delay().then(function() {
+						document.querySelector('#up-to-date-gradient').style.display = 'none';
+					});
 					console.log('Up to date');
 					// add popup saying "everything is up to date"
 				}
