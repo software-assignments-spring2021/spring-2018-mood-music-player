@@ -52,11 +52,11 @@ hr {
 }
 
 #second-hr {
-  top: 210px;
+  top: 135px;
 }
 
 #third-hr {
-  top: 500px;
+  top: 75%;
 }
 
 #links {
@@ -74,6 +74,19 @@ hr {
 
 #links a:hover, #account:hover {
   color: white;
+}
+
+#mood {
+  display: block;
+  padding-top: 15px;
+}
+
+#mood p {
+  display: block;
+  padding: 0px 0px 0px 30px;
+  font-size: 20px;
+  color: hsla(0,0%,100%,.6);
+  text-decoration: none;
 }
 
 .current-page {

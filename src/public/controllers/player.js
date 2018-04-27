@@ -21,7 +21,17 @@
 		/* Make the progress bar progress */
 		$interval(function() {
 			if ($rootScope.is_playing === true) {
-				if (width >= 100) {
+				if (width >= 25 && width < 100) {
+					$rootScope.player.getCurrentState().then(s => {
+						const id = s.track_window.current_track.id;
+						$rootScope.current_user.saved_songs.forEach((song) => {
+							if (song.spotify_id === id) {
+								$rootScope.lastSong = song;
+							}
+						});
+						$rootScope.moodIndex = 0;
+					});
+				} else if (width >= 100) {
 					PlayerAPI.delay().then(function() {
 						$rootScope.player.getCurrentState().then(state => {
 							let {
@@ -56,6 +66,9 @@
 					return;
 				}
 				if (count == 0) {
+					if ($rootScope.skips === undefined) {
+						$rootScope.skips = 0;
+					}
 					$rootScope.player.seek(0).then(function() {
 						if (state.paused === false) {
 							play_button.innerHTML = '<i class="far fa-play-circle"></i>'
@@ -151,7 +164,37 @@
 
 		/* Skip song. Trigger this function when skip button is pressed */
 		$scope.skip = function() {
+			if (!$rootScope.lastSong) {
+				$rootScope.player.getCurrentState().then(s => {
+					const id = s.track_window.current_track.id;
+					$rootScope.current_user.saved_songs.forEach((song) => {
+						if (song.spotify_id === id) {
+							$rootScope.lastSong = song;
+						}
+					});
+					$rootScope.moodIndex = 0;
+					$rootScope.currentMood = $rootScope.lastSong.mood[$rootScope.moodIndex].mood;
+					$rootScope.skips = 0;
+				});
+			}
+			console.log($rootScope.currentMood);
 			$rootScope.player.nextTrack().then(function() {
+				var play_button = document.querySelector('.play-button');
+				play_button.innerHTML = '<i class="far fa-pause-circle"></i>'
+				let previousWidth = bar.style.width;
+				previousWidth = parseInt(previousWidth.slice(0, previousWidth.length - 1));
+				if (previousWidth < 25) {
+					$rootScope.skips += 1
+				}
+
+				if ($rootScope.skips === 3) {
+					$rootScope.moodIndex += 1;
+					console.log($rootScope.lastSong);
+					$rootScope.currentMood = $rootScope.lastSong.mood[$rootScope.moodIndex].mood;
+					$rootScope.skips = 0;
+					console.log($rootScope.currentMood);
+				}
+				console.log(previousWidth, $rootScope.skips);
 				width = 0;
 				bar.style.width = width + '%';
 				PlayerAPI.delay().then(function() {
@@ -218,10 +261,19 @@
 			});
 		};
 
-		$scope.playSong = function(song_uri) {
-			PlayerAPI.playClickedSong(song_uri).then(function() {
+		$scope.playSong = function(song) {
+			count += 1
+			$rootScope.currentMood = song.mood[0].mood;
+			$rootScope.skips = 0;
+			$rootScope.moodIndex = 0;
+			console.log($rootScope.currentMood);
+			var play_button = document.querySelector('.play-button');
+			play_button.innerHTML = '<i class="far fa-pause-circle"></i>'
+			PlayerAPI.playClickedSong(song.spotify_uri).then(function() {
+				width = 0;
+				bar.style.width = width + '%';
 				PlayerAPI.delay().then(function() {
-					$rootScope.getCurrentState().then(state => {
+					$rootScope.player.getCurrentState().then(state => {
 
 						let {
 							current_track,
@@ -234,6 +286,7 @@
 							'artistName': current_track.artists[0].name,
 							'albumName': current_track.album.name
 						}
+						$rootScope.is_playing = true;
 					});
 				});
 			});

@@ -239,15 +239,23 @@
 							return song;
 						});
 
+						allSongs.map((s) => {
+							return MoodService.getSongWithAlgoMood(s);
+						});
+
+						allDeferred.resolve(allSongs);
+
+						/*
 						var moodPromises = [];
 						allSongs.forEach((s) => {
 							moodPromises.push(MoodService.getSongWithMood(s));
 						});
 
 						$q.all(moodPromises).then(function(data) {
-							console.log(data);
+							// console.log(data);
 							allDeferred.resolve(data);
 						});
+						*/
 					});
 
 				});
