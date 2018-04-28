@@ -3,13 +3,22 @@
 	var module = angular.module('smoodifyApp');
 
 	module.controller('PlayerController', function($scope, $http, $cookies, $rootScope, $location, $interval, $window, $route, PlayerAPI, SpotifyAPI, MoodService, DatabaseService) {
+
+		var bar = document.querySelector('#progress-bar');
+		var prog_bar = document.querySelector('#progress');
+		var width = 0;
+		var progress_ms = 0;
+		var duration_ms = 0;
+		var play_button = document.querySelector('.play-button');
+
 		/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
 		if ($rootScope.player === undefined) {
 			SpotifyAPI.refreshToken().then(function(token) {
 				$cookies.token = token;
 				PlayerAPI.initialize().then(function(player) {
 					$rootScope.player = player;
-					console.log($rootScope.player);	
+					console.log($rootScope.player);
+					$rootScope.count = 0;	
 				});
 			})
 		}
@@ -40,21 +49,12 @@
 		// 	var start = new Date().getTime();
 		// 	while (new Date().getTime() < start + delay);
 		// }
-
-		
-		var bar = document.querySelector('#progress-bar');
-		var prog_bar = document.querySelector('#progress');
-		var width = 0;
-		var progress_ms = 0;
-		var duration_ms = 0;
-		var count = 0;
-		var play_button = document.querySelector('.play-button');
 		
 
 		/* Make the progress bar progress */
 		$interval(function() {
 			if ($rootScope.is_playing === true) {
-				if (width >= 25 && width < 100) {
+				if (progress_ms >= (duration_ms * .25) && progress_ms < (duration_ms)) {
 					$rootScope.player.getCurrentState().then(state => {
 						const id = state.track_window.current_track.id;
 						$rootScope.current_user.saved_songs.forEach((song) => {
@@ -64,7 +64,7 @@
 						});
 						$rootScope.moodIndex = 0;
 					});
-				} else if (width >= 100) {
+				} else if (progress_ms >= duration_ms) {
 					PlayerAPI.delay().then(function() {
 						$rootScope.player.getCurrentState().then(state => {
 							let {
@@ -86,7 +86,6 @@
 					});
 				}
 				$rootScope.player.getCurrentState().then(state => {
-					console.log('Testing' + state.position);
 					let {
 						current_track,
 						next_tracks: [next_track]
@@ -126,7 +125,7 @@
 					console.error('User is not playing music.');
 					return;
 				}
-				if (count == 0) {
+				if ($rootScope.count == 0) {
 					if ($rootScope.skips === undefined) {
 						$rootScope.skips = 0;
 					}
@@ -162,7 +161,7 @@
 						}
 					})
 
-					count++;
+					$rootScope.count++;
 					
 				} else {
 					if (state.paused === false) {
@@ -332,18 +331,6 @@
 			$rootScope.player.setVolume($scope.vol / 100);
 		};
 
-		/* Change Progress */
-		$scope.setProgress = function() {
-			PlayerAPI.getCurrentState().then(state => {
-				let {
-					current_track,
-					next_tracks: [next_track]
-				} = state.track_window;
-
-				$rootScope.player.seek(state.duration * ($scope.prog / 100));
-			})
-		}
-
 		/* $scope.shuffle = function() {
 			PlayerAPI.getPlayerState().then(function(data){
 				console.log(data.shuffle_state);
@@ -365,7 +352,7 @@
 				$rootScope.moodIndex = 0;
 			}
 
-			count += 1
+			$rootScope.count += 1
 			console.log('Current mood (play song): ' + $rootScope.currentMood);
 			var play_button = document.querySelector('.play-button');
 			play_button.innerHTML = '<i class="far fa-pause-circle"></i>'
@@ -411,7 +398,7 @@
 		/* Function to seek to a part of a song */
 		$scope.seek = function($event) {
 			var click_percentage = 0;
-			click_percentage = Math.floor(duration_ms * ($event.clientX / $window.screen.width));
+			click_percentage = duration_ms * ($event.clientX / $window.screen.width);
 			width = ($event.clientX / $window.screen.width) * 100;
 			bar.style.width = width + '%';
 			$rootScope.player.seek(click_percentage);

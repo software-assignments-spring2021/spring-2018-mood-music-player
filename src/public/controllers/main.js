@@ -7,7 +7,8 @@
 			SpotifyAPI.refreshToken().then(function(token) {
 				$cookies.token = token;
 				PlayerAPI.initialize().then(function(player) {
-					$rootScope.player = player;				
+					$rootScope.player = player;		
+					$rootScope.count = 0;		
 				});
 			})
 		}
@@ -17,15 +18,22 @@
 		var width = 0;
 		var progress_ms = 0;
 		var duration_ms = 0;
-		var count = 0;
+		var play_button = document.querySelector('.play-button');
 
 		
-
-
-		/* Make the progress bar progress */
 		$interval(function() {
 			if ($rootScope.is_playing === true) {
-				if (width >= 100) {
+				if (progress_ms >= (duration_ms * .25) && progress_ms < (duration_ms)) {
+					$rootScope.player.getCurrentState().then(state => {
+						const id = state.track_window.current_track.id;
+						$rootScope.current_user.saved_songs.forEach((song) => {
+							if (song.spotify_id === id) {
+								$rootScope.lastSong = song;
+							}
+						});
+						$rootScope.moodIndex = 0;
+					});
+				} else if (progress_ms >= duration_ms) {
 					PlayerAPI.delay().then(function() {
 						$rootScope.player.getCurrentState().then(state => {
 							let {
@@ -39,17 +47,63 @@
 								'artistName': current_track.artists[0].name,
 								'albumName': current_track.album.name
 							}
+							/* FIX: sometimes it doesnt get updated here */
 							duration_ms = state.duration;
 						})
 						width = 0;
 						bar.style.width = width + '%';
 					});
-				} else {
-					width = width + (10 / duration_ms) * 100;
-					bar.style.width = width + '%';
 				}
+				$rootScope.player.getCurrentState().then(state => {
+					let {
+						current_track,
+						next_tracks: [next_track]
+					} = state.track_window;
+
+					$rootScope.currentlyPlaying = {
+						'imgSrc': current_track.album.images[0].url,
+						'songTitle': current_track.name,
+						'artistName': current_track.artists[0].name,
+						'albumName': current_track.album.name
+					}
+					/* FIX: sometimes it doesnt get updated here */
+					progress_ms = state.position;
+					duration_ms = state.duration;
+					width = (progress_ms / duration_ms) * 100
+					// width = width + (10 / duration_ms) * 100;
+					bar.style.width = width + '%';
+				})
 			}
 		}, 10);
+
+		/* Make the progress bar progress */
+		// $interval(function() {
+		// 	if ($rootScope.is_playing === true) {
+		// 		if (width >= 100) {
+		// 			PlayerAPI.delay().then(function() {
+		// 				$rootScope.player.getCurrentState().then(state => {
+		// 					let {
+		// 						current_track,
+		// 						next_tracks: [next_track]
+		// 					} = state.track_window;
+
+		// 					$rootScope.currentlyPlaying = {
+		// 						'imgSrc': current_track.album.images[0].url,
+		// 						'songTitle': current_track.name,
+		// 						'artistName': current_track.artists[0].name,
+		// 						'albumName': current_track.album.name
+		// 					}
+		// 					duration_ms = state.duration;
+		// 				})
+		// 				width = 0;
+		// 				bar.style.width = width + '%';
+		// 			});
+		// 		} else {
+		// 			width = width + (10 / duration_ms) * 100;
+		// 			bar.style.width = width + '%';
+		// 		}
+		// 	}
+		// }, 10);
 
 		/* Play a song. Trigger this function when play button is pressed */
 		$scope.play = function() {
@@ -59,7 +113,7 @@
 					console.error('User is not playing music.');
 					return;
 				}
-				if (count == 0) {
+				if ($rootScope.count == 0) {
 					$rootScope.player.seek(0).then(function() {
 						if (state.paused === false) {
 							play_button.innerHTML = '<i class="far fa-play-circle"></i>'
@@ -92,7 +146,7 @@
 						}
 					})
 
-					count++;
+					$rootScope.count++;
 					
 				} else {
 					if (state.paused === false) {
