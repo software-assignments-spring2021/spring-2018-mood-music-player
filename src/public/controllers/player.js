@@ -2,7 +2,7 @@
 
 	var module = angular.module('smoodifyApp');
 
-	module.controller('PlayerController', function($scope, $http, $cookies, $rootScope, $location, $interval, $window, $route, PlayerAPI, SpotifyAPI, MoodService, DatabaseService) {
+	module.controller('PlayerController', function($scope, $http, $cookies, $rootScope, $location, $interval, $window, $route, $q, PlayerAPI, SpotifyAPI, MoodService, DatabaseService) {
 		/* created spotify web sdk playback code into a ng-click function called by clicking a temp button in main.html */
 		if ($rootScope.player === undefined) {
 			SpotifyAPI.refreshToken().then(function(token) {
@@ -219,7 +219,7 @@
 					$rootScope.skips += 1
 				}
 
-				if ($rootScope.skips === 3) {
+				if ($rootScope.skips === 3 || !PlayerAPI.songsInQueue()) {
 					$rootScope.moodIndex += 1;
 					$rootScope.currentMood = $rootScope.lastSong.mood[$rootScope.moodIndex].mood;
 					while (!MoodService.hasMood($rootScope.currentMood)) {
@@ -230,27 +230,13 @@
 					$rootScope.skips = 0;
 					PlayerAPI.clearQueue();
 					PlayerAPI.populateQueue($rootScope.currentMood);
-					$scope.playSong().then(function() {
-						if (state.paused == false) {
-							/* if it is not paused */
-							play_button.innerHTML = '<i class="far fa-pause-circle"></i>';
-							$rootScope.is_playing = true;
-						} else {
-							/* if it is paused */
-							play_button.innerHTML = '<i class="far fa-play-circle"></i>';
-							$rootScope.is_playing = false;
-						}
-					});
+					$scope.playSong();
 				} else {
 					state.track_window.next_tracks = PlayerAPI.nextTracks();
 					console.log('Last song: ' + $rootScope.lastSong.name);
 					console.log('Current mood: ' + $rootScope.currentMood)
 					console.log('Number of skips: ' + $rootScope.skips);
 					$rootScope.player.nextTrack().then(function() {
-						// $rootScope.player.getCurrentState().then(state => {
-						// 	console.log(state.track_window);
-						// 	state.track_window.next_tracks = PlayerAPI.nextTracks(2);
-						// });
 						width = 0;
 						bar.style.width = width + '%';
 						PlayerAPI.delay().then(function() {
@@ -419,9 +405,23 @@
 		};
 
 		$scope.updateSongs = function() {
-			SpotifyAPI.getTracks().then(function(allTracks) {
+			SpotifyAPI.getTracksWithFeatures().then(function(allTracks) {
 				const current = $rootScope.current_user.saved_songs.length;
 				if (allTracks.length > current) {
+					document.querySelector('#loading-gradient').style.display = 'inline-block';
+					var promises = [];
+					const newTracks = allTracks.slice(0, allTracks.length - current);
+					newTracks.forEach((song) => {
+						promises.push(DatabaseService.saveSongToUser($rootScope.current_user.username, song));
+					});
+
+					$q.all(promises).then(function(d) {
+						$window.localStorage.setItem('user', JSON.stringify(d[d.length - 1].data));
+						$rootScope.current_user = JSON.parse($window.localStorage.getItem('user'))
+						$rootScope.songsByMood = DatabaseService.getSongsByMood();
+						document.querySelector('#loading-gradient').style.display = 'none';
+					});
+					/*
 					for (var i = 0; i < allTracks.length - current; i++) {
 						console.log('Inside allTracks');
 						var artists = allTracks[i].artists.map(function(a) {
@@ -449,7 +449,12 @@
 							$window.localStorage.setItem('user', JSON.stringify(d.data));
 						});
 					};
+					*/
 				} else {
+					document.querySelector('#up-to-date-gradient').style.display = 'inline-block';
+					PlayerAPI.delay().then(function() {
+						document.querySelector('#up-to-date-gradient').style.display = 'none';
+					});
 					console.log('Up to date');
 					// add popup saying "everything is up to date"
 				}

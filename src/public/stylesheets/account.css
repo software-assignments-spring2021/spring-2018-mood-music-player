@@ -34,3 +34,7 @@
   width: 300px;
   margin-top: 20px;
 }
+
+#loading-gradient, #up-to-date-gradient {
+  display: none;
+}
