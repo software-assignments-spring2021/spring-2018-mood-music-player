@@ -287,6 +287,14 @@
 				} else {
 					return _queue_.splice(0, 1)[0];
 				}
+			},
+
+			songsInQueue: function() {
+				if (_queue_.length > 0) {
+					return true;
+				} else {
+					return false;
+				}
 			}
 		};
 	});

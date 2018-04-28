@@ -219,7 +219,7 @@
 					$rootScope.skips += 1
 				}
 
-				if ($rootScope.skips === 3) {
+				if ($rootScope.skips === 3 || !PlayerAPI.songsInQueue()) {
 					$rootScope.moodIndex += 1;
 					$rootScope.currentMood = $rootScope.lastSong.mood[$rootScope.moodIndex].mood;
 					while (!MoodService.hasMood($rootScope.currentMood)) {
@@ -230,27 +230,13 @@
 					$rootScope.skips = 0;
 					PlayerAPI.clearQueue();
 					PlayerAPI.populateQueue($rootScope.currentMood);
-					$scope.playSong().then(function() {
-						if (state.paused == false) {
-							/* if it is not paused */
-							play_button.innerHTML = '<i class="far fa-pause-circle"></i>';
-							$rootScope.is_playing = true;
-						} else {
-							/* if it is paused */
-							play_button.innerHTML = '<i class="far fa-play-circle"></i>';
-							$rootScope.is_playing = false;
-						}
-					});
+					$scope.playSong();
 				} else {
 					state.track_window.next_tracks = PlayerAPI.nextTracks();
 					console.log('Last song: ' + $rootScope.lastSong.name);
 					console.log('Current mood: ' + $rootScope.currentMood)
 					console.log('Number of skips: ' + $rootScope.skips);
 					$rootScope.player.nextTrack().then(function() {
-						// $rootScope.player.getCurrentState().then(state => {
-						// 	console.log(state.track_window);
-						// 	state.track_window.next_tracks = PlayerAPI.nextTracks(2);
-						// });
 						width = 0;
 						bar.style.width = width + '%';
 						PlayerAPI.delay().then(function() {
