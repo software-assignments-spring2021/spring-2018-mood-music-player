@@ -90,26 +90,6 @@
 						});
 						$rootScope.moodIndex = 0;
 					});
-				} else if (progress_ms >= duration_ms) {
-					PlayerAPI.delay().then(function() {
-						$rootScope.player.getCurrentState().then(state => {
-							let {
-								current_track,
-								next_tracks: [next_track]
-							} = state.track_window;
-
-							$rootScope.currentlyPlaying = {
-								'imgSrc': current_track.album.images[0].url,
-								'songTitle': current_track.name,
-								'artistName': current_track.artists[0].name,
-								'albumName': current_track.album.name
-							}
-							/* FIX: sometimes it doesnt get updated here */
-							duration_ms = state.duration;
-						})
-						width = 0;
-						bar.style.width = width + '%';
-					});
 				}
 				$rootScope.player.getCurrentState().then(state => {
 					let {
