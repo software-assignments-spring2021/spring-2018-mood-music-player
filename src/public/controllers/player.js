@@ -86,6 +86,7 @@
 					});
 				}
 				$rootScope.player.getCurrentState().then(state => {
+					console.log('Testing' + state.position);
 					let {
 						current_track,
 						next_tracks: [next_track]
@@ -98,8 +99,10 @@
 						'albumName': current_track.album.name
 					}
 					/* FIX: sometimes it doesnt get updated here */
+					progress_ms = state.position;
 					duration_ms = state.duration;
-					width = width + (10 / duration_ms) * 100;
+					width = (progress_ms / duration_ms) * 100
+					// width = width + (10 / duration_ms) * 100;
 					bar.style.width = width + '%';
 				})
 			}
