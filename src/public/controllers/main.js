@@ -3,6 +3,14 @@
 	var module = angular.module('smoodifyApp');
 
 	module.controller('MainController', function($scope, $http, $cookies, $rootScope, $interval, $window, PlayerAPI, SpotifyAPI, MoodService, DatabaseService) {
+
+		var bar = document.querySelector('#progress-bar');
+		var prog_bar = document.querySelector('#progress');
+		var width = 0;
+		var progress_ms = 0;
+		var duration_ms = 0;
+		var play_button = document.querySelector('.play-button');
+		
 		if ($rootScope.player === undefined) {
 			SpotifyAPI.refreshToken().then(function(token) {
 				$cookies.token = token;
@@ -13,12 +21,31 @@
 			})
 		}
 
-		var bar = document.querySelector('#progress-bar');
-		var prog_bar = document.querySelector('#progress');
-		var width = 0;
-		var progress_ms = 0;
-		var duration_ms = 0;
-		var play_button = document.querySelector('.play-button');
+		if ($rootScope.player !== undefined) {
+			$rootScope.player.getCurrentState().then(state => {
+				let {
+					current_track,
+					next_tracks: [next_track]
+				} = state.track_window;
+
+				$rootScope.currentlyPlaying = {
+					'imgSrc': current_track.album.images[0].url,
+					'songTitle': current_track.name,
+					'artistName': current_track.artists[0].name,
+					'albumName': current_track.album.name
+				}
+				/* FIX: sometimes it doesnt get updated here */
+				if (state.paused == false) {
+					/* if it is not paused */
+					play_button.innerHTML = '<i class="far fa-pause-circle"></i>';
+					$rootScope.is_playing = true;
+				} else {
+					/* if it is paused */
+					play_button.innerHTML = '<i class="far fa-play-circle"></i>';
+					$rootScope.is_playing = false;
+				}
+			})
+		}
 
 		
 		$interval(function() {
@@ -181,31 +208,31 @@
 			});
 		};
 
-		/* Go back to previous song. Trigger this function when previous button is clicked */
-		$scope.previous = function() {      
-			$rootScope.player.previousTrack().then(() => {
-				width = 0;
-				bar.style.width = width + '%';
-				PlayerAPI.delay().then(function() {
-					$rootScope.player.getCurrentState().then(state => {
+		// /* Go back to previous song. Trigger this function when previous button is clicked */
+		// $scope.previous = function() {      
+		// 	$rootScope.player.previousTrack().then(() => {
+		// 		width = 0;
+		// 		bar.style.width = width + '%';
+		// 		PlayerAPI.delay().then(function() {
+		// 			$rootScope.player.getCurrentState().then(state => {
 
-						let {
-							current_track,
-							next_tracks: [next_track]
-						} = state.track_window;
+		// 				let {
+		// 					current_track,
+		// 					next_tracks: [next_track]
+		// 				} = state.track_window;
 
 
-						$rootScope.currentlyPlaying = {
-							'imgSrc': current_track.album.images[0].url,
-							'songTitle': current_track.name,
-							'artistName': current_track.artists[0].name,
-							'albumName': current_track.album.name
-						}
-						duration_ms = state.duration;
-					});
-				});
-			});
-		};
+		// 				$rootScope.currentlyPlaying = {
+		// 					'imgSrc': current_track.album.images[0].url,
+		// 					'songTitle': current_track.name,
+		// 					'artistName': current_track.artists[0].name,
+		// 					'albumName': current_track.album.name
+		// 				}
+		// 				duration_ms = state.duration;
+		// 			});
+		// 		});
+		// 	});
+		// };
 
 		/* Skip song. Trigger this function when skip button is pressed */
 		$scope.skip = function() {
