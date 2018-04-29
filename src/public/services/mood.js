@@ -1,6 +1,7 @@
 (function() {
 
 	var module = angular.module('smoodifyApp');
+	var max_valence, min_valence, max_energy, min_energy;
     
 	module.factory('MoodService', function($q, $http, $rootScope) {
 		return {
@@ -119,8 +120,8 @@
 			},
 
 			getAlgoMood: function(song) {
-				const valence_level = song.analysis.valence;
-				const energy_level = song.analysis.energy;
+				const valence_level = (song.analysis.valence - min_valence)/(max_valence - min_valence);
+				const energy_level = (song.analysis.energy - min_energy)/(max_energy - min_energy);
 				const moods = [
 					{mood: 'Somber', energy: 0, valence: 0, distance: 1},
 					{mood: 'Ominous', energy: 0, valence: 0.25, distance: 1},
@@ -227,6 +228,27 @@
 					return true;
 				} else {
 					return false;
+				}
+			},
+
+			getMaxMin: function(songs) {
+				max_valence = 0;
+				max_energy = 0;
+				min_valence = 1;
+				min_energy = 1;
+				for (let i = 0; i < songs.length; i++) {
+					if (songs[i].analysis.energy > max_energy) {
+						max_energy = songs[i].analysis.energy;
+					}
+					if (songs[i].analysis.valence > max_valence) {
+						max_valence = songs[i].analysis.valence;
+					}
+					if (songs[i].analysis.energy < min_energy) {
+						min_energy = songs[i].analysis.energy;
+					}
+					if (songs[i].analysis.valence < min_valence) {
+						min_valence = songs[i].analysis.valence;
+					}
 				}
 			}
 		};
