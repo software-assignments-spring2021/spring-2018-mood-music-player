@@ -239,6 +239,8 @@
 							return song;
 						});
 
+						MoodService.getMaxMin(allSongs);
+
 						allDeferred.resolve(allSongs.map((s) => {
 							return MoodService.getSongWithAlgoMood(s);
 						}));
