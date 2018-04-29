@@ -11,15 +11,15 @@
 		var duration_ms = 0;
 		var play_button = document.querySelector('.play-button');
 		
-		if ($rootScope.player === undefined) {
-			SpotifyAPI.refreshToken().then(function(token) {
-				$cookies.token = token;
-				PlayerAPI.initialize().then(function(player) {
-					$rootScope.player = player;		
-					$rootScope.count = 0;		
-				});
-			})
-		}
+		// if ($rootScope.player === undefined) {
+		// 	SpotifyAPI.refreshToken().then(function(token) {
+		// 		$cookies.token = token;
+		// 		PlayerAPI.initialize().then(function(player) {
+		// 			$rootScope.player = player;		
+		// 			$rootScope.count = 0;		
+		// 		});
+		// 	})
+		// }
 
 		if ($rootScope.player !== undefined) {
 			$rootScope.player.getCurrentState().then(state => {
@@ -80,6 +80,26 @@
 					// width = width + (10 / duration_ms) * 100;
 					bar.style.width = width + '%';
 				})
+			} else {
+				$rootScope.player.getCurrentState().then(state => {
+					let {
+						current_track,
+						next_tracks: [next_track]
+					} = state.track_window;
+
+					$rootScope.currentlyPlaying = {
+						'imgSrc': current_track.album.images[0].url,
+						'songTitle': current_track.name,
+						'artistName': current_track.artists[0].name,
+						'albumName': current_track.album.name
+					}
+					/* FIX: sometimes it doesnt get updated here */
+					progress_ms = state.position;
+					duration_ms = state.duration;
+					width = (progress_ms / duration_ms) * 100
+					// width = width + (10 / duration_ms) * 100;
+					bar.style.width = width + '%';
+				})
 			}
 		}, 10);
 
@@ -114,48 +134,15 @@
 
 		/* Play a song. Trigger this function when play button is pressed */
 		$scope.play = function() {
-			var play_button = document.querySelector('.play-button');
-			$rootScope.player.getCurrentState().then(state => {
-				if (!state) {
-					console.error('User is not playing music.');
-					return;
-				}
-				if ($rootScope.count == 0) {
-					$rootScope.player.seek(0).then(function() {
-						if (state.paused === false) {
-							play_button.innerHTML = '<i class="far fa-play-circle"></i>'
-							$rootScope.player.pause();
-							$rootScope.is_playing = false;
-						} else {
-							play_button.innerHTML = '<i class="far fa-pause-circle"></i>'
-							$rootScope.player.resume().then(function(data) {
-								$rootScope.player.getCurrentState().then(state => {
+			if ($rootScope.player === undefined) {
 
-									let {
-										current_track,
-										next_tracks: [next_track]
-									} = state.track_window;
-
-									$rootScope.currentlyPlaying = {
-										'imgSrc': current_track.album.images[0].url,
-										'songTitle': current_track.name,
-										'artistName': current_track.artists[0].name,
-										'albumName': current_track.album.name
-									}
-									progress_ms = state.position;
-									duration_ms = state.duration;
-									progress_percent = Math.floor((progress_ms / duration_ms) * 100);
-									bar.style.width = progress_percent.toString() + '%';
-		
-								});
-							});
-							$rootScope.is_playing = true;
-						}
-					})
-
-					$rootScope.count++;
-					
-				} else {
+			} else {
+				var play_button = document.querySelector('.play-button');
+				$rootScope.player.getCurrentState().then(state => {
+					if (!state) {
+						console.error('User is not playing music.');
+						return;
+					}
 					if (state.paused === false) {
 						play_button.innerHTML = '<i class="far fa-play-circle"></i>'
 						$rootScope.player.pause();
@@ -184,8 +171,8 @@
 						});
 						$rootScope.is_playing = true;
 					}
-				}
-			});
+				});
+			}
 		};
 
 		// /* Go back to previous song. Trigger this function when previous button is clicked */
@@ -216,29 +203,33 @@
 
 		/* Skip song. Trigger this function when skip button is pressed */
 		$scope.skip = function() {
-			$rootScope.player.nextTrack().then(function() {
-				width = 0;
-				bar.style.width = width + '%';
-				PlayerAPI.delay().then(function() {
-					$rootScope.player.getCurrentState().then(state => {
+			if ($rootScope.player === undefined ){
 
-						let {
-							current_track,
-							next_tracks: [next_track]
-						} = state.track_window;
-
-						
-						$rootScope.currentlyPlaying = {
-							'imgSrc': current_track.album.images[0].url,
-							'songTitle': current_track.name,
-							'artistName': current_track.artists[0].name,
-							'albumName': current_track.album.name
-						}
-
-						duration_ms = state.duration;
+			} else {
+				$rootScope.player.nextTrack().then(function() {
+					width = 0;
+					bar.style.width = width + '%';
+					PlayerAPI.delay().then(function() {
+						$rootScope.player.getCurrentState().then(state => {
+	
+							let {
+								current_track,
+								next_tracks: [next_track]
+							} = state.track_window;
+	
+							
+							$rootScope.currentlyPlaying = {
+								'imgSrc': current_track.album.images[0].url,
+								'songTitle': current_track.name,
+								'artistName': current_track.artists[0].name,
+								'albumName': current_track.album.name
+							}
+	
+							duration_ms = state.duration;
+						});
 					});
 				});
-			});
+			}
 		};
 
 		/* TODO $scope.vol does not have an initial value. */
@@ -266,14 +257,18 @@
 
 		/* Change Progress */
 		$scope.setProgress = function() {
-			PlayerAPI.getCurrentState().then(state => {
-				let {
-					current_track,
-					next_tracks: [next_track]
-				} = state.track_window;
+			if ($rootScope.player === undefined) {
 
-				$rootScope.player.seek(state.duration * ($scope.prog / 100));
-			})
+			} else {
+				PlayerAPI.getCurrentState().then(state => {
+					let {
+						current_track,
+						next_tracks: [next_track]
+					} = state.track_window;
+	
+					$rootScope.player.seek(state.duration * ($scope.prog / 100));
+				})
+			}
 		}
 
 	/*	$scope.shuffle = function() {
@@ -319,25 +314,36 @@
 			});
 		};
 		
-		/* Function to seek to a part of a song */
 		$scope.seek = function($event) {
-			var click_percentage = 0;
-			click_percentage = Math.floor(duration_ms * ($event.clientX / $window.screen.width));
-			width = ($event.clientX / $window.screen.width) * 100;
-			bar.style.width = width + '%';
-			$rootScope.player.seek(click_percentage);
+			if ($rootScope.player === undefined) {
+
+			} else {
+				var click_percentage = 0;
+				click_percentage = duration_ms * ($event.clientX / $window.screen.width);
+				width = ($event.clientX / $window.screen.width) * 100;
+				bar.style.width = width + '%';
+				$rootScope.player.seek(click_percentage);
+			}
 		};
 
 		$scope.enlarge = function($event) {
-			console.log($event);
-			prog_bar.style.height = 10 + 'px';
-			bar.style.height = 10 + 'px';
+			if ($rootScope.player === undefined) {
+
+			} else {
+				console.log($event);
+				prog_bar.style.height = 10 + 'px';
+				bar.style.height = 10 + 'px';
+			}
 		};
 
 		$scope.shrink = function($event) {
-			console.log($event);
-			prog_bar.style.height = 5 + 'px';
-			bar.style.height = 5 + 'px';
+			if ($rootScope.player === undefined) {
+
+			} else {
+				console.log($event);
+				prog_bar.style.height = 5 + 'px';
+				bar.style.height = 5 + 'px';
+			}
 		};
 
 		$scope.refresh = function() {
