@@ -15,7 +15,7 @@
 				var player = new Spotify.Player({
 					name: 'Smoodify',
 					getOAuthToken: cb => { cb($cookies.token); },
-					volume: 0.5
+					volume: $rootScope.initialVolume || 0.5
 				});
 
 				this.pause();
