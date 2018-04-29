@@ -234,20 +234,24 @@
 
 		/* TODO $scope.vol does not have an initial value. */
 		$scope.mute = function() {
-			volume_button = document.querySelector('.volume-mute');
-			if ($scope.vol === undefined) {
-				$scope.vol = 50;
-			}
-			$rootScope.player.getCurrentState().then(state => {
-				var volume = data.device.volume_percent;
-				if (volume !== 0) {
-					volume_button.innerHTML = '<i class="fas fa-volume-off"></i>'
-					$rootScope.player.setVolume(0);
-				} else {
-					volume_button.innerHTML = '<i class="fas fa-volume-up"></i>'
-					$rootScope.player.setVolume($scope.vol / 100);
+			if ($rootScope.player === undefined) {
+
+			} else {
+				volume_button = document.querySelector('.volume-mute');
+				if ($scope.vol === undefined) {
+					$scope.vol = 50;
 				}
-			});
+				$rootScope.player.getVolume().then(volume => {
+					var volumeValue = volume * 100;
+					if (volumeValue !== 0) {
+						volume_button.innerHTML = '<i class="fas fa-volume-off"></i>'
+						$rootScope.player.setVolume(0);
+					} else {
+						volume_button.innerHTML = '<i class="fas fa-volume-up"></i>'
+						$rootScope.player.setVolume($scope.vol / 100);
+					}
+				})
+			}
 		};
 
 		/* Make setVolume parameter to the value you get from volume bar */
