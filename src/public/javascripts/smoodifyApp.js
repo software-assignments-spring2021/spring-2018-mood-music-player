@@ -19,6 +19,7 @@
 				console.log('yes auth\'d');
 				$rootScope.authenticated = true;
 				$rootScope.current_user = JSON.parse($window.localStorage.getItem('user'));
+				console.log('Current user: ');
 				console.log($rootScope.current_user);
 				if (path === '/' && $rootScope.current_user.saved_songs.length > 0) {
 					$location.url('/browse');
@@ -26,6 +27,7 @@
 				if (!$rootScope.songsByMood) {
 					$rootScope.songsByMood = DatabaseService.getSongsByMood();
 				}
+				console.log('Songs by mood: ');
 				console.log($rootScope.songsByMood);
 			}
 			
@@ -37,7 +39,7 @@
 		});
 		/* Location change success */
 		$rootScope.$on('$locationChangeSuccess', function (angularEvent, newUrl, oldUrl) {
-			console.log($cookies.token);
+			// console.log($cookies.token);
 			if (newUrl.includes('code=')) {
 				$http.get('/learn/train').then(function() {
 					const code = newUrl.substring(oldUrl.indexOf('code')).split('&')[0].split('=')[1];
@@ -74,8 +76,10 @@
 				$window.localStorage.removeItem('user');
 				$cookies['user'] = '';
 				if ($rootScope.player) {
-					$rootScope.player.disconnect();
-					$rootScope.player = undefined;
+					$rootScope.player.pause().then(function() {
+						$rootScope.player.disconnect();
+						$rootScope.player = undefined;
+					})
 				}
 				console.log('removed cookie');
 			}

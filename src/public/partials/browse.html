@@ -35,7 +35,7 @@
 
 
     <footer class="music-player-container">
-        <div id="progress">
+        <div id='progress' ng-click="seek($event)" ng-mouseover="enlarge($event)" ng-mouseleave="shrink($event)">
             <div id="progress-bar">
 
             </div>
@@ -61,10 +61,10 @@
                 <div class="music-player-buttons">
                     <!--<button ng-click="getSavedTracks()" class="shuffle-button">
                         <i class="fas fa-random"></i>
-                    </button>-->
+                    </button>
                     <button ng-click="previous()" class="skip-back-button">
                         <i class="fas fa-backward"></i>
-                    </button>
+                    </button> -->
                     <button ng-click="play()" class="play-button">
                         <i class="far fa-play-circle"></i>
                     </button>

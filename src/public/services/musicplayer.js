@@ -2,8 +2,9 @@
 
 	var module = angular.module('smoodifyApp');
 
-	module.factory('PlayerAPI', function($q, $http, $cookies, $rootScope) {
+	module.factory('PlayerAPI', function($q, $http, $cookies, $rootScope, MoodService) {
 		var _queue_ = [];
+		var _queue_songs_ = [];
 		var baseUrl = 'https://api.spotify.com/v1';
 
 		return {
@@ -13,21 +14,20 @@
 				/* ReferenceError: Spotify is not defined in MainController */
 				var player = new Spotify.Player({
 					name: 'Smoodify',
-					getOAuthToken: cb => { cb($cookies.token); }
+					getOAuthToken: cb => { cb($cookies.token); },
+					volume: $rootScope.initialVolume || 0.5
 				});
 
-				/* Initialize the first song to the beginning of the song */
-				/* This connect function isn't firing when you first login with an old account */
+				this.pause();
+
+
 				player.connect().then(success => {
 					if (success) {
 						player.addListener('ready', ({ device_id }) => {
 							$cookies.device = device_id;
 							console.log('Ready with Device ID', device_id);
-							/* Code to play from our device */
+							console.log(player);
 							this.switchToDevice();
-							
-							/* Initialize the player volume to our volume bar's starting point */
-							this.setVolume(50);
 						});
 						ret.resolve(player);
 					}
@@ -38,7 +38,7 @@
 			switchToDevice: function() {
 				var ret = $q.defer();
 				var data = {
-					device_ids: [$cookies.device],
+					device_ids: [$cookies.device]
 				};
 				$http.put(baseUrl + '/me/player', JSON.stringify(data), {
 					headers: {
@@ -47,7 +47,7 @@
 						'Authorization': 'Bearer ' + $cookies.token
 					}
 				}).success(function(r) {
-					console.log(r);
+					// console.log(r);
 					ret.resolve(r);
 				}).error(function(r) {
 					console.log(r);
@@ -208,12 +208,15 @@
 				return ret.promise;
 			}, */
 
-			playClickedSong: function(song_uri) {
-				_queue_.unshift(song_uri)
+			playClickedSong: function(song) {
+				_queue_.unshift(song)
+				console.log(song)
+				let context = _queue_.map((s) => s.spotify_uri);
 				var ret = $q.defer();
 				var data = {
-					uris: _queue_
+					uris: context
 				};
+				console.log('Queue (play clicked): ');
 				console.log(_queue_);
 				$http.put(baseUrl + '/me/player/play', JSON.stringify(data), {
 					headers: {
@@ -227,30 +230,71 @@
 				return ret.promise;
 			},
 
-			playContext: function(context_uri, total_tracks) {
-				var num = Math.floor(Math.random() * total_tracks);
-				console.log(num);
-				var ret = $q.defer();
-				var data = {
-					context_uri: context_uri,
-					offset: {
-						position: num
-					}
-				};
-				$http.put(baseUrl + '/me/player/play', JSON.stringify(data), {
-					headers: {
-						'Accept': 'application/json',
-						'Content-Type': 'application/json',
-						'Authorization': 'Bearer ' + $cookies.token
-					}
-				}).success(function(r) {
-					ret.resolve(r);
-				});
-				return ret.promise;
+			populateQueue: function(mood, song) {
+				this.clearQueue();
+				if (song) {
+					_queue_ = MoodService.getSongsByMood(mood, song);
+				} else {
+					_queue_ = MoodService.getSongsByMood(mood);
+				}
 			},
 
-			addToQueue: function(song) {
-				_queue_.push(song.spotify_uri);
+			clearQueue: function() {
+				_queue_ = [];
+			},
+
+			getQueue: function() {
+				return _queue_
+			},
+
+			nextTracks: function(n) {
+				let nextTracks = [];
+				_queue_.forEach((song) => {
+					let newTrack = {
+						uri: song.spotify_uri, // Spotify URI
+						id: song.spotify_id,                // Spotify ID from URI (can be null)
+						type: "track",             // Content type: can be "track", "episode" or "ad"
+						media_type: "audio",       // Type of file: can be "audio" or "video"
+						name: song.name,         // Name of content
+						is_playable: true,         // Flag indicating whether it can be played
+						album: {
+							uri: song.album.spotify_uri, // Spotify Album URI
+							name: song.album.name,
+							images: song.album.images.map((image) => {
+								return {url: image.url};
+							})
+						},
+						artists: song.artist.map((artist) => {
+							return {uri: artist.spotify_uri, name: artist.name};
+						})
+					}
+					nextTracks.push(newTrack);
+				});
+				if (n) {
+					return nextTracks.splice(0, n);
+				} else {
+					return nextTracks;
+				}
+			},
+
+			dequeue: function(song) {
+				if (song) {
+					const ids = _queue_.map((s) => s.spotify_id);
+					const index = ids.indexOf(song.id);
+					if (index !== -1) {
+						return _queue_.splice(index, 1)[0];
+					}
+				} else {
+					return _queue_.splice(0, 1)[0];
+				}
+			},
+
+			songsInQueue: function() {
+				if (_queue_.length > 0) {
+					return true;
+				} else {
+					return false;
+				}
 			}
 		};
 	});

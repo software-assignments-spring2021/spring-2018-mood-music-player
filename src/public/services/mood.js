@@ -118,11 +118,6 @@
 				return ret.promise;
 			},
 
-			getNextMood: function(song) {
-				const songMoods = song.mood;
-				return songMoods[1];
-			},
-
 			getAlgoMood: function(song) {
 				const valence_level = song.analysis.valence;
 				const energy_level = song.analysis.energy;
@@ -195,6 +190,44 @@
 			getSongWithAlgoMood: function(song) {
 				song.moods = this.getAlgoMood(song);
 				return song;
+			},
+
+			getSongsByMood: function(mood, song) {
+				let songs = $rootScope.songsByMood[mood];
+				let currentIndex = songs.length, temporaryValue, randomIndex;
+
+				// While there remain elements to shuffle...
+				while (0 !== currentIndex) {
+
+					// Pick a remaining element...
+					randomIndex = Math.floor(Math.random() * currentIndex);
+					currentIndex -= 1;
+
+					// And swap it with the current element.
+					temporaryValue = songs[currentIndex];
+					songs[currentIndex] = songs[randomIndex];
+					songs[randomIndex] = temporaryValue;
+				}
+
+				if (song) {
+					for (let i = 0; i < songs.length; i++) {
+						if (songs[i].spotify_uri === song.spotify_uri) {
+							songs.splice(i, 1);
+							break;
+						}
+					}
+				}
+
+				return songs;
+			},
+
+			hasMood: function(mood) {
+				let songs = $rootScope.songsByMood[mood];
+				if (songs.length > 0) {
+					return true;
+				} else {
+					return false;
+				}
 			}
 		};
 	});
