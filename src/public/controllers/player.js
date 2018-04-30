@@ -4,7 +4,7 @@
 
 	module.controller('PlayerController', function($scope, $http, $cookies, $rootScope, $location, $interval, $window, $route, $q, PlayerAPI, SpotifyAPI, MoodService, DatabaseService) {
   
-  	var bar = document.querySelector('#progress-bar');
+  		var bar = document.querySelector('#progress-bar');
 		var prog_bar = document.querySelector('#progress');
 		var width = 0;
 		var progress_ms = 0;
@@ -24,6 +24,7 @@
 		// }
 
 		if ($rootScope.player !== undefined) {
+			$rootScope.player.setVolume(0.5);
 			$rootScope.player.getCurrentState().then(state => {
 				let {
 					current_track,
@@ -79,57 +80,59 @@
 
 		/* Make the progress bar progress */
 		$interval(function() {
-			if ($rootScope.is_playing === true) {
-				if (progress_ms >= (duration_ms * .25) && progress_ms < (duration_ms)) {
-					$rootScope.player.getCurrentState().then(state => {
-						const id = state.track_window.current_track.id;
-						$rootScope.current_user.saved_songs.forEach((song) => {
-							if (song.spotify_id === id) {
-								$rootScope.lastSong = song;
-							}
+			if ($rootScope.count > 0) {
+				if ($rootScope.is_playing === true) {
+					if (progress_ms >= (duration_ms * .25) && progress_ms < (duration_ms)) {
+						$rootScope.player.getCurrentState().then(state => {
+							const id = state.track_window.current_track.id;
+							$rootScope.current_user.saved_songs.forEach((song) => {
+								if (song.spotify_id === id) {
+									$rootScope.lastSong = song;
+								}
+							});
+							$rootScope.moodIndex = 0;
 						});
-						$rootScope.moodIndex = 0;
-					});
+					}
+					$rootScope.player.getCurrentState().then(state => {
+						let {
+							current_track,
+							next_tracks: [next_track]
+						} = state.track_window;
+	
+						$rootScope.currentlyPlaying = {
+							'imgSrc': current_track.album.images[0].url,
+							'songTitle': current_track.name,
+							'artistName': current_track.artists[0].name,
+							'albumName': current_track.album.name
+						}
+						/* FIX: sometimes it doesnt get updated here */
+						progress_ms = state.position;
+						duration_ms = state.duration;
+						width = (progress_ms / duration_ms) * 100
+						// width = width + (10 / duration_ms) * 100;
+						bar.style.width = width + '%';
+					})
+				} else {
+					$rootScope.player.getCurrentState().then(state => {
+						let {
+							current_track,
+							next_tracks: [next_track]
+						} = state.track_window;
+	
+						$rootScope.currentlyPlaying = {
+							'imgSrc': current_track.album.images[0].url,
+							'songTitle': current_track.name,
+							'artistName': current_track.artists[0].name,
+							'albumName': current_track.album.name
+						}
+						/* FIX: sometimes it doesnt get updated here */
+						progress_ms = state.position;
+						duration_ms = state.duration;
+						width = (progress_ms / duration_ms) * 100
+						// width = width + (10 / duration_ms) * 100;
+						bar.style.width = width + '%';
+					})
 				}
-				$rootScope.player.getCurrentState().then(state => {
-					let {
-						current_track,
-						next_tracks: [next_track]
-					} = state.track_window;
-
-					$rootScope.currentlyPlaying = {
-						'imgSrc': current_track.album.images[0].url,
-						'songTitle': current_track.name,
-						'artistName': current_track.artists[0].name,
-						'albumName': current_track.album.name
-					}
-					/* FIX: sometimes it doesnt get updated here */
-					progress_ms = state.position;
-					duration_ms = state.duration;
-					width = (progress_ms / duration_ms) * 100
-					// width = width + (10 / duration_ms) * 100;
-					bar.style.width = width + '%';
-				})
-			} else {
-				$rootScope.player.getCurrentState().then(state => {
-					let {
-						current_track,
-						next_tracks: [next_track]
-					} = state.track_window;
-
-					$rootScope.currentlyPlaying = {
-						'imgSrc': current_track.album.images[0].url,
-						'songTitle': current_track.name,
-						'artistName': current_track.artists[0].name,
-						'albumName': current_track.album.name
-					}
-					/* FIX: sometimes it doesnt get updated here */
-					progress_ms = state.position;
-					duration_ms = state.duration;
-					width = (progress_ms / duration_ms) * 100
-					// width = width + (10 / duration_ms) * 100;
-					bar.style.width = width + '%';
-				})
 			}
 		}, 10);
 
@@ -350,7 +353,6 @@
 					PlayerAPI.initialize().then(function(player) {
 						$rootScope.player = player;
 						console.log($rootScope.player);
-						$rootScope.player.pause();
 						PlayerAPI.delay().then(function() {
 							PlayerAPI.playClickedSong(song).then(function() {
 								width = 0;
@@ -370,8 +372,13 @@
 											'artistName': current_track.artists[0].name,
 											'albumName': current_track.album.name
 										}
+										$rootScope.count = 1;
 										$rootScope.is_playing = true;
-										$rootScope.player.resume();
+										$rootScope.player.setVolume($scope.vol || 0.5).then(function() {
+											$rootScope.player.seek(0).then(function() {
+												$rootScope.player.resume();
+											});
+										});
 									});
 								});
 							});
