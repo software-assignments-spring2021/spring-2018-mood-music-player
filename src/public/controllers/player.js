@@ -4,7 +4,7 @@
 
 	module.controller('PlayerController', function($scope, $http, $cookies, $rootScope, $location, $interval, $window, $route, $q, PlayerAPI, SpotifyAPI, MoodService, DatabaseService) {
   
-  	var bar = document.querySelector('#progress-bar');
+  		var bar = document.querySelector('#progress-bar');
 		var prog_bar = document.querySelector('#progress');
 		var width = 0;
 		var progress_ms = 0;
@@ -24,6 +24,7 @@
 		// }
 
 		if ($rootScope.player !== undefined) {
+			$rootScope.player.setVolume(0.5);
 			$rootScope.player.getCurrentState().then(state => {
 				let {
 					current_track,

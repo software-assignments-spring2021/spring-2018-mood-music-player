@@ -27,6 +27,7 @@
 		}
 
 		if ($rootScope.player !== undefined) {
+			$rootScope.player.setVolume(0.5);
 			$rootScope.player.getCurrentState().then(state => {
 				let {
 					current_track,
