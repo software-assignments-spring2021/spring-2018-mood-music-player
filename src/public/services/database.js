@@ -18,7 +18,7 @@
 				return ret.promise;
 			},	
 
-			getSongsByMood: function() {
+			getSongsByMood: function(allSongs) {
 				const globalMoods = {
 					Somber: [], Ominous: [], Sentimental: [], Nostalgic: [], Peaceful: [], 
 					Depressing: [], Melancholy: [], Mellow: [], Tender: [], Easygoing: [], 
@@ -26,8 +26,9 @@
 					Despair: [], Anxious: [], Chill: [], Stirring: [], Excited: [], 
 					Aggressive: [], Angsty: [], Energizing: [], Upbeat: [], Empowering: []
 				}
-
-				const allSongs = $rootScope.current_user.saved_songs;
+				if (!allSongs) {
+					allSongs = $rootScope.current_user.saved_songs;
+				}
 				allSongs.forEach((s) => {
 					globalMoods[s.mood[0].mood].push(s);
 				});
