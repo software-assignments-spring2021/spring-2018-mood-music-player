@@ -6,7 +6,8 @@ const cookieParser = require('cookie-parser');
 
 const client_id = process.env.SPOTIFY_ID || require('../config.js').spotifyId;
 const client_secret = process.env.SPOTIFY_SECRET || require('../config.js').spotifySecret;
-const redirect_uri = 'http://localhost:3000/';
+
+const redirect_uri = process.env.REDIRECT_URI || 'http://localhost:3000/';
 
 const getRandStr = function(n) {
 	let str = '';
