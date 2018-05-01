@@ -230,7 +230,7 @@
 					if (previousWidth < 25) {
 						$rootScope.skips += 1
 					}
-	
+
 					if ($rootScope.skips === 3 || !PlayerAPI.songsInQueue()) {
 						$rootScope.moodIndex += 1;
 						$rootScope.currentMood = $rootScope.lastSong.mood[$rootScope.moodIndex].mood;
@@ -338,6 +338,7 @@
 				$rootScope.currentMood = song.mood[0].mood;
 				// PlayerAPI.clearQueue();
 				PlayerAPI.populateQueue($rootScope.currentMood, song);
+				PlayerAPI.dequeue(song);
 				$rootScope.skips = 0;
 				$rootScope.moodIndex = 0;
 			}
