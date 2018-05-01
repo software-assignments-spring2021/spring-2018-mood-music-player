@@ -374,11 +374,19 @@
 										}
 										$rootScope.count = 1;
 										$rootScope.is_playing = true;
-										$rootScope.player.setVolume($scope.vol || 0.5).then(function() {
-											$rootScope.player.seek(0).then(function() {
-												$rootScope.player.resume();
+										if ($scope.vol === undefined) {
+											$rootScope.player.setVolume(0.5).then(function() {
+												$rootScope.player.seek(0).then(function() {
+													$rootScope.player.resume();
+												});
+											});	
+										} else {
+											$rootScope.player.setVolume(($scope.vol / 100)).then(function() {
+												$rootScope.player.seek(0).then(function() {
+													$rootScope.player.resume();
+												});
 											});
-										});
+										}
 									});
 								});
 							});
