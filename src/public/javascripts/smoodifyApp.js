@@ -73,6 +73,7 @@
 				$http.get('auth/signout');
 				$rootScope.authenticated = false;
 				$rootScope.current_user = '';
+				$rootScope.count = 0;
 				$window.localStorage.removeItem('user');
 				$cookies['user'] = '';
 				if ($rootScope.player) {
@@ -80,6 +81,12 @@
 						$rootScope.player.disconnect();
 						$rootScope.player = undefined;
 					})
+				}
+				$rootScope.currentlyPlaying = {
+					'imgSrc': undefined,
+					'songTitle': undefined,
+					'artistName': undefined,
+					'albumName': undefined
 				}
 				console.log('removed cookie');
 			}
