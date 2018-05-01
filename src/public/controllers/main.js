@@ -34,12 +34,12 @@
 					next_tracks: [next_track]
 				} = state.track_window;
 
-				$rootScope.currentlyPlaying = {
-					'imgSrc': current_track.album.images[0].url,
-					'songTitle': current_track.name,
-					'artistName': current_track.artists[0].name,
-					'albumName': current_track.album.name
-				}
+				// $rootScope.currentlyPlaying = {
+				// 	'imgSrc': current_track.album.images[0].url,
+				// 	'songTitle': current_track.name,
+				// 	'artistName': current_track.artists[0].name,
+				// 	'albumName': current_track.album.name
+				// }
 				/* FIX: sometimes it doesnt get updated here */
 				if (state.paused == false) {
 					/* if it is not paused */
